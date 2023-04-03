@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "M68ZJPHAsB+DIhnMgkUrltOqWs3KADPRzDM+fzDd/q709ypn70ndS5KyoQpwWae/l7kBH0HZ+CSsjVgNpTxyHg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ihsan\\source\\repos\\ExtendedPomodoro\\ExtendedPomodoro.Models\\ExtendedPomodoro.Models.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ihsan\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\stub.system.data.sqlite.core.netstandard\\1.0.117\\stub.system.data.sqlite.core.netstandard.1.0.117.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\system.data.sqlite.core\\1.0.117\\system.data.sqlite.core.1.0.117.nupkg.sha512"
+  ],
+  "logs": []
+}

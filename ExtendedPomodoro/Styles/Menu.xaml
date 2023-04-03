@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:ExtendedPomodoro.Controls">
+
+    <Style TargetType="{x:Type controls:DrawerSidebarMenuItem}" x:Key="DrawerSidebarMenuItemDefault">
+        <Setter Property="Foreground" Value="{StaticResource Black}"/>
+        <Setter Property="Space" Value="12"/>
+        <Setter Property="IconSize" Value="25"/>
+        <Setter Property="FontSize" Value="{StaticResource FSRegular}"/>
+        <Setter Property="Margin" Value="0 0 0 30"/>
+        <Setter Property="HoverColor" Value="{StaticResource Primary}"/>
+    </Style>
+</ResourceDictionary>
