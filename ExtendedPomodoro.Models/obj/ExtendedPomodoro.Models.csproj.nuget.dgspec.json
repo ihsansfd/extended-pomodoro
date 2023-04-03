@@ -44,9 +44,9 @@
               "target": "Package",
               "version": "[2.0.123, )"
             },
-            "System.Data.SQLite.Core": {
+            "Microsoft.Data.Sqlite": {
               "target": "Package",
-              "version": "[1.0.117, )"
+              "version": "[7.0.4, )"
             }
           },
           "imports": [

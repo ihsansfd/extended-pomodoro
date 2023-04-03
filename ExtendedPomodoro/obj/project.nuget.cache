@@ -1,15 +1,22 @@
 {
   "version": 2,
-  "dgSpecHash": "ZaE4KnKPC6C00EQ84zxJDo0BLRF+L4AHKtm5g44C4st2n6luD0BpR8WdjEP3K6mCx0Tg6SnURsLuzflb3Z2Dfg==",
+  "dgSpecHash": "GX5mKm7Z8rpNVJfkY6JxReNqCwNtOAs0g4MWAmg3Wy4msPdAfWYZ3etJsPKvjclfqeWcfOqulTLMKBB9WgxLrA==",
   "success": true,
   "projectFilePath": "C:\\Users\\ihsan\\source\\repos\\ExtendedPomodoro\\ExtendedPomodoro\\ExtendedPomodoro.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ihsan\\.nuget\\packages\\communitytoolkit.mvvm\\8.1.0\\communitytoolkit.mvvm.8.1.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\mahapps.metro.iconpacks.bootstrapicons\\4.11.0\\mahapps.metro.iconpacks.bootstrapicons.4.11.0.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\microsoft.data.sqlite\\7.0.4\\microsoft.data.sqlite.7.0.4.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\microsoft.data.sqlite.core\\7.0.4\\microsoft.data.sqlite.core.7.0.4.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
-    "C:\\Users\\ihsan\\.nuget\\packages\\sqlite\\3.13.0\\sqlite.3.13.0.nupkg.sha512"
+    "C:\\Users\\ihsan\\.nuget\\packages\\sqlite\\3.13.0\\sqlite.3.13.0.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.4\\sqlitepclraw.bundle_e_sqlite3.2.1.4.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.core\\2.1.4\\sqlitepclraw.core.2.1.4.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.4\\sqlitepclraw.lib.e_sqlite3.2.1.4.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.4\\sqlitepclraw.provider.e_sqlite3.2.1.4.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512"
   ],
   "logs": []
 }

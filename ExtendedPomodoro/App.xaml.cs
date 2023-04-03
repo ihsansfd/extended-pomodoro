@@ -1,4 +1,7 @@
-﻿using ExtendedPomodoro.ViewModels;
+﻿using ExtendedPomodoro.Models.DbConfigs;
+using ExtendedPomodoro.Models.DbConnections;
+using ExtendedPomodoro.Models.DbSetup;
+using ExtendedPomodoro.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -21,6 +24,14 @@ namespace ExtendedPomodoro
         public App()
         {
             Services = ConfigureServices();
+
+            InitializeDb();
+        }
+
+        private void InitializeDb()
+        {
+            IDatabaseSetup dbSetup = Services.GetRequiredService<IDatabaseSetup>();
+            dbSetup.Setup();
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -36,6 +47,13 @@ namespace ExtendedPomodoro
         private static ServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
+            services.AddSingleton<DbConfig>(
+                (s) => new(ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString)
+                );
+            services.AddSingleton<SqliteDbConnectionFactory>();
+            services.AddSingleton<SqliteDbSetup>();
+            services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
+            services.AddSingleton<IDatabaseSetup, SqliteDbSetup>();
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<TimerViewModel>();
             services.AddSingleton<MainWindow>();
