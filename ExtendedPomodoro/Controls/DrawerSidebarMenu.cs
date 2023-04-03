@@ -106,12 +106,17 @@ namespace ExtendedPomodoro.Controls
 
     public class DrawerSidebarMenuItem : Control
     {
+        public Brush ForegroundTemp { get; }
+
         static DrawerSidebarMenuItem()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DrawerSidebarMenuItem), new FrameworkPropertyMetadata(typeof(DrawerSidebarMenuItem)));
         }
 
-        //public Brush ForegroundTemp { get; set; }
+        public DrawerSidebarMenuItem()
+        {
+            ForegroundTemp = Foreground;
+        }
 
         public ICommand Command
         {
@@ -194,30 +199,25 @@ namespace ExtendedPomodoro.Controls
         }
 
         public static readonly DependencyProperty IsActiveProperty =
-            DependencyProperty.Register("IsActive", typeof(bool), typeof(DrawerSidebarMenuItem), new PropertyMetadata(false));
+            DependencyProperty.Register("IsActive", typeof(bool), typeof(DrawerSidebarMenuItem), new PropertyMetadata(false, OnIsActiveChanged));
 
+        private static void OnIsActiveChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is DrawerSidebarMenuItem menuItem)
+            {
+                if (menuItem.IsActive)
+                {
+                    menuItem.Foreground = menuItem.HoverColor;
+                }
 
-        //public DrawerSidebarMenuItem()
-        //{
-        //    ForegroundTemp = Foreground;
-        //}
+                else
+                {
+                    menuItem.Foreground = menuItem.ForegroundTemp;
 
-        //private static void OnIsActiveChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    if (d is DrawerSidebarMenuItem menuItem)
-        //    {
-        //       if(menuItem.IsActive)
-        //        {
-        //            menuItem.Foreground = menuItem.HoverColor;
-        //        }
+                }
+            }
+        }
 
-        //       else
-        //        {
-        //            menuItem.Foreground = menuItem.ForegroundTemp;
-
-        //        }
-        //    }
-        //}
 
         public override void OnApplyTemplate()
         {
@@ -225,16 +225,15 @@ namespace ExtendedPomodoro.Controls
 
             if (HoverColor != null)
             {
-                var hoverColor = this.HoverColor;
-                var foreground = this.Foreground;
-                this.MouseEnter += (object sender, MouseEventArgs e) =>
+                MouseEnter += (object sender, MouseEventArgs e) =>
                 {
-                    this.Foreground = hoverColor;
+                    Foreground = HoverColor;
                 };
 
-                this.MouseLeave += (object sender, MouseEventArgs e) =>
+                MouseLeave += (object sender, MouseEventArgs e) =>
                 {
-                    this.Foreground = foreground;
+                    if (this.IsActive) Foreground = HoverColor;
+                    else Foreground = ForegroundTemp;
                 };
             }
 

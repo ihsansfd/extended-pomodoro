@@ -96,11 +96,6 @@
                             />
                         </StackPanel>
                     </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsActive" Value="True">
-                            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=HoverColor}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
