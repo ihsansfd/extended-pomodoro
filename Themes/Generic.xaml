@@ -1,0 +1,108 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:ExtendedPomodoro"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
+    xmlns:converters="clr-namespace:ExtendedPomodoro.Converters">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Styles/Fonts.xaml"/>
+        <ResourceDictionary Source="../Styles/Colors.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <converters:SpaceToMarginConverter x:Key="SpaceToMarginConv"/>
+
+    <Style TargetType="{x:Type controls:DrawerSidebarMenu}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:DrawerSidebarMenu}">
+                    <Border 
+                        Padding="12 20 13 20" x:Name="PART_MenuBorder">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter 
+                                    Property="Width" 
+                                    Value="{Binding Path=Width, RelativeSource={RelativeSource AncestorType={x:Type controls:DrawerSidebarMenu}}}"/>
+                                <Setter
+                                    Property="Background"
+                                    Value="{Binding Path=Background, RelativeSource={RelativeSource AncestorType={x:Type controls:DrawerSidebarMenu}}}"/>
+                                <Setter
+                                    Property="Padding"
+                                    Value="{Binding Path=Padding, RelativeSource={RelativeSource AncestorType={x:Type controls:DrawerSidebarMenu}}}"/>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel>
+                            <CheckBox 
+                                IsChecked="False" 
+                                x:Name="PART_MenuToggle">
+                                
+                                <CheckBox.Template>
+                                    <ControlTemplate TargetType="CheckBox">
+                                        <controls:DrawerSidebarMenuItem 
+                                            x:Name="PART_MenuToggleMenuItem"
+                                            Kind="List" 
+                                            IconSize="25"
+                                            Space="12" 
+                                            Margin="0 0 0 45" 
+                                            Text="Menu" 
+                                            HoverColor="{StaticResource Primary}"
+                                            FontSize="{StaticResource FSRegular}" 
+                                            Foreground="{StaticResource Black}">
+                                        </controls:DrawerSidebarMenuItem>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter TargetName="PART_MenuToggleMenuItem" Property="Kind" Value="XLg" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </CheckBox.Template>
+                            </CheckBox>
+                            <ContentControl Content="{TemplateBinding Content}"/>
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:DrawerSidebarMenuItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:DrawerSidebarMenuItem}">
+                    <Border Cursor="Hand" Background="Transparent">
+                        <Border.InputBindings>
+                            <MouseBinding Gesture="LeftClick"
+                                          Command="{Binding Path=Command, RelativeSource={RelativeSource AncestorType={x:Type controls:DrawerSidebarMenuItem}}}"
+                                          CommandParameter="{Binding Path=CommandParameter, RelativeSource={RelativeSource AncestorType={x:Type controls:DrawerSidebarMenuItem}}}"
+                                          />
+                        </Border.InputBindings>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconBootstrapIcons
+                            Kind="{TemplateBinding Kind}" 
+                            Foreground="{TemplateBinding Foreground}" 
+                            Width="{TemplateBinding IconSize}"
+                            Height="{TemplateBinding IconSize}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            />
+                            <TextBlock 
+                            Text="{TemplateBinding Text}" 
+                            Foreground="{TemplateBinding Foreground}" 
+                            FontSize="{TemplateBinding FontSize}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="{TemplateBinding Space, Converter={StaticResource SpaceToMarginConv}}"
+                            />
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsActive" Value="True">
+                            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=HoverColor}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

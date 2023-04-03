@@ -1,0 +1,76 @@
+﻿<Window x:Class="ExtendedPomodoro.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExtendedPomodoro"
+        xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
+        xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
+        xmlns:views="clr-namespace:ExtendedPomodoro.Views"
+        xmlns:converters="clr-namespace:ExtendedPomodoro.Converters"
+        d:DataContext="{d:DesignInstance Type=vms:MainWindowViewModel}"
+        mc:Ignorable="d"
+        Title="Extended Pomodoro" Height="440" Width="615" Icon="extended-pomodoro-icon.ico">
+    <Window.Resources>
+        <converters:TimerViewModelToBooleanConverter x:Key="TimerVMToBoolConv"/>
+        <converters:StatsViewModelToBooleanConverter x:Key="StatsVMToBoolConv"/>
+        <converters:TasksViewModelToBooleanConverter x:Key="TasksVMToBoolConv"/>
+        <converters:SettingsViewModelToBooleanConverter x:Key="SettingsVMToBoolConv"/>
+        <DataTemplate DataType="{x:Type vms:TimerViewModel}">
+            <views:TimerView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vms:StatsViewModel}">
+            <views:StatsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vms:SettingsViewModel}">
+            <views:SettingsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vms:TasksViewModel}">
+            <views:TasksView/>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <controls:DrawerSidebarMenu 
+            HorizontalAlignment="Left"
+            ClosedWidth="50" 
+            OpenedWidth="145"
+            Background="{StaticResource VeryLightGrey}" 
+            Foreground="{StaticResource Primary}"
+            Padding="12">
+            <StackPanel>
+                <controls:DrawerSidebarMenuItem 
+                    Kind="Stopwatch" 
+                    Text="Timer"
+                    Style="{StaticResource DrawerSidebarMenuItemDefault}"
+                    Command="{Binding NavigateToTimerCommand}"
+                    IsActive="{Binding CurrentViewModel, Converter={StaticResource TimerVMToBoolConv}}"
+                    />
+                <controls:DrawerSidebarMenuItem 
+                    Kind="ListTask" 
+                    Text="Tasks"  
+                    Style="{StaticResource DrawerSidebarMenuItemDefault}"
+                    Command="{Binding NavigateToTasksCommand}"
+                    IsActive="{Binding CurrentViewModel, Converter={StaticResource TasksVMToBoolConv}}"
+                    />
+                <controls:DrawerSidebarMenuItem
+                    Kind="BarChart" 
+                    Text="Stats" 
+                    Style="{StaticResource DrawerSidebarMenuItemDefault}"
+                    Command="{Binding NavigateToStatsCommand}"
+                    IsActive="{Binding CurrentViewModel, Converter={StaticResource StatsVMToBoolConv}}"
+                    />
+                <controls:DrawerSidebarMenuItem
+                    Kind="Gear"
+                    Text="Settings" 
+                    Style="{StaticResource DrawerSidebarMenuItemDefault}"
+                    Command="{Binding NavigateToSettingsCommand}"
+                    IsActive="{Binding CurrentViewModel, Converter={StaticResource SettingsVMToBoolConv}}"
+                    />
+            </StackPanel>
+            
+        </controls:DrawerSidebarMenu>
+        <Grid HorizontalAlignment="Center" Margin="0 20 0 0">
+            <Frame Content="{Binding CurrentViewModel}" NavigationUIVisibility="Hidden"/>
+        </Grid>
+    </Grid>
+</Window>

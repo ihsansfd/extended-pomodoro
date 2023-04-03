@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    
+    <!--Region: Font Family-->
+    
+    <FontFamily x:Key="FWRegular">pack://application;,,,/Fonts/#Inter Regular</FontFamily>
+    <FontFamily x:Key="FWSemiBold">pack://application;,,,/Fonts/#Inter SemiBold</FontFamily>
+    <FontFamily x:Key="FWMedium">pack://application;,,,/Fonts/#Inter Medium</FontFamily>
+    <FontFamily x:Key="FWLight">pack://application;,,,/Fonts/#Inter Light</FontFamily>
+
+    <!--End Region-->
+
+    <!--Region: Font Sizes-->
+
+    <sys:Double x:Key="FSVerySmall">10</sys:Double>
+    <sys:Double x:Key="FSSmall">12</sys:Double>
+    <sys:Double x:Key="FSRegular">16</sys:Double>
+    <sys:Double x:Key="FSMedium">21</sys:Double>
+
+    <!--End Region-->
+    
+    <!--Region: Styles-->
+
+    <Style TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
+        <Setter Property="FontSize" Value="{StaticResource FSRegular}"/>
+        <Setter Property="Foreground" Value="{StaticResource Black}"/>
+    </Style>
+    
+    <!--End Region-->
+
+
+</ResourceDictionary>

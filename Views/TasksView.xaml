@@ -1,0 +1,35 @@
+﻿<Page x:Class="ExtendedPomodoro.Views.TasksView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ExtendedPomodoro.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="400"
+      Title="TasksView">
+
+    <Grid Width="400">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button 
+            Style="{StaticResource IconizedButtonStyle}"
+            Grid.Row="0" 
+            Tag="PlusCircle"
+            Content="Add new"
+            HorizontalAlignment="Left"
+            />
+
+        <WrapPanel Grid.Row="0" HorizontalAlignment="Right">
+            <Button Style="{StaticResource LeftTabbedButtonStyle}" Background="{StaticResource Primary}" Foreground="White">In Progress</Button>
+            <Button Style="{StaticResource RightTabbedButtonStyle}">Completed</Button>
+        </WrapPanel>
+
+        <ScrollViewer Grid.Row="1">
+   
+            
+        </ScrollViewer>
+
+    </Grid>
+</Page>
