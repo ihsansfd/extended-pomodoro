@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="TextBox" x:Key="TextBoxStyle">
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="FontSize" Value="{StaticResource FSVerySmall}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Black-50}"/>
+        <Setter Property="Foreground" Value="{StaticResource Black}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel>
+                        <AdornedElementPlaceholder x:Name="placeholder"/>
+                        <TextBlock FontSize="{StaticResource FSVerySmall}" Foreground="Red"
+                                       Text="{Binding ElementName=placeholder, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Resources>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="CornerRadius" Value="5"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+    
+</ResourceDictionary>

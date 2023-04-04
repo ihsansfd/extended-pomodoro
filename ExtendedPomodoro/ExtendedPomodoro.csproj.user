@@ -39,6 +39,12 @@
     <Page Update="Styles\Menu.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Styles\TextBlocks.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Styles\TextBoxes.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Themes\Generic.xaml">
       <SubType>Designer</SubType>
     </Page>

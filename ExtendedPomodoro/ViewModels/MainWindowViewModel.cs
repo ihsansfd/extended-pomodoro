@@ -33,7 +33,11 @@ namespace ExtendedPomodoro.ViewModels
         public void NavigateToSettings() => _navigationViewModel.SetCurrentViewModel(_settingsViewModel);
 
         [RelayCommand]
-        public void NavigateToTasks() => _navigationViewModel.SetCurrentViewModel( _tasksViewModel);
+        public async Task NavigateToTasks()
+        {
+            _navigationViewModel.SetCurrentViewModel(_tasksViewModel);
+            await _tasksViewModel.ReadTasksViewModel.LoadTasks();
+        }
 
         public void Receive(CurrentViewModelMessage currentViewModelMessage) => CurrentViewModel = currentViewModelMessage.Message;
 

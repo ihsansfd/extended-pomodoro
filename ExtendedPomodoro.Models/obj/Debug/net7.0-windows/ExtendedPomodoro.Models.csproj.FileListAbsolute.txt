@@ -1,0 +1,12 @@
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\bin\Debug\net7.0-windows\ExtendedPomodoro.Models.deps.json
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\bin\Debug\net7.0-windows\ExtendedPomodoro.Models.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\bin\Debug\net7.0-windows\ExtendedPomodoro.Models.pdb
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\obj\Debug\net7.0-windows\ExtendedPomodoro.Models.csproj.AssemblyReference.cache
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\obj\Debug\net7.0-windows\ExtendedPomodoro.Models.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\obj\Debug\net7.0-windows\ExtendedPomodoro.Models.AssemblyInfoInputs.cache
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\obj\Debug\net7.0-windows\ExtendedPomodoro.Models.AssemblyInfo.cs
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\obj\Debug\net7.0-windows\ExtendedPomodoro.Models.csproj.CoreCompileInputs.cache
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\obj\Debug\net7.0-windows\ExtendedPomodoro.Models.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\obj\Debug\net7.0-windows\refint\ExtendedPomodoro.Models.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\obj\Debug\net7.0-windows\ExtendedPomodoro.Models.pdb
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Models\obj\Debug\net7.0-windows\ref\ExtendedPomodoro.Models.dll

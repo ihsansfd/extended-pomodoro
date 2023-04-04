@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExtendedPomodoro.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,17 @@ namespace ExtendedPomodoro.Views
         public TasksView()
         {
             InitializeComponent();
+
+        }
+
+        private void ButtonCreateTask_Click(object sender, RoutedEventArgs e)
+        {
+            ModalCreateTask.IsShown = true;
+        }
+
+        private void ButtonCancelCreateTaskModal_Click(object sender, RoutedEventArgs e)
+        {
+            ModalCreateTask.IsShown = false;
         }
     }
 }

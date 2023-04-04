@@ -12,10 +12,7 @@
         mc:Ignorable="d"
         Title="Extended Pomodoro" Height="440" Width="615" Icon="extended-pomodoro-icon.ico">
     <Window.Resources>
-        <converters:TimerViewModelToBooleanConverter x:Key="TimerVMToBoolConv"/>
-        <converters:StatsViewModelToBooleanConverter x:Key="StatsVMToBoolConv"/>
-        <converters:TasksViewModelToBooleanConverter x:Key="TasksVMToBoolConv"/>
-        <converters:SettingsViewModelToBooleanConverter x:Key="SettingsVMToBoolConv"/>
+
         <DataTemplate DataType="{x:Type vms:TimerViewModel}">
             <views:TimerView/>
         </DataTemplate>
@@ -28,6 +25,11 @@
         <DataTemplate DataType="{x:Type vms:TasksViewModel}">
             <views:TasksView/>
         </DataTemplate>
+
+        <converters:TimerViewModelToBooleanConverter x:Key="TimerVMToBoolConv"/>
+        <converters:StatsViewModelToBooleanConverter x:Key="StatsVMToBoolConv"/>
+        <converters:TasksViewModelToBooleanConverter x:Key="TasksVMToBoolConv"/>
+        <converters:SettingsViewModelToBooleanConverter x:Key="SettingsVMToBoolConv"/>
     </Window.Resources>
     <Grid>
         <controls:DrawerSidebarMenu 

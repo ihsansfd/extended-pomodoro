@@ -13,11 +13,13 @@ namespace ExtendedPomodoro.Models.DbSetup
         private readonly SqliteDbConnectionFactory _connectionFactory;
 
         private const string CREATE_TASKS_TABLE = @"CREATE TABLE IF NOT EXISTS tblTasks (
-                Id TEXT PRIMARY KEY, 
+                Id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 Name VARCHAR(255) NOT NULL,
                 Description TEXT,
-                EstPmodoro INT,
-                ActPomodoro INT,
+                EstPomodoro INT,
+                ActPomodoro INT DEFAULT 0 NOT NULL,
+                IsTaskCompleted INT(1) DEFAULT 0 NOT NULL,
+                TimeSpent INT DEFAULT 0 NOT NULL,
                 CreatedAt TEXT,
                 UpdatedAt TEXT
             )";

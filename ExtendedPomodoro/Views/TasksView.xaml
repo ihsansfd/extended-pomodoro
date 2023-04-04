@@ -4,32 +4,278 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ExtendedPomodoro.Views"
+      xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
       mc:Ignorable="d" 
+      d:DataContext="{d:DesignInstance Type=vms:TasksViewModel}"
       d:DesignHeight="450" d:DesignWidth="400"
       Title="TasksView">
 
-    <Grid Width="400">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Button 
+    <Grid>
+        <Grid Width="400">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button 
             Style="{StaticResource IconizedButtonStyle}"
             Grid.Row="0" 
             Tag="PlusCircle"
             Content="Add new"
             HorizontalAlignment="Left"
+            Click="ButtonCreateTask_Click"
             />
 
-        <WrapPanel Grid.Row="0" HorizontalAlignment="Right">
-            <Button Style="{StaticResource LeftTabbedButtonStyle}" Background="{StaticResource Primary}" Foreground="White">In Progress</Button>
-            <Button Style="{StaticResource RightTabbedButtonStyle}">Completed</Button>
-        </WrapPanel>
+            <WrapPanel Grid.Row="0" HorizontalAlignment="Right">
+                <Button Style="{StaticResource LeftTabbedButtonStyle}" Background="{StaticResource Primary}" Foreground="White">In Progress</Button>
+                <Button Style="{StaticResource RightTabbedButtonStyle}">Completed</Button>
+            </WrapPanel>
 
-        <ScrollViewer Grid.Row="1">
-   
-            
-        </ScrollViewer>
+            <ListView 
+                ItemsSource="{Binding ReadTasksViewModel.Tasks}" 
+                BorderThickness="0"
+                Grid.Row="1" 
+                Margin="0 20 0 0"
+                FocusVisualStyle="{x:Null}"
+                >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border 
+                            CornerRadius="13"
+                            BorderThickness="1" 
+                            Height="25"
+                            Margin="0 0 0 5"
+                            BorderBrush="{StaticResource Black}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0">
+                                    <TextBlock 
+                                    FontSize="{StaticResource FSSmall}" 
+                                    FontFamily="{StaticResource FWRegular}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    MaxWidth="250"
+                                    TextTrimming="CharacterEllipsis"
+                                    Margin="10 0 0 0"
+                                    Foreground="{StaticResource Black}"
+                                    Text="{Binding Name}"
+                                    />
+                                </Grid>
+                                
+                                <Button Grid.Column="1">
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <iconPacks:PackIconBootstrapIcons 
+                                                Kind="ArrowUpRightCircle" 
+                                                Foreground="{StaticResource Info}"
+                                                VerticalAlignment="Center"
+                                                Width="16"
+                                                Height="16"/>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <Button Grid.Column="2">
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <iconPacks:PackIconBootstrapIcons 
+                                                Kind="XCircle" 
+                                                Foreground="{StaticResource Danger}"
+                                                VerticalAlignment="Center"
+                                                Margin="5 0 0 0"
+                                                Width="16"
+                                                Height="16"/>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <Button Grid.Column="3">
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <iconPacks:PackIconBootstrapIcons 
+                                                Kind="CheckCircle" 
+                                                Foreground="{StaticResource Success}"
+                                                VerticalAlignment="Center"
+                                                Margin="5 0 10 0"
+                                                Width="16"
+                                                Height="16"/>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+
+        </Grid>
+        
+        <!--Modal create task popup-->
+        <!--<Border Background="White" Width="310" Height="225" CornerRadius="10" UseLayoutRounding="True">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1"  Opacity="0.4" />
+            </Border.Effect>
+            <StackPanel Grid.IsSharedSizeScope="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock 
+                    Text="Title"
+                    Margin="0 0 20 0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource TextBoxLabelStyle}"
+                    />
+                    <TextBox 
+                    Grid.Column="1"
+                    Width="175"
+                    Style="{StaticResource TextBoxStyle}"
+                    />
+                </Grid>
+                <Grid Margin="0 20 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock 
+                    Text="Description"
+                    Margin="0 0 20 0"
+                    Style="{StaticResource TextBoxLabelStyle}"
+                    />
+                    <TextBox 
+                    Grid.Column="1"
+                    Height="65"
+                    Width="175"
+                    Style="{StaticResource TextBoxStyle}"
+                    />
+                </Grid>
+                <Grid Margin="0 20 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock 
+                    Text="Est. Pomodoro"
+                    Margin="0 0 20 0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource TextBoxLabelStyle}"
+                    />
+                    <TextBox 
+                    Grid.Column="1"
+                    Width="60"
+                    Style="{StaticResource TextBoxStyle}"
+                    />
+                </Grid>
+                <WrapPanel HorizontalAlignment="Right" Margin="0 20 0 0">
+                    <Button Style="{StaticResource ButtonStyle}" Content="Cancel" Margin="0 0 10 0"/>
+                    <Button Style="{StaticResource ButtonInfoStyle}" 
+                            Content="Create"/>
+                </WrapPanel>
+            </StackPanel>
+        </Border>-->
+        <controls:Modal x:Name="ModalCreateTask" Background="White" Width="310" Height="225" IsShown="False">
+            <StackPanel Grid.IsSharedSizeScope="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock 
+                    Text="Title"
+                    Margin="0 0 20 0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource TextBoxLabelStyle}"
+                    />
+                    <TextBox 
+                    Grid.Column="1"
+                    Width="175"
+                    Text="{Binding CreateTaskViewModel.Name}"
+                    Style="{StaticResource TextBoxStyle}"
+                    />
+                </Grid>
+                <Grid Margin="0 20 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock 
+                    Text="Description"
+                    Margin="0 0 20 0"
+                    Style="{StaticResource TextBoxLabelStyle}"
+                    />
+                    <TextBox 
+                    Grid.Column="1"
+                    Height="65"
+                    Width="175"
+                    Text="{Binding CreateTaskViewModel.Description}"
+                    Style="{StaticResource TextBoxStyle}"
+                    />
+                </Grid>
+                <Grid Margin="0 20 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock 
+                    Text="Est. Pomodoro"
+                    Margin="0 0 20 0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource TextBoxLabelStyle}"
+                    />
+                    <TextBox 
+                    Grid.Column="1"
+                    Width="60"
+                    Text="{Binding CreateTaskViewModel.EstPomodoro}"
+                    Style="{StaticResource TextBoxStyle}"
+                    />
+                </Grid>
+                <WrapPanel HorizontalAlignment="Right" Margin="0 20 0 0">
+                    <Button Style="{StaticResource ButtonStyle}" 
+                            Content="Cancel" 
+                            Click="ButtonCancelCreateTaskModal_Click"
+                            Margin="0 0 10 0"/>
+                    <Button Style="{StaticResource ButtonInfoStyle}" 
+                            Command="{Binding CreateTaskViewModel.CreateTaskCommand}"
+                            Content="Create"/>
+                </WrapPanel>
+            </StackPanel>
+        </controls:Modal>
 
     </Grid>
 </Page>

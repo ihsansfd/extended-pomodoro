@@ -298,7 +298,7 @@
       },
       "ExtendedPomodoro.Models/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Dapper": "2.0.123",
           "Microsoft.Data.Sqlite": "7.0.4"

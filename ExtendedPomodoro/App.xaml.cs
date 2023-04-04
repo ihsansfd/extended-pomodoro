@@ -1,6 +1,9 @@
 ﻿using ExtendedPomodoro.Models.DbConfigs;
 using ExtendedPomodoro.Models.DbConnections;
 using ExtendedPomodoro.Models.DbSetup;
+using ExtendedPomodoro.Models.Domains;
+using ExtendedPomodoro.Models.Repositories;
+using ExtendedPomodoro.Models.Repositories.Sqlite;
 using ExtendedPomodoro.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -28,12 +31,6 @@ namespace ExtendedPomodoro
             InitializeDb();
         }
 
-        private void InitializeDb()
-        {
-            IDatabaseSetup dbSetup = Services.GetRequiredService<IDatabaseSetup>();
-            dbSetup.Setup();
-        }
-
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -44,12 +41,22 @@ namespace ExtendedPomodoro
 
         }
 
+        private void InitializeDb()
+        {
+            IDatabaseSetup dbSetup = Services.GetRequiredService<IDatabaseSetup>();
+            dbSetup.Setup();
+        }
+
         private static ServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
             services.AddSingleton<DbConfig>(
                 (s) => new(ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString)
                 );
+            services.AddSingleton<ReadTasksViewModel>();
+            services.AddSingleton<CreateTaskViewModel>();
+            services.AddSingleton<SqliteTasksRepository>();
+            services.AddSingleton<ITasksRepository, SqliteTasksRepository>();
             services.AddSingleton<SqliteDbConnectionFactory>();
             services.AddSingleton<SqliteDbSetup>();
             services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
