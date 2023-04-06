@@ -7,8 +7,8 @@
     xmlns:converters="clr-namespace:ExtendedPomodoro.Converters">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../Styles/Colors.xaml"/>
-        <ResourceDictionary Source="../Styles/Fonts.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/Themes/LightTheme.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/Styles/Fonts.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <converters:SpaceToMarginConverter x:Key="SpaceToMarginConv"/>
@@ -131,5 +131,32 @@
 
     <!--#End Region: Modal-->
 
+    <!--#Region: Buttons-->
+
+    <Style TargetType="{x:Type controls:IconOnlyButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:IconOnlyButton}">
+                    <Border Background="Transparent" Cursor="{TemplateBinding Cursor}">
+                        <Border.InputBindings>
+                            <MouseBinding Gesture="LeftClick"
+                                        Command="{Binding Path=Command, RelativeSource={RelativeSource AncestorType={x:Type controls:IconOnlyButton}}}"
+                                        CommandParameter="{Binding Path=CommandParameter, RelativeSource={RelativeSource AncestorType={x:Type controls:IconOnlyButton}}}"/>
+                        </Border.InputBindings>
+                        <iconPacks:PackIconBootstrapIcons 
+                                    Kind="{TemplateBinding Kind}" 
+                                    Foreground="{TemplateBinding Foreground}"
+                                    VerticalAlignment="Center"
+                                    Width="{TemplateBinding Width}"
+                                    Height="{TemplateBinding Height}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        
+    </Style>
+    
+    <!--#End Region: Buttons-->
+    
 
 </ResourceDictionary>

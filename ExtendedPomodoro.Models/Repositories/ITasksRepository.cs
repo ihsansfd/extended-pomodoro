@@ -10,6 +10,9 @@ namespace ExtendedPomodoro.Models.Repositories
     public interface ITasksRepository
     {
         Task CreateTask(CreateTaskDomain task);
-        IAsyncEnumerable<TaskDomain> GetTasks(int limit = 20);
+        Task UpdateTask(UpdateTaskDomain task);
+        Task UpdateTaskState(int taskId, TaskState taskIntendedState);
+        IAsyncEnumerable<TaskDomain> GetTasks(TaskState taskState = TaskState.IN_PROGRESS, int limit = 20);
+        Task DeleteTask(int taskId);
     }
 }

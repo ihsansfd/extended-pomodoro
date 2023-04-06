@@ -8,7 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!--Order matters-->
-                <ResourceDictionary Source="Styles/Colors.xaml"/>
+                <ResourceDictionary Source="Themes/LightTheme.xaml"/>
                 <ResourceDictionary Source="Styles/Fonts.xaml"/>
                 <ResourceDictionary Source="Styles/Menu.xaml"/>
                 <ResourceDictionary Source="Styles/ComboBoxes.xaml"/>

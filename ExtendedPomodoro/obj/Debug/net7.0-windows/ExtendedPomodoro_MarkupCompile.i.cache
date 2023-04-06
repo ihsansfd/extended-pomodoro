@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\App.xaml
-131223191320
+16960599792
 1-2092025167
-20762742671
-209-1884002905
-MainWindow.xaml;Styles\Buttons.xaml;Styles\Colors.xaml;Styles\ComboBoxes.xaml;Styles\Fonts.xaml;Styles\Menu.xaml;Styles\TextBlocks.xaml;Styles\TextBoxes.xaml;Themes\Generic.xaml;Views\SettingsView.xaml;Views\StatsView.xaml;Views\TasksView.xaml;Views\TimerView.xaml;
+32-1821880238
+209-1720512019
+MainWindow.xaml;Styles\Buttons.xaml;Styles\Colors.xaml;Styles\ComboBoxes.xaml;Styles\Fonts.xaml;Styles\Menu.xaml;Styles\TextBlocks.xaml;Styles\TextBoxes.xaml;Themes\DarkTheme.xaml;Themes\Generic.xaml;Themes\LightTheme.xaml;Views\SettingsView.xaml;Views\StatsView.xaml;Views\TasksView.xaml;Views\TimerView.xaml;Views\windowtest.xaml;
 
 True
 

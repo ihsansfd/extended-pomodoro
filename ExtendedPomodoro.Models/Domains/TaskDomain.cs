@@ -15,9 +15,17 @@ namespace ExtendedPomodoro.Models.Domains
 
     public record class CreateTaskDomain(
         string Name,
-        string Description,
-        int EstPomodoro
+        string? Description,
+        int? EstPomodoro
         );
+
+    public record class UpdateTaskDomain(
+        int Id,
+        string Name,
+        string? Description,
+        int? EstPomodoro,
+        TaskState Taskstate
+       );
 
     public record class TaskDomain(
         int Id,
@@ -27,7 +35,7 @@ namespace ExtendedPomodoro.Models.Domains
         int ActPomodoro,
         DateTime CreatedAt,
         DateTime UpdatedAt,
-        TaskState TaskStatus,
+        TaskState TaskState,
         TimeSpan TimeSpent
         );
 }

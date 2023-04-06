@@ -80,3 +80,5 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-w
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\ExtendedPomodoro.Models.pdb
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\TextBlocks.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\TextBoxes.baml
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\windowtest.g.cs
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\windowtest.baml

@@ -8,6 +8,7 @@
         xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
         xmlns:views="clr-namespace:ExtendedPomodoro.Views"
         xmlns:converters="clr-namespace:ExtendedPomodoro.Converters"
+        ResizeMode="CanMinimize"
         d:DataContext="{d:DesignInstance Type=vms:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="Extended Pomodoro" Height="440" Width="615" Icon="extended-pomodoro-icon.ico">

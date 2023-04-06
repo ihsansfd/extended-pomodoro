@@ -5,12 +5,28 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ExtendedPomodoro.Views"
       xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
-      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
+      xmlns:services="clr-namespace:ExtendedPomodoro.Services"
+      xmlns:converters="clr-namespace:ExtendedPomodoro.Converters"
       mc:Ignorable="d" 
       d:DataContext="{d:DesignInstance Type=vms:TasksViewModel}"
       d:DesignHeight="450" d:DesignWidth="400"
       Title="TasksView">
+
+    <Page.Resources>
+        <converters:InvertBooleanConverter x:Key="InvertBoolConv"/>
+        <converters:InvertBooleanToVisibilityConverter x:Key="InvertBoolToVisibilityConv"/>
+        <converters:TaskStateToInteger x:Key="TaskStateToIntConv"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
+
+        <CollectionViewSource x:Key="TasksCollectionViewSource" 
+                              Source="{Binding ReadTasksViewModel.Tasks}" 
+                              IsLiveGroupingRequested="True">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="CreatedAt"/>
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+    </Page.Resources>
 
     <Grid>
         <Grid Width="400">
@@ -28,15 +44,26 @@
             />
 
             <WrapPanel Grid.Row="0" HorizontalAlignment="Right">
-                <Button Style="{StaticResource LeftTabbedButtonStyle}" Background="{StaticResource Primary}" Foreground="White">In Progress</Button>
-                <Button Style="{StaticResource RightTabbedButtonStyle}">Completed</Button>
+                
+                <!--tag is used for determining active color-->
+                <Button 
+                    Style="{StaticResource LeftTabbedButtonStyle}" 
+                    Tag="{Binding ReadTasksViewModel.IsDisplayingCompletedTasks, Converter={StaticResource InvertBoolConv}}"
+                    Command="{Binding ReadTasksViewModel.DisplayInProgressTasksCommand}"
+                    >In Progress</Button>
+                <Button 
+                    Style="{StaticResource RightTabbedButtonStyle}"
+                    Tag="{Binding ReadTasksViewModel.IsDisplayingCompletedTasks}" 
+                    Command="{Binding ReadTasksViewModel.DisplayCompletedTasksCommand}"
+                    >Completed</Button>
             </WrapPanel>
-
+            
+            <!--Showing tasks-->
             <ListView 
-                ItemsSource="{Binding ReadTasksViewModel.Tasks}" 
+                ItemsSource="{Binding Source={StaticResource TasksCollectionViewSource}, Mode=OneWay}" 
                 BorderThickness="0"
                 Grid.Row="1" 
-                Margin="0 20 0 0"
+                Margin="0 10 0 0"
                 FocusVisualStyle="{x:Null}"
                 >
                 <ListView.ItemTemplate>
@@ -48,6 +75,9 @@
                             Margin="0 0 0 5"
                             BorderBrush="{StaticResource Black}">
                             <Grid>
+                                <Grid.Resources>
+                                    <services:BindingProxy x:Key="CurrentDataContext" Data="{Binding}"/>
+                                </Grid.Resources>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="auto"/>
@@ -68,45 +98,68 @@
                                     Text="{Binding Name}"
                                     />
                                 </Grid>
+
+                                <controls:IconOnlyButton Grid.Column="1"
+                                                         Cursor="Hand"
+                                                         Kind="ArrowUpRightCircle"
+                                                         Foreground="{StaticResource Info}"
+                                                         HoverColor="{StaticResource InfoDarker}"
+                                                         Width="16"
+                                                         Height="16"/>
                                 
-                                <Button Grid.Column="1">
-                                    <Button.Template>
-                                        <ControlTemplate>
-                                            <iconPacks:PackIconBootstrapIcons 
-                                                Kind="ArrowUpRightCircle" 
-                                                Foreground="{StaticResource Info}"
-                                                VerticalAlignment="Center"
-                                                Width="16"
-                                                Height="16"/>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                                <Button Grid.Column="2">
-                                    <Button.Template>
-                                        <ControlTemplate>
-                                            <iconPacks:PackIconBootstrapIcons 
-                                                Kind="XCircle" 
-                                                Foreground="{StaticResource Danger}"
-                                                VerticalAlignment="Center"
-                                                Margin="5 0 0 0"
-                                                Width="16"
-                                                Height="16"/>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                                <Button Grid.Column="3">
-                                    <Button.Template>
-                                        <ControlTemplate>
-                                            <iconPacks:PackIconBootstrapIcons 
-                                                Kind="CheckCircle" 
-                                                Foreground="{StaticResource Success}"
-                                                VerticalAlignment="Center"
-                                                Margin="5 0 10 0"
-                                                Width="16"
-                                                Height="16"/>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
+                                <controls:IconOnlyButton Grid.Column="2"
+                                                         Cursor="Hand"
+                                                         Kind="XCircle"
+                                                         Foreground="{StaticResource Danger}"
+                                                         HoverColor="{StaticResource DangerDarker}"
+                                                         Margin="5 0 0 0"
+                                                         Width="16"
+                                                         Height="16"
+                                                         Command="{Binding DataContext.DeleteTaskViewModel.DeleteTaskCommand, 
+                                                                   RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
+                                                         CommandParameter="{Binding Id}"/>
+
+                                <controls:IconOnlyButton Grid.Column="3"
+                                                         Cursor="Hand"
+                                                         Kind="CheckCircle"
+                                                         Foreground="{StaticResource Success}"
+                                                         HoverColor="{StaticResource SuccessDarker}"
+                                                         Margin="5 0 10 0"
+                                                         Width="16"
+                                                         Height="16"
+                                                         Visibility="{Binding DataContext.ReadTasksViewModel.IsDisplayingCompletedTasks, 
+                                                            RelativeSource={RelativeSource AncestorType={x:Type Page}},
+                                                            Converter={StaticResource InvertBoolToVisibilityConv}}"
+                                                         Command="{Binding DataContext.UpdateTaskViewModel.UpdateTaskStateCommand, 
+                                                            RelativeSource={RelativeSource AncestorType={x:Type Page}}}">
+                                    <controls:IconOnlyButton.CommandParameter>
+                                        <vms:UpdateTaskStateDomainViewModel
+                                            TaskId="{Binding Data.Id,
+                                                    Source={StaticResource CurrentDataContext}}"
+                                            IntendedTaskState="1"/>
+                                    </controls:IconOnlyButton.CommandParameter>
+                                </controls:IconOnlyButton>
+
+                                <controls:IconOnlyButton Grid.Column="3"
+                                                         Cursor="Hand"
+                                                         Kind="ArrowLeftCircle"
+                                                         Foreground="{StaticResource WarningDarker}"
+                                                         Margin="5 0 10 0"
+                                                         Width="16"
+                                                         Height="16"
+                                                         Visibility="{Binding DataContext.ReadTasksViewModel.IsDisplayingCompletedTasks, 
+                                                                    RelativeSource={RelativeSource AncestorType={x:Type Page}},
+                                                                    Converter={StaticResource BoolToVisibilityConv}}"
+                                                         Command="{Binding DataContext.UpdateTaskViewModel.UpdateTaskStateCommand, 
+                                                            RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
+                                                         >
+                                    <controls:IconOnlyButton.CommandParameter>
+                                        <vms:UpdateTaskStateDomainViewModel
+                                            TaskId="{Binding Data.Id,
+                                                    Source={StaticResource CurrentDataContext}}"
+                                            IntendedTaskState="0"/>
+                                    </controls:IconOnlyButton.CommandParameter>
+                                </controls:IconOnlyButton>
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -123,10 +176,29 @@
                         </Setter>
                     </Style>
                 </ListView.ItemContainerStyle>
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock 
+                                    Margin="5 10 0 5"
+                                    Text="{Binding Items[0].CreatedAt}" 
+                                    FontSize="{StaticResource FSSmall}" 
+                                    FontFamily="{StaticResource FWMedium}"
+                                    Foreground="{StaticResource Black}"/>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+                <ListView.Resources>
+                    <Style TargetType="ScrollBar">
+                        <Setter Property="Margin" Value="10 0 0 0"/>
+                    </Style>
+                </ListView.Resources>
             </ListView>
 
         </Grid>
-        
+                
         <!--Modal create task popup-->
         <!--<Border Background="White" Width="310" Height="225" CornerRadius="10" UseLayoutRounding="True">
             <Border.Effect>
@@ -201,81 +273,169 @@
             </StackPanel>
         </Border>-->
         <controls:Modal x:Name="ModalCreateTask" Background="White" Width="310" Height="225" IsShown="False">
-            <StackPanel Grid.IsSharedSizeScope="True" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid Grid.IsSharedSizeScope="True">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock 
-                    Text="Title"
-                    Margin="0 0 20 0"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource TextBoxLabelStyle}"
-                    />
-                    <TextBox 
-                    Grid.Column="1"
-                    Width="175"
-                    Text="{Binding CreateTaskViewModel.Name}"
-                    Style="{StaticResource TextBoxStyle}"
-                    />
-                </Grid>
-                <Grid Margin="0 20 0 0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock 
-                    Text="Description"
-                    Margin="0 0 20 0"
-                    Style="{StaticResource TextBoxLabelStyle}"
-                    />
+                        Text="Title"
+                        Margin="0 0 20 15"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBoxLabelStyle}"/>
                     <TextBox 
-                    Grid.Column="1"
-                    Height="65"
-                    Width="175"
-                    Text="{Binding CreateTaskViewModel.Description}"
-                    Style="{StaticResource TextBoxStyle}"
-                    />
-                </Grid>
-                <Grid Margin="0 20 0 0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
+                        Grid.Column="1"
+                        Width="175"
+                        Margin="0 0 0 15"
+                        Text="{Binding CreateTaskViewModel.Name}"
+                        Style="{StaticResource TextBoxStyle}"/>
                     <TextBlock 
-                    Text="Est. Pomodoro"
-                    Margin="0 0 20 0"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource TextBoxLabelStyle}"
-                    />
+                        Grid.Row="1"
+                        Text="Description"
+                        Margin="0 0 20 15"
+                        Style="{StaticResource TextBoxLabelStyle}"/>
                     <TextBox 
-                    Grid.Column="1"
-                    Width="60"
-                    Text="{Binding CreateTaskViewModel.EstPomodoro}"
-                    Style="{StaticResource TextBoxStyle}"
-                    />
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Height="65"
+                        Width="175"
+                        Margin="0 0 0 15"
+                        Text="{Binding CreateTaskViewModel.Description}"
+                        Style="{StaticResource TextBoxStyle}"/>
+                    <TextBlock 
+                        Text="Est. Pomodoro"
+                        Margin="0 0 20 0"
+                        Grid.Row="2"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBoxLabelStyle}"/>
+                    <TextBox 
+                        Grid.Column="2"
+                        Grid.Row="2"
+                        Width="60"
+                        HorizontalAlignment="Left"
+                        Text="{Binding CreateTaskViewModel.EstPomodoro}"
+                        Style="{StaticResource TextBoxStyle}"/>              
                 </Grid>
                 <WrapPanel HorizontalAlignment="Right" Margin="0 20 0 0">
                     <Button Style="{StaticResource ButtonStyle}" 
-                            Content="Cancel" 
-                            Click="ButtonCancelCreateTaskModal_Click"
-                            Margin="0 0 10 0"/>
+                        Content="Cancel" 
+                        Click="ButtonCancelCreateTaskModal_Click"
+                        Margin="0 0 10 0"/>
                     <Button Style="{StaticResource ButtonInfoStyle}" 
-                            Command="{Binding CreateTaskViewModel.CreateTaskCommand}"
-                            Content="Create"/>
+                        Command="{Binding CreateTaskViewModel.CreateTaskCommand}"
+                        Content="Create"/>
                 </WrapPanel>
             </StackPanel>
         </controls:Modal>
-
+            
+         <!--Modal edit task/view task detail popup-->
+        <controls:Modal x:Name="ModalViewTaskDetail" Background="White" Width="340" Height="290" IsShown="True">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid Grid.IsSharedSizeScope="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Visibility="Collapsed" 
+                               Text="{Binding UpdateTaskViewModel.Id}"/>
+                    <TextBlock 
+                        Text="Title"
+                        Margin="0 0 20 15"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBoxLabelStyle}"/>
+                    <TextBox 
+                        Grid.Column="1"
+                        Width="175"
+                        x:Name="TitleTaskDetail"
+                        Margin="0 0 0 15"
+                        Text="{Binding UpdateTaskViewModel.Name}"
+                        Style="{StaticResource TextBoxStyle}"/>
+                    <TextBlock 
+                        Grid.Row="1"
+                        Text="Description"
+                        Margin="0 0 20 15"
+                        Style="{StaticResource TextBoxLabelStyle}"/>
+                    <TextBox 
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Height="65"
+                        Width="175"
+                        x:Name="DescriptionTaskDetail"
+                        Margin="0 0 0 15"
+                        Text="{Binding UpdateTaskViewModel.Description}"
+                        Style="{StaticResource TextBoxStyle}"/>
+                    <TextBlock 
+                        Text="Est. / Act. Pomodoro"
+                        Margin="0 0 20 0"
+                        Grid.Row="2"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBoxLabelStyle}"/>
+                    <WrapPanel Grid.Column="2" Grid.Row="2">
+                        <TextBox 
+                        Width="60"
+                        HorizontalAlignment="Left"
+                        x:Name="EstPomodoroTaskDetail"
+                        Text="{Binding UpdateTaskViewModel.EstPomodoro}"
+                        Style="{StaticResource TextBoxStyle}"
+                        Margin="0 0 7 0"/>
+                        <TextBlock Text="/" Margin="0 0 7 0"/>
+                        <TextBlock 
+                            x:Name="ActPomodoroTaskDetail" 
+                            Style="{StaticResource TextBoxLabelStyle}"/>
+                    </WrapPanel>
+                    <TextBlock 
+                        Grid.Row="3"
+                        Text="Status"
+                        Margin="0 0 20 15"
+                        Style="{StaticResource TextBoxLabelStyle}"/>
+                    <ComboBox 
+                        Grid.Column="1"
+                        Grid.Row="3"
+                        Width="100"
+                        x:Name="StatusTaskDetail"
+                        Margin="0 0 0 15"
+                        SelectedValuePath="Tag"
+                        SelectedItem="{Binding UpdateTaskViewModel.TaskState, Converter={StaticResource TaskStateToIntConv}}">
+                        <ComboBox.Items>
+                            <ComboBoxItem Content="In Progress" Tag="0"/>
+                            <ComboBoxItem Content="Completed" Tag="1"/>
+                        </ComboBox.Items>
+                    </ComboBox>
+                    <TextBlock 
+                        Grid.Row="4"
+                        Text="Time Spent"
+                        Margin="0 0 20 15"
+                        Style="{StaticResource TextBoxLabelStyle}"/>
+                    <TextBlock 
+                        Grid.Column="1"
+                        Grid.Row="4"
+                        x:Name="TimeSpentTaskDetail"
+                        Style="{StaticResource TextBoxLabelStyle}"/>
+                </Grid>
+                <WrapPanel HorizontalAlignment="Right" Margin="0 20 0 0">
+                    <Button Style="{StaticResource ButtonStyle}" 
+                        Content="Close" 
+                        Click="ButtonCancelCreateTaskModal_Click"
+                        Margin="0 0 10 0"/>
+                    <Button Style="{StaticResource ButtonInfoStyle}" 
+                        Command="{Binding UpdateTaskViewModel.UpdateTaskCommand}"
+                        Content="Save"/>
+                </WrapPanel>
+            </StackPanel>
+        </controls:Modal> 
+        
     </Grid>
 </Page>

@@ -1,10 +1,12 @@
-﻿using ExtendedPomodoro.Models.DbConfigs;
+﻿using ExtendedPomodoro.Helpers;
+using ExtendedPomodoro.Models.DbConfigs;
 using ExtendedPomodoro.Models.DbConnections;
 using ExtendedPomodoro.Models.DbSetup;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.Repositories;
 using ExtendedPomodoro.Models.Repositories.Sqlite;
 using ExtendedPomodoro.ViewModels;
+using ExtendedPomodoro.Views;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -35,10 +37,11 @@ namespace ExtendedPomodoro
         {
             base.OnStartup(e);
 
-            var mainWindow = Services.GetRequiredService<MainWindow>();
-            mainWindow.DataContext = Services.GetRequiredService<MainWindowViewModel>();
-            mainWindow.Show();
+            //var mainWindow = Services.GetRequiredService<MainWindow>();
+            //mainWindow.DataContext = Services.GetRequiredService<MainWindowViewModel>();
+            //mainWindow.Show();
 
+            new windowtest().Show();
         }
 
         private void InitializeDb()
@@ -53,8 +56,11 @@ namespace ExtendedPomodoro
             services.AddSingleton<DbConfig>(
                 (s) => new(ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString)
                 );
+            services.AddSingleton<TasksHelper>();
             services.AddSingleton<ReadTasksViewModel>();
             services.AddSingleton<CreateTaskViewModel>();
+            services.AddSingleton<UpdateTaskViewModel>();
+            services.AddSingleton<DeleteTaskViewModel>();
             services.AddSingleton<SqliteTasksRepository>();
             services.AddSingleton<ITasksRepository, SqliteTasksRepository>();
             services.AddSingleton<SqliteDbConnectionFactory>();
