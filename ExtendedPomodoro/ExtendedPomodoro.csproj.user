@@ -33,7 +33,13 @@
     <Page Update="Styles\Fonts.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Styles\ListViews.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Styles\Menu.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Styles\Modals.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Styles\TextBlocks.xaml">

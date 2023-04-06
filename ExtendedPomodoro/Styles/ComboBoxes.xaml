@@ -4,7 +4,7 @@
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
-    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConv"/>
+    <converters:InvertNullToVisibilityConverter x:Key="InvertNullToVisibilityConv"/>
 
     <!--TODO: Fix this idiot-->
     
@@ -237,7 +237,7 @@
             <TextBlock
                        IsHitTestVisible="False"
                        Text="Select task..."
-                       Visibility="{Binding Path=SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}, Converter={StaticResource NullToVisibilityConv}}"
+                       Visibility="{Binding Path=SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}, Converter={StaticResource InvertNullToVisibilityConv}}"
             Grid.ColumnSpan="2"
                        >
             </TextBlock>

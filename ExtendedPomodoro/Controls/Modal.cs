@@ -32,5 +32,14 @@ namespace ExtendedPomodoro.Controls
         public static readonly DependencyProperty IsShownProperty =
             DependencyProperty.Register("IsShown", typeof(bool), typeof(Modal), new PropertyMetadata(false));
 
+        public string? Title
+        {
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
+        }
+
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register("Title", typeof(string), typeof(Modal), new PropertyMetadata(null));
+
     }
 }

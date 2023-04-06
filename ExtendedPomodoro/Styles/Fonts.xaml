@@ -19,20 +19,6 @@
     <sys:Double x:Key="FSMedium">21</sys:Double>
 
     <!--End Region-->
-    
-    <!--Region: Styles-->
-
-    <Style x:Key="RegularFontStyle" TargetType="{x:Type TextBlock}">
-        <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
-        <Setter Property="FontSize" Value="{StaticResource FSRegular}"/>
-        <Setter Property="Foreground" Value="{StaticResource Black}"/>
-    </Style>
-
-    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource RegularFontStyle}">
-    </Style>
-    
-
-    <!--End Region-->
 
 
 </ResourceDictionary>

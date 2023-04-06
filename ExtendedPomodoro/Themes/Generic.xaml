@@ -6,13 +6,9 @@
     xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
     xmlns:converters="clr-namespace:ExtendedPomodoro.Converters">
 
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/Themes/LightTheme.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/Styles/Fonts.xaml"/>
-    </ResourceDictionary.MergedDictionaries>
-
     <converters:SpaceToMarginConverter x:Key="SpaceToMarginConv"/>
-    <BooleanToVisibilityConverter x:Key="BoolToVisibilityCov"/>
+    <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConv"/>
 
     <!--#Region: DrawerSidebarMenu--> 
     <Style TargetType="{x:Type controls:DrawerSidebarMenu}">
@@ -39,23 +35,21 @@
                             <CheckBox 
                                 IsChecked="False" 
                                 x:Name="PART_MenuToggle">
-                                
                                 <CheckBox.Template>
                                     <ControlTemplate TargetType="CheckBox">
                                         <controls:DrawerSidebarMenuItem 
                                             x:Name="PART_MenuToggleMenuItem"
                                             Kind="List" 
-                                            IconSize="25"
-                                            Space="12" 
                                             Margin="0 0 0 45" 
-                                            Text="Menu" 
-                                            HoverColor="{StaticResource Primary}"
-                                            FontSize="{StaticResource FSRegular}" 
-                                            Foreground="{StaticResource Black}">
+                                            Text="Menu"
+                                            Style="{Binding Path=MenuTogglerStyle, RelativeSource={RelativeSource AncestorType={x:Type controls:DrawerSidebarMenu}}}">
                                         </controls:DrawerSidebarMenuItem>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsChecked" Value="True">
-                                                <Setter TargetName="PART_MenuToggleMenuItem" Property="Kind" Value="XLg" />
+                                                <Setter 
+                                                    TargetName="PART_MenuToggleMenuItem" 
+                                                    Property="Kind" 
+                                                    Value="XLg" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -108,8 +102,6 @@
 
     <!--#Region: Modal-->
     <Style TargetType="{x:Type controls:Modal}">
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:Modal}">
@@ -119,13 +111,24 @@
                         VerticalAlignment="{TemplateBinding VerticalAlignment}"
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                         CornerRadius="10" 
-                        Visibility="{TemplateBinding IsShown, Converter={StaticResource BoolToVisibilityCov}}"
-                        Panel.ZIndex="999"
-                        >
+                        Visibility="{TemplateBinding IsShown, Converter={StaticResource BoolToVisibilityConv}}"
+                        Panel.ZIndex="999">
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="5"  Opacity="0.4" />
                         </Border.Effect>
-                        <ContentPresenter/>
+
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock 
+                                    Visibility="{TemplateBinding Title, Converter={StaticResource NullToVisibilityConv}}"
+                                    Text="{TemplateBinding Title}"
+                                    HorizontalAlignment="Left"
+                                    Margin="15 20 15 20"
+                                    FontSize="{TemplateBinding FontSize}"
+                                    FontFamily="{TemplateBinding FontFamily}"
+                                    FontWeight="{TemplateBinding FontWeight}"
+                                    Foreground="{TemplateBinding Foreground}"/>
+                            <ContentPresenter/>
+                        </StackPanel>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

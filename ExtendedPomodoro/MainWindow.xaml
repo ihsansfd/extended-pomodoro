@@ -31,6 +31,7 @@
         <converters:StatsViewModelToBooleanConverter x:Key="StatsVMToBoolConv"/>
         <converters:TasksViewModelToBooleanConverter x:Key="TasksVMToBoolConv"/>
         <converters:SettingsViewModelToBooleanConverter x:Key="SettingsVMToBoolConv"/>
+
     </Window.Resources>
     <Grid>
         <controls:DrawerSidebarMenu 
@@ -39,6 +40,7 @@
             OpenedWidth="145"
             Background="{StaticResource VeryLightGrey}" 
             Foreground="{StaticResource Primary}"
+            MenuTogglerStyle="{StaticResource DrawerSidebarMenuItemDefault}"
             Padding="12">
             <StackPanel>
                 <controls:DrawerSidebarMenuItem 
@@ -70,7 +72,6 @@
                     IsActive="{Binding CurrentViewModel, Converter={StaticResource SettingsVMToBoolConv}}"
                     />
             </StackPanel>
-            
         </controls:DrawerSidebarMenu>
         <Grid HorizontalAlignment="Center" Margin="0 20 0 0">
             <Frame Content="{Binding CurrentViewModel}" NavigationUIVisibility="Hidden"/>

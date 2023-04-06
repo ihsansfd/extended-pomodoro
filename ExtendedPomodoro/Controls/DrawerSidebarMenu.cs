@@ -102,6 +102,16 @@ namespace ExtendedPomodoro.Controls
             }
 
         }
+
+        public Style MenuTogglerStyle
+        {
+            get { return (Style)GetValue(MenuTogglerStyleProperty); }
+            set { SetValue(MenuTogglerStyleProperty, value); }
+        }
+
+        public static readonly DependencyProperty MenuTogglerStyleProperty =
+            DependencyProperty.Register("MenuTogglerStyle", typeof(Style), typeof(DrawerSidebarMenu), new PropertyMetadata(null));
+
     }
 
     public class DrawerSidebarMenuItem : Control
