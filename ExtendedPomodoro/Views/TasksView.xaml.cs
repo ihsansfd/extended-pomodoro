@@ -1,5 +1,8 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using ExtendedPomodoro.Controls;
 using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -22,7 +25,10 @@ namespace ExtendedPomodoro.Views
     /// Interaction logic for TasksView.xaml
     /// </summary>
     public partial class TasksView : Page, 
-        IRecipient<TaskCreationInfoMessage>, IRecipient<TaskDeletionInfoMessage>, IRecipient<TaskUpdateStateInfoMessage>
+        IRecipient<TaskCreationInfoMessage>, 
+        IRecipient<TaskDeletionInfoMessage>, 
+        IRecipient<TaskUpdateStateInfoMessage>,
+        IRecipient<TaskUpdateInfoMessage>
     {
         public TasksView()
         {
@@ -63,16 +69,74 @@ namespace ExtendedPomodoro.Views
             }
         }
 
-        public void Receive(TaskUpdateStateInfoMessage taskUpdateInfo)
+        public void Receive(TaskUpdateStateInfoMessage taskUpdateStateInfo)
         {
-            if (!taskUpdateInfo.IsTaskUpdateSuccess)
+            if (!taskUpdateStateInfo.IsTaskUpdateSuccess)
+            {
+                MessageBox.Show(taskUpdateStateInfo.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public void Receive(TaskUpdateInfoMessage taskUpdateInfo)
+        {
+            if(taskUpdateInfo.IsTaskUpdateSuccess)
+            {
+                ModalViewTaskDetail.IsShown = false;
+            }
+
+            else
             {
                 MessageBox.Show(taskUpdateInfo.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
         }
 
         ~TasksView() {
             StrongReferenceMessenger.Default.UnregisterAll(this);
         }
+
+        private void ButtonTaskDetail_Click(object _sender, RoutedEventArgs e)
+        {
+            var sender = (IconOnlyButton) _sender;
+            var taskData = (TaskDomainViewModel) ((BindingProxy) sender.FindResource("CurrentDataContext")).Data;
+
+            var modal = (Modal) FindName("ModalViewTaskDetail");
+
+            var idTextBlock = (TextBlock) modal.FindName("IdTaskDetail");
+            idTextBlock.Text = taskData.Id.ToString();
+            BindingOperations.GetBindingExpression(idTextBlock, TextBlock.TextProperty).UpdateSource();
+
+            var titleTextBox = (TextBox) modal.FindName("TitleTaskDetail");
+            titleTextBox.Text = taskData.Name;
+            BindingOperations.GetBindingExpression(titleTextBox, TextBox.TextProperty).UpdateSource();
+
+            var descriptionTextBox = (TextBox)modal.FindName("DescriptionTaskDetail");
+            descriptionTextBox.Text = taskData.Description;
+            BindingOperations.GetBindingExpression(descriptionTextBox, TextBox.TextProperty).UpdateSource();
+
+            var estPomodoroTaskDetail = (TextBox)modal.FindName("EstPomodoroTaskDetail");
+            estPomodoroTaskDetail.Text = taskData.EstPomodoro.ToString();
+            BindingOperations.GetBindingExpression(estPomodoroTaskDetail, TextBox.TextProperty).UpdateSource();
+
+            var actPomodoroTextBlock = (TextBlock)modal.FindName("ActPomodoroTaskDetail");
+            actPomodoroTextBlock.Text = taskData.ActPomodoro.ToString();
+
+            var statusTextBlock = (ComboBox)modal.FindName("StatusTaskDetail");
+            statusTextBlock.SelectedValue = taskData.TaskStatus.ToString();
+            statusTextBlock.SelectedItem = taskData.TaskStatus.ToString();
+            BindingOperations.GetBindingExpression(statusTextBlock, ComboBox.SelectedValueProperty).UpdateSource();
+            BindingOperations.GetBindingExpression(statusTextBlock, ComboBox.SelectedItemProperty).UpdateSource();
+
+            var timeSpentTextBlock = (TextBlock)modal.FindName("TimeSpentTaskDetail");
+            timeSpentTextBlock.Text = taskData.TimeSpentInMinutes.ToString();
+
+            modal.IsShown = true;
+        }
+
+        private void ButtonCloseTaskDetail_Click(object sender, RoutedEventArgs e)
+        {
+            ModalViewTaskDetail.IsShown = false;
+        }
+
     }
 }

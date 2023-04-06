@@ -10,8 +10,8 @@ namespace ExtendedPomodoro.Models.DTOs
     {
         public int Id          {get; set;}
         public string Name       {get; set;} = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public int EstPomodoro   {get; set;}
+        public string? Description { get; set; }
+        public int? EstPomodoro   {get; set;}
         public int ActPomodoro   {get; set;}
         public int IsTaskCompleted {get; set;}
         public int TimeSpent  {get; set;} // in seconds

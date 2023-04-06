@@ -6,6 +6,8 @@
 
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConv"/>
 
+    <!--TODO: Fix this idiot-->
+    
     <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC"/>
     <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="#FF606060"/>
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="#FFFFFFFF"/>

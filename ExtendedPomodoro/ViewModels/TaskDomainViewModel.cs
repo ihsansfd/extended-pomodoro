@@ -10,11 +10,11 @@ namespace ExtendedPomodoro.ViewModels
     public record class TaskDomainViewModel(
         int Id,
         string Name,
-        string Description,
-        int EstPomodoro,
+        string? Description,
+        int? EstPomodoro,
         int ActPomodoro,
         string CreatedAt,
-        string TaskStatus,
+        int TaskStatus,
         int TimeSpentInMinutes
         );
 }

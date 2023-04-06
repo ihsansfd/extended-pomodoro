@@ -30,8 +30,8 @@ namespace ExtendedPomodoro.Models.Domains
     public record class TaskDomain(
         int Id,
         string Name, 
-        string Description,
-        int EstPomodoro,
+        string? Description,
+        int? EstPomodoro,
         int ActPomodoro,
         DateTime CreatedAt,
         DateTime UpdatedAt,

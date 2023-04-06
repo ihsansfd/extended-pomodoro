@@ -9,12 +9,12 @@
             <ResourceDictionary.MergedDictionaries>
                 <!--Order matters-->
                 <ResourceDictionary Source="Themes/LightTheme.xaml"/>
-                <ResourceDictionary Source="Styles/Fonts.xaml"/>
-                <ResourceDictionary Source="Styles/Menu.xaml"/>
-                <ResourceDictionary Source="Styles/ComboBoxes.xaml"/>
-                <ResourceDictionary Source="Styles/Buttons.xaml"/>
-                <ResourceDictionary Source="Styles/TextBlocks.xaml"/>
-                <ResourceDictionary Source="Styles/TextBoxes.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/Fonts.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/TextBlocks.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/TextBoxes.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/Buttons.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/Menu.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/ComboBoxes.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
         

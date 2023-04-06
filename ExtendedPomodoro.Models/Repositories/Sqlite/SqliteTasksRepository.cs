@@ -19,7 +19,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
               VALUES (@Name, @Description, @EstPomodoro, @CreatedAt, @UpdatedAt)";
 
         private const string UPDATE_TASK_QUERY =
-            @"UPDATE tblTasks SET Title = @Name, Description = @Description, EstPomodoro = @EstPomodoro, 
+            @"UPDATE tblTasks SET Name = @Name, Description = @Description, EstPomodoro = @EstPomodoro, 
             IsTaskCompleted = @IsTaskCompleted WHERE Id = @Id";
 
         private const string UPDATE_TASK_STATE_QUERY =

@@ -16,7 +16,7 @@
     <Page.Resources>
         <converters:InvertBooleanConverter x:Key="InvertBoolConv"/>
         <converters:InvertBooleanToVisibilityConverter x:Key="InvertBoolToVisibilityConv"/>
-        <converters:TaskStateToInteger x:Key="TaskStateToIntConv"/>
+        <converters:TaskStateConverter x:Key="TaskStateConv"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
 
         <CollectionViewSource x:Key="TasksCollectionViewSource" 
@@ -105,6 +105,7 @@
                                                          Foreground="{StaticResource Info}"
                                                          HoverColor="{StaticResource InfoDarker}"
                                                          Width="16"
+                                                         Click="ButtonTaskDetail_Click"
                                                          Height="16"/>
                                 
                                 <controls:IconOnlyButton Grid.Column="2"
@@ -143,7 +144,8 @@
                                 <controls:IconOnlyButton Grid.Column="3"
                                                          Cursor="Hand"
                                                          Kind="ArrowLeftCircle"
-                                                         Foreground="{StaticResource WarningDarker}"
+                                                         Foreground="{StaticResource Orange}"
+                                                         HoverColor="{StaticResource OrangeDarker}"
                                                          Margin="5 0 10 0"
                                                          Width="16"
                                                          Height="16"
@@ -217,7 +219,7 @@
                     Text="Title"
                     Margin="0 0 20 0"
                     VerticalAlignment="Center"
-                    Style="{StaticResource TextBoxLabelStyle}"
+                    Style="{StaticResource TextBlockFormLabelStyle}"
                     />
                     <TextBox 
                     Grid.Column="1"
@@ -236,7 +238,7 @@
                     <TextBlock 
                     Text="Description"
                     Margin="0 0 20 0"
-                    Style="{StaticResource TextBoxLabelStyle}"
+                    Style="{StaticResource TextBlockFormLabelStyle}"
                     />
                     <TextBox 
                     Grid.Column="1"
@@ -257,7 +259,7 @@
                     Text="Est. Pomodoro"
                     Margin="0 0 20 0"
                     VerticalAlignment="Center"
-                    Style="{StaticResource TextBoxLabelStyle}"
+                    Style="{StaticResource TextBlockFormLabelStyle}"
                     />
                     <TextBox 
                     Grid.Column="1"
@@ -288,7 +290,7 @@
                         Text="Title"
                         Margin="0 0 20 15"
                         VerticalAlignment="Center"
-                        Style="{StaticResource TextBoxLabelStyle}"/>
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <TextBox 
                         Grid.Column="1"
                         Width="175"
@@ -299,10 +301,11 @@
                         Grid.Row="1"
                         Text="Description"
                         Margin="0 0 20 15"
-                        Style="{StaticResource TextBoxLabelStyle}"/>
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <TextBox 
                         Grid.Column="1"
                         Grid.Row="1"
+                        VerticalContentAlignment="Top"
                         Height="65"
                         Width="175"
                         Margin="0 0 0 15"
@@ -313,7 +316,7 @@
                         Margin="0 0 20 0"
                         Grid.Row="2"
                         VerticalAlignment="Center"
-                        Style="{StaticResource TextBoxLabelStyle}"/>
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <TextBox 
                         Grid.Column="2"
                         Grid.Row="2"
@@ -335,7 +338,7 @@
         </controls:Modal>
             
          <!--Modal edit task/view task detail popup-->
-        <controls:Modal x:Name="ModalViewTaskDetail" Background="White" Width="340" Height="290" IsShown="True">
+        <controls:Modal x:Name="ModalViewTaskDetail" Background="White" Width="340" Height="310"  IsShown="False">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid Grid.IsSharedSizeScope="True">
                     <Grid.ColumnDefinitions>
@@ -350,24 +353,25 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Visibility="Collapsed" 
-                               Text="{Binding UpdateTaskViewModel.Id}"/>
+                               x:Name="IdTaskDetail"
+                               Text="{Binding UpdateTaskViewModel.Id, Mode=TwoWay}"/>
                     <TextBlock 
                         Text="Title"
                         Margin="0 0 20 15"
                         VerticalAlignment="Center"
-                        Style="{StaticResource TextBoxLabelStyle}"/>
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <TextBox 
                         Grid.Column="1"
                         Width="175"
                         x:Name="TitleTaskDetail"
                         Margin="0 0 0 15"
-                        Text="{Binding UpdateTaskViewModel.Name}"
+                        Text="{Binding UpdateTaskViewModel.Name, Mode=TwoWay}"
                         Style="{StaticResource TextBoxStyle}"/>
                     <TextBlock 
                         Grid.Row="1"
                         Text="Description"
                         Margin="0 0 20 15"
-                        Style="{StaticResource TextBoxLabelStyle}"/>
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <TextBox 
                         Grid.Column="1"
                         Grid.Row="1"
@@ -375,60 +379,89 @@
                         Width="175"
                         x:Name="DescriptionTaskDetail"
                         Margin="0 0 0 15"
-                        Text="{Binding UpdateTaskViewModel.Description}"
+                        VerticalContentAlignment="Top"
+                        Text="{Binding UpdateTaskViewModel.Description, Mode=TwoWay}"
                         Style="{StaticResource TextBoxStyle}"/>
                     <TextBlock 
                         Text="Est. / Act. Pomodoro"
-                        Margin="0 0 20 0"
+                        Margin="0 0 20 15"
                         Grid.Row="2"
                         VerticalAlignment="Center"
-                        Style="{StaticResource TextBoxLabelStyle}"/>
-                    <WrapPanel Grid.Column="2" Grid.Row="2">
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
+                    <WrapPanel Grid.Column="1" Grid.Row="2" Margin="0 0 0 15">
                         <TextBox 
                         Width="60"
                         HorizontalAlignment="Left"
                         x:Name="EstPomodoroTaskDetail"
-                        Text="{Binding UpdateTaskViewModel.EstPomodoro}"
+                        Text="{Binding UpdateTaskViewModel.EstPomodoro, Mode=TwoWay}"
                         Style="{StaticResource TextBoxStyle}"
                         Margin="0 0 7 0"/>
-                        <TextBlock Text="/" Margin="0 0 7 0"/>
+                        <TextBlock 
+                            Text="/" 
+                            Margin="0 0 7 0" 
+                            VerticalAlignment="Center" 
+                            Style="{StaticResource TextBlockFormValueStyle}"/>
                         <TextBlock 
                             x:Name="ActPomodoroTaskDetail" 
-                            Style="{StaticResource TextBoxLabelStyle}"/>
+                            VerticalAlignment="Center"
+                            Style="{StaticResource TextBlockFormValueStyle}"/>
                     </WrapPanel>
                     <TextBlock 
                         Grid.Row="3"
                         Text="Status"
                         Margin="0 0 20 15"
-                        Style="{StaticResource TextBoxLabelStyle}"/>
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <ComboBox 
-                        Grid.Column="1"
                         Grid.Row="3"
-                        Width="100"
+                        Grid.Column="1"
+                        Style="{StaticResource ComboBoxStyle}"
+                        Width="110"
+                        Height="25"
+                        HorizontalAlignment="Left"
                         x:Name="StatusTaskDetail"
                         Margin="0 0 0 15"
                         SelectedValuePath="Tag"
-                        SelectedItem="{Binding UpdateTaskViewModel.TaskState, Converter={StaticResource TaskStateToIntConv}}">
+                        SelectedValue="{Binding UpdateTaskViewModel.TaskState, Mode=TwoWay}"
+                        SelectedItem="{Binding UpdateTaskViewModel.TaskState, Mode=TwoWay}">
                         <ComboBox.Items>
-                            <ComboBoxItem Content="In Progress" Tag="0"/>
-                            <ComboBoxItem Content="Completed" Tag="1"/>
+                            <ComboBoxItem Tag="0">
+                                <ComboBoxItem.Content>
+                                    <TextBlock 
+                                        FontFamily="{StaticResource FWRegular}" 
+                                        FontSize="{StaticResource FSSmall}"
+                                        Foreground="{StaticResource Black}">
+                                        In Progress
+                                    </TextBlock>
+                                </ComboBoxItem.Content>
+                            </ComboBoxItem>
+                            <ComboBoxItem Tag="1">
+                                <ComboBoxItem.Content>
+                                    <TextBlock 
+                                        FontFamily="{StaticResource FWRegular}" 
+                                        FontSize="{StaticResource FSSmall}"
+                                        Foreground="{StaticResource Black}">
+                                        Completed
+                                    </TextBlock>
+                                </ComboBoxItem.Content>
+                            </ComboBoxItem>
                         </ComboBox.Items>
                     </ComboBox>
                     <TextBlock 
                         Grid.Row="4"
                         Text="Time Spent"
                         Margin="0 0 20 15"
-                        Style="{StaticResource TextBoxLabelStyle}"/>
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <TextBlock 
                         Grid.Column="1"
                         Grid.Row="4"
                         x:Name="TimeSpentTaskDetail"
-                        Style="{StaticResource TextBoxLabelStyle}"/>
+                        Style="{StaticResource TextBlockFormValueStyle}"/>
                 </Grid>
                 <WrapPanel HorizontalAlignment="Right" Margin="0 20 0 0">
                     <Button Style="{StaticResource ButtonStyle}" 
                         Content="Close" 
-                        Click="ButtonCancelCreateTaskModal_Click"
+                        Click="ButtonCloseTaskDetail_Click"
                         Margin="0 0 10 0"/>
                     <Button Style="{StaticResource ButtonInfoStyle}" 
                         Command="{Binding UpdateTaskViewModel.UpdateTaskCommand}"

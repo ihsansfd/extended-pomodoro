@@ -18,10 +18,13 @@
     <SolidColorBrush x:Key="Orange">#FFA06A</SolidColorBrush>
     <SolidColorBrush x:Key="OrangeDarker">#FA7428</SolidColorBrush>
     <SolidColorBrush x:Key="White">#FFFFFF</SolidColorBrush>
-
     <SolidColorBrush x:Key="MainHoverColor">#FF6363</SolidColorBrush>
     <SolidColorBrush x:Key="MainActiveColor">#FF6363</SolidColorBrush>
-    
-    <!--<MergedD-->
-    
+
+    <SolidColorBrush x:Key="TextColor">#311717</SolidColorBrush>
+    <SolidColorBrush x:Key="BorderColor">#988b8b</SolidColorBrush>
+    <SolidColorBrush x:Key="ContainerBackground">#988b8b</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuBackground">#988b8b</SolidColorBrush>
+
+
 </ResourceDictionary>

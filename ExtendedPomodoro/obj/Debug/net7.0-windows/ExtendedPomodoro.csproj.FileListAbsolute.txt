@@ -1,6 +1,5 @@
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\ExtendedPomodoro.csproj.AssemblyReference.cache
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\Buttons.baml
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\Colors.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\ComboBoxes.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\Fonts.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\App.g.cs
@@ -80,5 +79,5 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-w
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\ExtendedPomodoro.Models.pdb
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\TextBlocks.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\TextBoxes.baml
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\windowtest.g.cs
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\windowtest.baml
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Themes\DarkTheme.baml
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Themes\LightTheme.baml

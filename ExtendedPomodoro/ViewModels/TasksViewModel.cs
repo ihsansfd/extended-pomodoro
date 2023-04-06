@@ -44,7 +44,10 @@ namespace ExtendedPomodoro.ViewModels
 
 
     public partial class ReadTasksViewModel : ObservableObject, 
-        IRecipient<TaskDeletionInfoMessage>, IRecipient<TaskCreationInfoMessage>, IRecipient<TaskUpdateStateInfoMessage>
+        IRecipient<TaskDeletionInfoMessage>, 
+        IRecipient<TaskCreationInfoMessage>, 
+        IRecipient<TaskUpdateStateInfoMessage>,
+        IRecipient<TaskUpdateInfoMessage>
     {
        private readonly ITasksRepository _repository;
        private readonly TasksHelper _helper;
@@ -89,7 +92,7 @@ namespace ExtendedPomodoro.ViewModels
                         record.EstPomodoro,
                         record.ActPomodoro,
                         DateOnly.FromDateTime(record.CreatedAt).ToString("MMMM dd, yyyy"),
-                        _helper.ConvertTaskStateToString(record.TaskState),
+                        _helper.ConvertTaskStateToInteger(record.TaskState),
                         (int) record.TimeSpent.TotalMinutes
                         )) ;
                 }
@@ -121,7 +124,12 @@ namespace ExtendedPomodoro.ViewModels
             if (taskCreationInfo.IsTaskCreationSuccess) await LoadTasks();
         }
 
-        public async void Receive(TaskUpdateStateInfoMessage taskUpdateInfo)
+        public async void Receive(TaskUpdateStateInfoMessage taskUpdateStateInfo)
+        {
+            if (taskUpdateStateInfo.IsTaskUpdateSuccess) await LoadTasks();
+        }
+
+        public async void Receive(TaskUpdateInfoMessage taskUpdateInfo)
         {
             if (taskUpdateInfo.IsTaskUpdateSuccess) await LoadTasks();
         }
@@ -155,9 +163,7 @@ namespace ExtendedPomodoro.ViewModels
 
             if (HasErrors) return;
 
-            int? estPomodoro = null;
-
-            if(int.TryParse(EstPomodoro, out _))estPomodoro = int.Parse(EstPomodoro);
+            int? estPomodoro = EstPomodoro.TryParseEmptyStringToNullableInteger();
 
             try
             {
@@ -182,18 +188,19 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private int _id;
 
-        [Required]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Task name is required")]
         [ObservableProperty]
-        private string _title;
+        private string _name;
 
         [ObservableProperty]
         private string? _description;
 
         [ObservableProperty]
-        private int? _estPomodoro;
+        private string? _estPomodoro;
 
         [ObservableProperty]
-        private TaskState _taskState;
+        private int _taskState;
 
         public UpdateTaskViewModel(ITasksRepository repository, TasksHelper helper) {
             _repository = repository;
@@ -207,9 +214,11 @@ namespace ExtendedPomodoro.ViewModels
 
             if (HasErrors) return;
 
+            int? estPomodoro = EstPomodoro.TryParseEmptyStringToNullableInteger();
+
             try
             {
-                await _repository.UpdateTask(new(Id, Title, Description, EstPomodoro, TaskState));
+                await _repository.UpdateTask(new(Id, Name, Description, estPomodoro, _helper.ConvertIntegerToTaskState(TaskState)));
 
                 StrongReferenceMessenger.Default.Send(new TaskUpdateInfoMessage(true, "The task is successfully updated."));
 

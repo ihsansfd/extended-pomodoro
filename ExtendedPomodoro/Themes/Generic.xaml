@@ -108,22 +108,25 @@
 
     <!--#Region: Modal-->
     <Style TargetType="{x:Type controls:Modal}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:Modal}">
-                        <Border Background="{TemplateBinding Background}"
-                            Width="{TemplateBinding Width}" 
-                            Height="{TemplateBinding Height}" 
-                            CornerRadius="10" 
-                            Visibility="{TemplateBinding IsShown, Converter={StaticResource BoolToVisibilityCov}}"
-                            UseLayoutRounding="True"
-                            Panel.ZIndex="999"
-                            >
-                            <Border.Effect>
-                                <DropShadowEffect ShadowDepth="5"  Opacity="0.4" />
-                            </Border.Effect>
-                            <ContentPresenter/>
-                        </Border>
+                    <Border Background="{TemplateBinding Background}"
+                        Width="{TemplateBinding Width}" 
+                        Height="{TemplateBinding Height}" 
+                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                        CornerRadius="10" 
+                        Visibility="{TemplateBinding IsShown, Converter={StaticResource BoolToVisibilityCov}}"
+                        Panel.ZIndex="999"
+                        >
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="5"  Opacity="0.4" />
+                        </Border.Effect>
+                        <ContentPresenter/>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

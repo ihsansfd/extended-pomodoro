@@ -2,17 +2,19 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="TextBox" x:Key="TextBoxStyle">
-        <Setter Property="Height" Value="20"/>
-        <Setter Property="FontSize" Value="{StaticResource FSVerySmall}"/>
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
         <Setter Property="BorderBrush" Value="{StaticResource Black-50}"/>
         <Setter Property="Foreground" Value="{StaticResource Black}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5 0 0 5"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>
                 <ControlTemplate>
                     <StackPanel>
                         <AdornedElementPlaceholder x:Name="placeholder"/>
-                        <TextBlock FontSize="{StaticResource FSVerySmall}" Foreground="Red"
+                        <TextBlock FontSize="{StaticResource FSSmall}" Foreground="Red"
                                        Text="{Binding ElementName=placeholder, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}" />
                     </StackPanel>
                 </ControlTemplate>
