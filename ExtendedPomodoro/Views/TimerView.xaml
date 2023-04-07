@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ExtendedPomodoro.Views"
+      xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="TimerView">
@@ -13,13 +14,16 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <ComboBox ItemContainerStyle="{DynamicResource ComboBoxItemContainerStyle1}" Template="{StaticResource TaskSelectionComboBoxTemplate}" Grid.Row="0" Width="200" Height="30" BorderBrush="{DynamicResource Black-50}">
+        <controls:TasksComboBox Style="{StaticResource ComboBoxStyle}" 
+                  Grid.Row="0" 
+                  Width="200" 
+                  Height="30">
             <ComboBox.Items>
                 <ComboBoxItem>ComboBox Item #1</ComboBoxItem>
                 <ComboBoxItem>ComboBox Item #2</ComboBoxItem>
                 <ComboBoxItem>ComboBox Item #3</ComboBoxItem>
                 <ComboBoxItem>Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet</ComboBoxItem>
             </ComboBox.Items>
-        </ComboBox>
+        </controls:TasksComboBox>
     </Grid>
 </Page>

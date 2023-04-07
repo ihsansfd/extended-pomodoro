@@ -125,7 +125,6 @@ namespace ExtendedPomodoro.Views
             statusTextBlock.SelectedValue = taskData.TaskStatus.ToString();
             statusTextBlock.SelectedItem = taskData.TaskStatus.ToString();
             BindingOperations.GetBindingExpression(statusTextBlock, ComboBox.SelectedValueProperty).UpdateSource();
-            BindingOperations.GetBindingExpression(statusTextBlock, ComboBox.SelectedItemProperty).UpdateSource();
 
             var timeSpentTextBlock = (TextBlock)modal.FindName("TimeSpentTaskDetail");
             timeSpentTextBlock.Text = taskData.TimeSpentInMinutes.ToString();

@@ -360,29 +360,10 @@
                         x:Name="StatusTaskDetail"
                         Margin="0 0 0 15"
                         SelectedValuePath="Tag"
-                        SelectedValue="{Binding UpdateTaskViewModel.TaskState, Mode=TwoWay}"
-                        SelectedItem="{Binding UpdateTaskViewModel.TaskState, Mode=TwoWay}">
+                        SelectedValue="{Binding UpdateTaskViewModel.TaskState, Mode=TwoWay}">
                         <ComboBox.Items>
-                            <ComboBoxItem Tag="0">
-                                <ComboBoxItem.Content>
-                                    <TextBlock 
-                                        FontFamily="{StaticResource FWRegular}" 
-                                        FontSize="{StaticResource FSSmall}"
-                                        Foreground="{StaticResource Black}">
-                                        In Progress
-                                    </TextBlock>
-                                </ComboBoxItem.Content>
-                            </ComboBoxItem>
-                            <ComboBoxItem Tag="1">
-                                <ComboBoxItem.Content>
-                                    <TextBlock 
-                                        FontFamily="{StaticResource FWRegular}" 
-                                        FontSize="{StaticResource FSSmall}"
-                                        Foreground="{StaticResource Black}">
-                                        Completed
-                                    </TextBlock>
-                                </ComboBoxItem.Content>
-                            </ComboBoxItem>
+                            <ComboBoxItem Tag="0">In Progress</ComboBoxItem>
+                            <ComboBoxItem Tag="1">Completed</ComboBoxItem>
                         </ComboBox.Items>
                     </ComboBox>
                     <TextBlock 

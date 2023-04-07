@@ -4,7 +4,9 @@
     xmlns:local="clr-namespace:ExtendedPomodoro"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
-    xmlns:converters="clr-namespace:ExtendedPomodoro.Converters">
+    xmlns:converters="clr-namespace:ExtendedPomodoro.Converters"
+    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+    >
 
     <converters:SpaceToMarginConverter x:Key="SpaceToMarginConv"/>
     <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
@@ -215,5 +217,99 @@
     </Style>
     <!--#End Region: TasksListView-->
     
+    <!--#Region: TasksComboBox-->
+    <ControlTemplate x:Key="CustomToggleButton" TargetType="{x:Type ToggleButton}">
+        <Grid>
+            <Border Background="{StaticResource White}"
+                        BorderBrush="{StaticResource Black-50}"
+                        CornerRadius="5"
+                       BorderThickness="1" />
+            <iconPacks:PackIconBootstrapIcons 
+                    Kind="CaretDownFill" 
+                    Width="10" 
+                    Height="10"
+                    Margin="0 0 10 0"
+                    Foreground="{StaticResource Black-50}"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Center"/>
+        </Grid>
+    </ControlTemplate>
+    <Style x:Key="FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
+        <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition 
+                        MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"
+                        Width="0"/>
+            </Grid.ColumnDefinitions>
+            <Popup x:Name="PART_Popup" 
+                       AllowsTransparency="true" 
+                       Grid.ColumnSpan="2" 
+                       IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                       Margin="1" 
+                       Placement="Bottom" 
+                       PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+                <theme:SystemDropShadowChrome 
+                        x:Name="shadow" 
+                        Color="Transparent" 
+                        MinWidth="{Binding ActualWidth, ElementName=templateRoot}" 
+                        MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                    <Border 
+                            CornerRadius="5" 
+                            Padding="5" 
+                            x:Name="dropDownBorder" 
+                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" 
+                            BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" 
+                            BorderThickness="1">
+                        <ScrollViewer x:Name="DropDownScrollViewer">
+                            <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                <Canvas 
+                                        x:Name="canvas"
+                                        HorizontalAlignment="Left" 
+                                        Height="0" 
+                                        VerticalAlignment="Top" 
+                                        Width="0">
+                                    <Rectangle 
+                                            x:Name="opaqueRect" 
+                                            Fill="{Binding Background, ElementName=dropDownBorder}" 
+                                            Height="{Binding ActualHeight, ElementName=dropDownBorder}" 
+                                            Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                </Canvas>
+                                <ItemsPresenter 
+                                        x:Name="ItemsPresenter"
+                                        KeyboardNavigation.DirectionalNavigation="Contained"
+                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+                </theme:SystemDropShadowChrome>
+            </Popup>
+            <ToggleButton
+                    x:Name="toggleButton" 
+                    Template="{StaticResource CustomToggleButton}"
+                    Cursor="Hand"
+                    Grid.ColumnSpan="2" 
+                    IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+            <ContentPresenter 
+                    x:Name="contentPresenter" 
+                    Margin="10 0 10 0"
+                    Content="{TemplateBinding SelectionBoxItem}"
+                    HorizontalAlignment="Left" 
+                    IsHitTestVisible="false"
+                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                    VerticalAlignment="Center"/>
+        </Grid>
+    </ControlTemplate>
 
+    <!--#End Region: TasksComboBox-->
+    
 </ResourceDictionary>
