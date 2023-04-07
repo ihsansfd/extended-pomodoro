@@ -51,15 +51,22 @@ namespace ExtendedPomodoro.ViewModels
     {
        private readonly ITasksRepository _repository;
        private readonly TasksHelper _helper;
+       private int _currentPage = 1;
+       private int _totalPages = 1;
+
        public ObservableCollection<TaskDomainViewModel> Tasks { get; } = new();
 
        [ObservableProperty]
        private bool _isDisplayingCompletedTasks = false; // true = completed tasks, false = in progress tasks
 
+        [ObservableProperty]
+        private bool _areThereMoreTasks;
+
        public ReadTasksViewModel(ITasksRepository repository, TasksHelper helper)
         {
             _repository = repository;
             _helper = helper;
+
             StrongReferenceMessenger.Default.RegisterAll(this);
         }
 
@@ -77,13 +84,28 @@ namespace ExtendedPomodoro.ViewModels
             await LoadTasks();
         }
 
-        public async Task LoadTasks()
+        [RelayCommand]
+        public async Task DisplayMoreTasks()
         {
-            ClearTasks();
+            _currentPage++;
+            OnAreThereMoreTasksChanged();
+
+            await LoadTasks(instantiateNew: false, page: _currentPage);
+        }
+
+        public async Task LoadTasks(bool instantiateNew = true, int page = 1)
+        {
+            if(instantiateNew) ClearTasks();
+
             TaskState taskState = IsDisplayingCompletedTasks ? TaskState.COMPLETED : TaskState.IN_PROGRESS;
             try
             {
-                await foreach (var record in _repository.GetTasks(taskState: taskState, limit: 20))
+                if (instantiateNew)
+                {
+                    _totalPages = await _repository.GetTotalPages(taskState);
+                    OnAreThereMoreTasksChanged();
+                }
+                await foreach (var record in _repository.GetTasks(taskState: taskState, page: page, limit: 20))
                 {
                     Tasks.Add(new(
                         record.Id,
@@ -96,6 +118,7 @@ namespace ExtendedPomodoro.ViewModels
                         (int) record.TimeSpent.TotalMinutes
                         )) ;
                 }
+
             }
 
             catch(Exception ex)
@@ -107,6 +130,7 @@ namespace ExtendedPomodoro.ViewModels
         public void ClearTasks()
         {
             Tasks.Clear();
+            _currentPage = 1;
         }
 
         internal async Task OnTaskDeleted(TaskDomainViewModel deletedTask)
@@ -132,6 +156,11 @@ namespace ExtendedPomodoro.ViewModels
         public async void Receive(TaskUpdateInfoMessage taskUpdateInfo)
         {
             if (taskUpdateInfo.IsTaskUpdateSuccess) await LoadTasks();
+        }
+
+        private void OnAreThereMoreTasksChanged()
+        {
+            AreThereMoreTasks = _currentPage < _totalPages;
         }
     }
 
@@ -163,7 +192,7 @@ namespace ExtendedPomodoro.ViewModels
 
             if (HasErrors) return;
 
-            int? estPomodoro = EstPomodoro.TryParseEmptyStringToNullableInteger();
+            int? estPomodoro = EstPomodoro.TryParseEmptiableStringToNullableInteger();
 
             try
             {
@@ -214,7 +243,7 @@ namespace ExtendedPomodoro.ViewModels
 
             if (HasErrors) return;
 
-            int? estPomodoro = EstPomodoro.TryParseEmptyStringToNullableInteger();
+            int? estPomodoro = EstPomodoro.TryParseEmptiableStringToNullableInteger();
 
             try
             {

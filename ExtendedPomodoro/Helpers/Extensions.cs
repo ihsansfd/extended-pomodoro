@@ -9,7 +9,7 @@ namespace ExtendedPomodoro.Helpers
 {
     public static class Extensions
     {
-        public static int? TryParseEmptyStringToNullableInteger(this string? value)
+        public static int? TryParseEmptiableStringToNullableInteger(this string? value)
         {
             if (string.IsNullOrWhiteSpace(value)) return null;
             if (int.TryParse(value, out _)) return int.Parse(value);

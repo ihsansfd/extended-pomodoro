@@ -16,7 +16,6 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/Menu.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/ComboBoxes.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/Modals.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Styles/ListViews.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
         
