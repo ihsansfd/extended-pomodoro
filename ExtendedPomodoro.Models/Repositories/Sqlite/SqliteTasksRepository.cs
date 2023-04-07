@@ -27,7 +27,10 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
 
         private const string GET_TASKS_QUERY =
             @"SELECT * FROM tblTasks WHERE IsTaskCompleted = @IsTaskCompleted
-             ORDER BY datetime(CreatedAt) DESC LIMIT @Limit";
+             ORDER BY datetime(CreatedAt) DESC LIMIT @Limit OFFSET @Offset";
+
+        private const string GET_TOTAL_PAGES_QUERY =
+            @"SELECT COUNT(*) FROM tblTasks WHERE IsTaskCompleted = @IsTaskCompleted";
 
         private const string DELETE_TASK_QUERY =
             @"DELETE FROM tblTasks WHERE Id = @Id";
@@ -37,7 +40,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             _connectionFactory = connectionFactory;
         }
 
-        public async IAsyncEnumerable<TaskDomain> GetTasks(TaskState taskState = TaskState.IN_PROGRESS, int limit = 20)
+        public async IAsyncEnumerable<TaskDomain> GetTasks(TaskState taskState = TaskState.IN_PROGRESS, int page = 1, int limit = 20)
         {
 
             using (var db = _connectionFactory.Connect())
@@ -45,12 +48,30 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                 object data = new
                 {
                     IsTaskCompleted = ConvertTaskStateToInt(taskState),
-                    Limit = limit
+                    Limit = limit,
+                    Offset = limit * (page - 1)
                 };
 
                 IEnumerable<TaskDTO> records = await db.QueryAsync<TaskDTO>(GET_TASKS_QUERY, data);
 
                 foreach(var record in records) yield return ConvertToTaskDomain(record);
+            }
+        }
+
+        public async Task<int> GetTotalPages(TaskState taskState = TaskState.IN_PROGRESS, int limit = 20)
+        {
+            using (var db = _connectionFactory.Connect())
+            {
+                object data = new
+                {
+                    IsTaskCompleted = ConvertTaskStateToInt(taskState),
+                    Limit = limit,
+                };
+
+                int totalRows = await db.ExecuteScalarAsync<int>(GET_TOTAL_PAGES_QUERY, data);
+
+                return (totalRows + (limit - 1)) / limit;
+
             }
         }
 

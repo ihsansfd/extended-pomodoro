@@ -12,7 +12,8 @@ namespace ExtendedPomodoro.Models.Repositories
         Task CreateTask(CreateTaskDomain task);
         Task UpdateTask(UpdateTaskDomain task);
         Task UpdateTaskState(int taskId, TaskState taskIntendedState);
-        IAsyncEnumerable<TaskDomain> GetTasks(TaskState taskState = TaskState.IN_PROGRESS, int limit = 20);
+        IAsyncEnumerable<TaskDomain> GetTasks(TaskState taskState = TaskState.IN_PROGRESS, int page = 1, int limit = 20);
         Task DeleteTask(int taskId);
+        Task<int> GetTotalPages(TaskState taskState = TaskState.IN_PROGRESS, int limit = 20);
     }
 }
