@@ -37,11 +37,11 @@ namespace ExtendedPomodoro
         {
             base.OnStartup(e);
 
-            var mainWindow = Services.GetRequiredService<MainWindow>();
-            mainWindow.DataContext = Services.GetRequiredService<MainWindowViewModel>();
-            mainWindow.Show();
+            //var mainWindow = Services.GetRequiredService<MainWindow>();
+            //mainWindow.DataContext = Services.GetRequiredService<MainWindowViewModel>();
+            //mainWindow.Show();
 
-            //new windowtest().Show();
+            new windowtest().Show();
         }
 
         private void InitializeDb()

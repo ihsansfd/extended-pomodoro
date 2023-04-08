@@ -26,5 +26,7 @@
     <SolidColorBrush x:Key="ContainerBackground">#988b8b</SolidColorBrush>
     <SolidColorBrush x:Key="MenuBackground">#988b8b</SolidColorBrush>
 
+    <SolidColorBrush x:Key="TogglerBackground">#B1B1B1</SolidColorBrush>
+
 
 </ResourceDictionary>

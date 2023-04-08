@@ -13,7 +13,7 @@
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConv"/>
     <converters:InvertNullToVisibilityConverter x:Key="InvertNullToVisibilityConv"/>
 
-    <!--#Region: DrawerSidebarMenu--> 
+    <!--#region DrawerSidebarMenu--> 
     <Style TargetType="{x:Type controls:DrawerSidebarMenu}">
         <Setter Property="Panel.ZIndex" Value="999"/>
         <Setter Property="Template">
@@ -101,9 +101,9 @@
         </Setter>
     </Style>
 
-    <!--#End Region: DrawerSidebarMenu-->
+    <!--#endregion DrawerSidebarMenu-->
 
-    <!--#Region: Modal-->
+    <!--#region Modal-->
     <Style TargetType="{x:Type controls:Modal}">
         <Setter Property="Template">
             <Setter.Value>
@@ -138,9 +138,9 @@
         </Setter>
     </Style>
 
-    <!--#End Region: Modal-->
+    <!--#endregion Modal-->
 
-    <!--#Region: Buttons-->
+    <!--#region Buttons-->
 
     <Style TargetType="{x:Type controls:IconOnlyButton}">
         <Setter Property="Template">
@@ -165,9 +165,9 @@
         
     </Style>
     
-    <!--#End Region: Buttons-->
+    <!--#endregion Buttons-->
     
-    <!--#Region: TasksListView-->
+    <!--#region TasksListView-->
     <SolidColorBrush x:Key="ListBox.Static.Background" Color="#FFFFFFFF"/>
     <SolidColorBrush x:Key="ListBox.Static.Border" Color="#FFABADB3"/>
     <SolidColorBrush x:Key="ListBox.Disabled.Background" Color="#FFFFFFFF"/>
@@ -216,9 +216,9 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!--#End Region: TasksListView-->
+    <!--#endregion TasksListView-->
     
-    <!--#Region: TasksComboBox-->
+    <!--#region TasksComboBox-->
     <ControlTemplate x:Key="CustomToggleButton" TargetType="{x:Type ToggleButton}">
         <Grid>
             <Border Background="{Binding Path=Background, RelativeSource={RelativeSource AncestorType={x:Type controls:TasksComboBox}}}"
@@ -396,6 +396,6 @@
         </Setter>
     </Style>
 
-    <!--#End Region: TasksComboBox-->
+    <!--#endregion TasksComboBox-->
     
 </ResourceDictionary>

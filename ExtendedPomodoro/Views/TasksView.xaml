@@ -64,7 +64,6 @@
                 ItemsSource="{Binding Source={StaticResource TasksCollectionViewSource}, Mode=OneWay}" 
                 BorderThickness="0"
                 Grid.Row="1" 
-                IsSynchronizedWithCurrentItem="True"
                 Margin="0 10 0 0"
                 LoadMoreButtonStyle="{StaticResource ButtonStyle}"
                 LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"
@@ -79,10 +78,10 @@
                             Height="25"
                             Margin="0 0 0 5"
                             BorderBrush="{StaticResource Black}">
+                            <Border.Resources>
+                                <services:BindingProxy x:Key="CurrentDataContext" Data="{Binding}"/>
+                            </Border.Resources>
                             <Grid>
-                                <Grid.Resources>
-                                    <services:BindingProxy x:Key="CurrentDataContext" Data="{Binding}"/>
-                                </Grid.Resources>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="auto"/>

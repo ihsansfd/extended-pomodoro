@@ -25,7 +25,6 @@ namespace ExtendedPomodoro.Views
     /// Interaction logic for TasksView.xaml
     /// </summary>
     public partial class TasksView : Page,
-        //IRecipient<TaskCreationInfoMessage>,
         IRecipient<TaskDeletionInfoMessage>, 
         IRecipient<TaskUpdateStateInfoMessage>,
         IRecipient<TaskUpdateInfoMessage>
@@ -42,24 +41,6 @@ namespace ExtendedPomodoro.Views
         {
             ModalCreateTask.IsShown = true;
         }
-
-        //private void ButtonCancelCreateTaskModal_Click(object sender, RoutedEventArgs e)
-        //{
-        //    ModalCreateTask.IsShown = false;
-        //}
-
-        //public void Receive(TaskCreationInfoMessage taskCreationInfo)
-        //{
-        //    if(taskCreationInfo.IsTaskCreationSuccess)
-        //    {
-        //        ModalCreateTask.IsShown = false;
-        //    }
-
-        //    else
-        //    {
-        //        MessageBox.Show(taskCreationInfo.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        //    }
-        //}
 
         public void Receive(TaskDeletionInfoMessage taskDeletionInfo)
         {
