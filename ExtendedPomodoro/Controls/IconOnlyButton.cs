@@ -35,7 +35,7 @@ namespace ExtendedPomodoro.Controls
         }
 
         public static readonly DependencyProperty HoverColorProperty =
-            DependencyProperty.Register("MyProperty", typeof(Brush), typeof(IconOnlyButton), new PropertyMetadata(null));
+            DependencyProperty.Register("HoverColor", typeof(Brush), typeof(IconOnlyButton), new PropertyMetadata(null));
 
         public override void OnApplyTemplate()
         {

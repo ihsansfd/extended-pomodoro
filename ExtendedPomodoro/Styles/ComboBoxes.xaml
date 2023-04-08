@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:ExtendedPomodoro.Converters"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
     <converters:InvertNullToVisibilityConverter x:Key="InvertNullToVisibilityConv"/>
@@ -101,15 +102,9 @@
     <Style x:Key="BaseComboboxStyle" TargetType="{x:Type ComboBox}">
         <Setter Property="Background" Value="{StaticResource White}"/>
         <Setter Property="BorderBrush" Value="{StaticResource Black-50}"/>
-        <Style.Resources>
-            <Style TargetType="TextBlock">
-                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                <Setter Property="MaxWidth" Value="10"/>
-                <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
-                <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
-                <Setter Property="Foreground" Value="{StaticResource Black}"/>
-            </Style>
-        </Style.Resources>
+        <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
+        <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
+        <Setter Property="Foreground" Value="{StaticResource Black}"/>
     </Style>
 
     <Style x:Key="ComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource BaseComboboxStyle}">
@@ -121,6 +116,12 @@
         <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
         <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
+    </Style>
+
+    <Style x:Key="TasksComboBoxStyle" TargetType="{x:Type controls:TasksComboBox}" BasedOn="{StaticResource BaseComboboxStyle}">
+        <Setter Property="PlaceholderForeground" Value="{StaticResource Black-50}"/>
+        <Setter Property="CompleteTaskButtonForeground" Value="{StaticResource Success}"/>
+        <Setter Property="CompleteTaskButtonHoverColor" Value="{StaticResource SuccessDarker}"/>
     </Style>
         
 </ResourceDictionary>

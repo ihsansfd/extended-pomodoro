@@ -57,9 +57,9 @@ namespace ExtendedPomodoro
                 (s) => new(ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString)
                 );
             services.AddSingleton<TasksHelper>();
-            services.AddSingleton<ReadTasksViewModel>();
-            services.AddSingleton<CreateTaskViewModel>();
-            services.AddSingleton<UpdateTaskViewModel>();
+            services.AddTransient<ReadTasksViewModel>();
+            services.AddTransient<CreateTaskViewModel>();
+            services.AddTransient<UpdateTaskViewModel>();
             services.AddSingleton<DeleteTaskViewModel>();
             services.AddSingleton<SqliteTasksRepository>();
             services.AddSingleton<ITasksRepository, SqliteTasksRepository>();

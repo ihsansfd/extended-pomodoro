@@ -197,15 +197,23 @@ namespace ExtendedPomodoro.ViewModels
             try
             {
                 await _repository.CreateTask(new(Name, Description, estPomodoro));
+                ClearAll();
+                
                 StrongReferenceMessenger.Default.Send(new TaskCreationInfoMessage(true, "Task successfully added."));
             }
             catch (Exception ex)
             {
                 StrongReferenceMessenger.Default.Send(new TaskCreationInfoMessage(false, ex.Message));
             }
+
         }
 
-
+        private void ClearAll()
+        {
+            Name = null;
+            Description = null;
+            EstPomodoro = null;
+        }
     }
 
     public partial class UpdateTaskViewModel : ObservableValidator

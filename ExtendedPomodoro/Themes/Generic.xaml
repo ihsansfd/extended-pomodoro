@@ -11,6 +11,7 @@
     <converters:SpaceToMarginConverter x:Key="SpaceToMarginConv"/>
     <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConv"/>
+    <converters:InvertNullToVisibilityConverter x:Key="InvertNullToVisibilityConv"/>
 
     <!--#Region: DrawerSidebarMenu--> 
     <Style TargetType="{x:Type controls:DrawerSidebarMenu}">
@@ -114,7 +115,7 @@
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                         CornerRadius="10" 
                         Visibility="{TemplateBinding IsShown, Converter={StaticResource BoolToVisibilityConv}}"
-                        Panel.ZIndex="999">
+                        Panel.ZIndex="999999999">
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="5"  Opacity="0.4" />
                         </Border.Effect>
@@ -220,8 +221,8 @@
     <!--#Region: TasksComboBox-->
     <ControlTemplate x:Key="CustomToggleButton" TargetType="{x:Type ToggleButton}">
         <Grid>
-            <Border Background="{StaticResource White}"
-                        BorderBrush="{StaticResource Black-50}"
+            <Border Background="{Binding Path=Background, RelativeSource={RelativeSource AncestorType={x:Type controls:TasksComboBox}}}"
+                        BorderBrush="{Binding Path=BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type controls:TasksComboBox}}}"
                         CornerRadius="5"
                        BorderThickness="1" />
             <iconPacks:PackIconBootstrapIcons 
@@ -229,7 +230,7 @@
                     Width="10" 
                     Height="10"
                     Margin="0 0 10 0"
-                    Foreground="{StaticResource Black-50}"
+                    Foreground="{Binding Path=PlaceholderForeground, RelativeSource={RelativeSource AncestorType={x:Type controls:TasksComboBox}}}"
                     HorizontalAlignment="Right" 
                     VerticalAlignment="Center"/>
         </Grid>
@@ -243,72 +244,157 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
-        <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition 
+
+    <Style TargetType="controls:TasksComboBox">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:TasksComboBox}">
+                    <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition 
                         MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"
                         Width="0"/>
-            </Grid.ColumnDefinitions>
-            <Popup x:Name="PART_Popup" 
+                        </Grid.ColumnDefinitions>
+                        <Popup x:Name="PART_Popup" 
                        AllowsTransparency="true" 
                        Grid.ColumnSpan="2" 
                        IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
                        Margin="1" 
                        Placement="Bottom" 
                        PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
-                <theme:SystemDropShadowChrome 
+                            <theme:SystemDropShadowChrome 
                         x:Name="shadow" 
                         Color="Transparent" 
                         MinWidth="{Binding ActualWidth, ElementName=templateRoot}" 
                         MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                    <Border 
+                                <Border 
                             CornerRadius="5" 
                             Padding="5" 
                             x:Name="dropDownBorder" 
-                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" 
-                            BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
                             BorderThickness="1">
-                        <ScrollViewer x:Name="DropDownScrollViewer">
-                            <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
-                                <Canvas 
-                                        x:Name="canvas"
-                                        HorizontalAlignment="Left" 
-                                        Height="0" 
-                                        VerticalAlignment="Top" 
-                                        Width="0">
-                                    <Rectangle 
-                                            x:Name="opaqueRect" 
-                                            Fill="{Binding Background, ElementName=dropDownBorder}" 
-                                            Height="{Binding ActualHeight, ElementName=dropDownBorder}" 
-                                            Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
-                                </Canvas>
-                                <ItemsPresenter 
-                                        x:Name="ItemsPresenter"
-                                        KeyboardNavigation.DirectionalNavigation="Contained"
-                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                            </Grid>
-                        </ScrollViewer>
-                    </Border>
-                </theme:SystemDropShadowChrome>
-            </Popup>
-            <ToggleButton
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
+                                        <ScrollViewer x:Name="DropDownScrollViewer">
+                                            <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition Height="auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Canvas 
+                                            x:Name="canvas"
+                                            HorizontalAlignment="Left" 
+                                            Height="0" 
+                                            VerticalAlignment="Top" 
+                                            Width="0">
+                                                    <Rectangle 
+                                                x:Name="opaqueRect" 
+                                                Fill="{Binding Background, ElementName=dropDownBorder}" 
+                                                Height="{Binding ActualHeight, ElementName=dropDownBorder}" 
+                                                Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                                </Canvas>
+                                                <ItemsPresenter 
+                                            x:Name="ItemsPresenter"
+                                            KeyboardNavigation.DirectionalNavigation="Contained"
+                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                <Button
+                                                    Margin="0 5 0 0"
+                                                    Grid.Row="1"
+                                                    Tag="ThreeDots"
+                                                    Visibility="{TemplateBinding IsLoadMoreButtonShown,Converter={StaticResource BoolToVisibilityConv}}"
+                                                    Command="{TemplateBinding LoadMoreTasksCommand}"
+                                                    Style="{TemplateBinding ButtonStyle}">
+                                                    Load More
+                                                </Button>
+                                            </Grid>
+                                        </ScrollViewer>
+                                        <Button
+                                            Margin="0 5 0 0"
+                                            Grid.Row="1"
+                                            x:Name="PART_AddNewTaskButton"
+                                            Tag="PlusCircle"
+                                            Command="{TemplateBinding AddNewTaskCommand}"
+                                            Style="{TemplateBinding ButtonStyle}">
+                                            Add New
+                                        </Button>
+                                    </Grid>
+
+                                </Border>
+                            </theme:SystemDropShadowChrome>
+                        </Popup>
+                        <ToggleButton
                     x:Name="toggleButton" 
                     Template="{StaticResource CustomToggleButton}"
                     Cursor="Hand"
                     Grid.ColumnSpan="2" 
                     IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
-            <ContentPresenter 
-                    x:Name="contentPresenter" 
-                    Margin="10 0 10 0"
-                    Content="{TemplateBinding SelectionBoxItem}"
-                    HorizontalAlignment="Left" 
-                    IsHitTestVisible="false"
-                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                    VerticalAlignment="Center"/>
-        </Grid>
-    </ControlTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ContentPresenter
+                                Grid.Column="1"
+                                x:Name="contentPresenter" 
+                                Margin="10 0 10 0"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                HorizontalAlignment="Center" 
+                                IsHitTestVisible="false"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="Center"/>
+                            <!--Placeholder-->
+                            <TextBlock 
+                                Grid.Column="1"
+                                Text="Select task..."
+                                Foreground="{TemplateBinding PlaceholderForeground}"
+                                Visibility="{TemplateBinding SelectedItem, Converter={StaticResource InvertNullToVisibilityConv}}"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                Margin="10 0 10 0"
+                                IsHitTestVisible="False"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+                            <controls:IconOnlyButton 
+                                Grid.Column="0"
+                                Kind="CheckCircle"
+                                Cursor="Hand"
+                                Command="{TemplateBinding CompleteTaskCommand}"
+                                Foreground="{TemplateBinding CompleteTaskButtonForeground}"
+                                HoverColor="{TemplateBinding CompleteTaskButtonHoverColor}"
+                                Visibility="{TemplateBinding SelectedItem, Converter={StaticResource NullToVisibilityConv}}"
+                                Width="16"
+                                Height="16"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Margin="10 0 0 0"/>
+                            <controls:IconOnlyButton
+                                Grid.Column="2"
+                                Kind="X"
+                                Cursor="Hand"
+                                Command="{TemplateBinding CancelTaskCommand}"
+                                Foreground="{TemplateBinding PlaceholderForeground}"
+                                Visibility="{TemplateBinding SelectedItem, Converter={StaticResource NullToVisibilityConv}}"
+                                Width="10"
+                                Height="10"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="0 0 10 0"/>
+                        </Grid>
+                        
+                            
+                    </Grid>
+                </ControlTemplate>
+
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <!--#End Region: TasksComboBox-->
     

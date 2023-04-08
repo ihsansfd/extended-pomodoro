@@ -82,3 +82,5 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-w
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Themes\DarkTheme.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Themes\LightTheme.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\Modals.baml
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\ModalCreateTaskUserControl.g.cs
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\ModalCreateTaskUserControl.baml

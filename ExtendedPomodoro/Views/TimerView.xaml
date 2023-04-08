@@ -4,26 +4,40 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ExtendedPomodoro.Views"
+      xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
+      xmlns:components="clr-namespace:ExtendedPomodoro.Views.Components"
       xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
+      d:DataContext="{d:DesignInstance Type=vms:TimerViewModel}"
       Title="TimerView">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <controls:TasksComboBox Style="{StaticResource ComboBoxStyle}" 
-                  Grid.Row="0" 
-                  Width="200" 
-                  Height="30">
-            <ComboBox.Items>
-                <ComboBoxItem>ComboBox Item #1</ComboBoxItem>
-                <ComboBoxItem>ComboBox Item #2</ComboBoxItem>
-                <ComboBoxItem>ComboBox Item #3</ComboBoxItem>
-                <ComboBoxItem>Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet</ComboBoxItem>
-            </ComboBox.Items>
+
+        <controls:TasksComboBox
+            x:Name="TasksComboBox"
+            ItemsSource="{Binding ReadTasksViewModel.Tasks}"
+            DisplayMemberPath="Name"
+            ButtonStyle="{StaticResource IconizedButtonStyle}"
+            Style="{StaticResource TasksComboBoxStyle}"
+            LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"
+            IsLoadMoreButtonShown="{Binding ReadTasksViewModel.AreThereMoreTasks}"
+            AddNewTaskCommand="{Binding NotifTasksComboBoxAddNewButtonPressedCommand}"
+            Grid.Row="0" 
+            Width="200" 
+            Height="30">
         </controls:TasksComboBox>
+        <components:ModalCreateTaskUserControl 
+            x:Name="ModalCreateTask"
+            Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsShown, Converter={StaticResource BoolToVisibilityConv}}"
+            Style="{StaticResource RemoveErrorBorderUserControlStyle}"
+            CreateTaskViewModel="{Binding CreateTaskViewModel}"/>
     </Grid>
 </Page>

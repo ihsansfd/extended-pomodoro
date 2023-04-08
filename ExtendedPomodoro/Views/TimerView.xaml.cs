@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using ExtendedPomodoro.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +20,23 @@ namespace ExtendedPomodoro.Views
     /// <summary>
     /// Interaction logic for TimerView.xaml
     /// </summary>
-    public partial class TimerView : Page
+    public partial class TimerView : Page, IRecipient<TasksComboBoxAddNewButtonPressedMessage>
     {
         public TimerView()
         {
             InitializeComponent();
+            StrongReferenceMessenger.Default.RegisterAll(this);
+        }
+
+        void IRecipient<TasksComboBoxAddNewButtonPressedMessage>.Receive(TasksComboBoxAddNewButtonPressedMessage message)
+        {
+            ModalCreateTask.IsShown = true;
+            TasksComboBox.IsDropDownOpen = false;
+        }
+
+        ~TimerView()
+        {
+            StrongReferenceMessenger.Default.UnregisterAll(this);
         }
     }
 }
