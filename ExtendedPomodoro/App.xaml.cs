@@ -41,7 +41,6 @@ namespace ExtendedPomodoro
             mainWindow.DataContext = Services.GetRequiredService<MainWindowViewModel>();
             mainWindow.Show();
 
-            //new windowtest().Show();
         }
 
         private void InitializeDb()
@@ -63,6 +62,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<DeleteTaskViewModel>();
             services.AddSingleton<SqliteTasksRepository>();
             services.AddSingleton<ITasksRepository, SqliteTasksRepository>();
+            services.AddSingleton<ISettingsRepository, SqliteSettingsRepository>();
             services.AddSingleton<SqliteDbConnectionFactory>();
             services.AddSingleton<SqliteDbSetup>();
             services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();

@@ -144,3 +144,6 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\ne
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\net7.0-windows\ExtendedPomodoro.Tests.pdb
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\net7.0-windows\ExtendedPomodoro.Tests.genruntimeconfig.cache
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\net7.0-windows\ref\ExtendedPomodoro.Tests.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Microsoft.Xaml.Behaviors.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.Core.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.Core.pdb

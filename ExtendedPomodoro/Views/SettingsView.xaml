@@ -28,19 +28,18 @@
 
             <!--region Timer-->
             <TextBlock 
-            Text="Timer (in minutes)"
-            Grid.Row="0"
-            Grid.Column="0"
-            HorizontalAlignment="Left"
-            Margin="0 0 40 0"
-            Style="{StaticResource TextBlockFormLabelLargeStyle}"/>
+                Text="Timer (in minutes)"
+                Grid.Row="0"
+                Grid.Column="0"
+                HorizontalAlignment="Left"
+                Margin="0 0 40 0"
+                Style="{StaticResource TextBlockFormLabelLargeStyle}"/>
             <Separator 
-            Grid.Row="0"
-            Grid.Column="1"
-            Style="{StaticResource VerticalSeparatorStyle}"
-            Width="1"
-            Margin="0 0 20 30"
-            />
+                Grid.Row="0"
+                Grid.Column="1"
+                Style="{StaticResource VerticalSeparatorStyle}"
+                Width="1"
+                Margin="0 0 20 30"/>
 
             <StackPanel Grid.Row="0" Grid.Column="2" MinWidth="240" Margin="0 0 0 30">
                 <Grid Margin="0 0 0 20">
@@ -52,6 +51,7 @@
                         Grid.Column="0"
                         Style="{StaticResource TextBlockFormLabelStyle}"/>
                         <TextBox 
+                        Text="{Binding PomodoroDurationInMinutes}"
                         Width="70"
                         Margin="0 0 8.5 0"
                         Style="{StaticResource TextBoxStyle}"/>
@@ -59,24 +59,26 @@
 
                     <StackPanel HorizontalAlignment="Center">
                         <TextBlock 
-                    Text="Short Break"
-                    Margin="0 0 0 5"
-                    Style="{StaticResource TextBlockFormLabelStyle}"/>
+                            Text="Short Break"
+                            Margin="0 0 0 5"
+                            Style="{StaticResource TextBlockFormLabelStyle}"/>
                         <TextBox 
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Width="70"
-                    Style="{StaticResource TextBoxStyle}"/>
+                            Text="{Binding ShortBreakDurationInMinutes}"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Width="70"
+                            Style="{StaticResource TextBoxStyle}"/>
                     </StackPanel>
 
                     <StackPanel HorizontalAlignment="Right">
                         <TextBlock 
-                    Text="Long Break"
-                    Margin="0 0 0 5"
-                    Style="{StaticResource TextBlockFormLabelStyle}"/>
+                            Text="Long Break"
+                            Margin="0 0 0 5"
+                            Style="{StaticResource TextBlockFormLabelStyle}"/>
                         <TextBox 
-                    Width="70"
-                    Style="{StaticResource TextBoxStyle}"/>
+                            Text="{Binding LongBreakDurationInMinutes}"
+                            Width="70"
+                            Style="{StaticResource TextBoxStyle}"/>
                     </StackPanel>
                 </Grid>
                 <Grid>
@@ -90,63 +92,66 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock 
-                    Text="Long Break Interval"
-                    Grid.Column="0"
-                    Grid.Row="0"
-                    VerticalAlignment="Center"
-                    Margin="0 0 0 20"
-                    Style="{StaticResource TextBlockFormLabelStyle}"/>
+                        Text="Long Break Interval"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        VerticalAlignment="Center"
+                        Margin="0 0 0 20"
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <TextBox
-                    Grid.Column="1"
-                    Grid.Row="0"
-                    Width="70"
-                    HorizontalAlignment="Right"
-                    Margin="0 0 0 20"
-                    Style="{StaticResource TextBoxStyle}"/>
+                        Text="{Binding LongBreakInterval}"
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Width="70"
+                        HorizontalAlignment="Right"
+                        Margin="0 0 0 20"
+                        Style="{StaticResource TextBoxStyle}"/>
 
                     <TextBlock 
-                    Text="Daily Pomodoro Target"
-                    Grid.Column="0"
-                    Grid.Row="1"
-                    Margin="0 0 0 20"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource TextBlockFormLabelStyle}"/>
+                        Text="Daily Pomodoro Target"
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Margin="0 0 0 20"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <TextBox
-                    Grid.Column="1"
-                    Grid.Row="1"
-                    Width="70"
-                    HorizontalAlignment="Right"
-                    Margin="0 0 0 20"
-                    Style="{StaticResource TextBoxStyle}"/>
+                        Text="{Binding DailyPomodoroTarget}"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Width="70"
+                        HorizontalAlignment="Right"
+                        Margin="0 0 0 20"
+                        Style="{StaticResource TextBoxStyle}"/>
 
                     <TextBlock 
-                    Text="Autostart Next Session"
-                    Grid.Column="0"
-                    Grid.Row="2"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource TextBlockFormLabelStyle}"/>
+                        Text="Autostart Next Session"
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <ToggleButton
-                    Grid.Column="1"
-                    Grid.Row="2"
-                    HorizontalAlignment="Right"
-                    Style="{StaticResource ToggleButtonStyle}"/>
+                        IsChecked="{Binding IsAutoStart, Mode=TwoWay}"
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource ToggleButtonStyle}"/>
                 </Grid>
             </StackPanel>
             <!--endregion Timer-->
 
             <!--#region Ring-->
             <TextBlock 
-            Text="Ring"
-            Grid.Row="1"
-            Grid.Column="0"
-            HorizontalAlignment="Left"
-            Style="{StaticResource TextBlockFormLabelLargeStyle}"/>
+                Text="Ring"
+                Grid.Row="1"
+                Grid.Column="0"
+                HorizontalAlignment="Left"
+                Style="{StaticResource TextBlockFormLabelLargeStyle}"/>
             <Separator 
-            Grid.Row="1"
-            Grid.Column="1"
-            Style="{StaticResource VerticalSeparatorStyle}"
-            Width="1"
-            Margin="0 0 20 30"
+                Grid.Row="1"
+                Grid.Column="1"
+                Style="{StaticResource VerticalSeparatorStyle}"
+                Width="1"
+                Margin="0 0 20 30"
             />
             <Grid Grid.Row="1" Grid.Column="2" Margin="0 0 0 30">
                 <Grid.ColumnDefinitions>
@@ -160,61 +165,64 @@
                 </Grid.RowDefinitions>
                 <WrapPanel Margin="0 0 0 20" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">
                     <TextBlock 
-                    Text="Alarm Sound"
-                    Margin="0 0 6 0"
-                    Style="{StaticResource TextBlockFormLabelStyle}"/>
+                        Text="Alarm Sound"
+                        Margin="0 0 6 0"
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <controls:IconOnlyButton 
-                    Kind="VolumeDownFill"
-                    Foreground="{StaticResource TextColor}"
-                    Width="12"
-                    Height="12"
+                        Kind="VolumeDownFill"
+                        Foreground="{StaticResource TextColor}"
+                        Width="12"
+                        Height="12"
                     />
                 </WrapPanel>
                 <ComboBox 
-                Grid.Column="1" 
-                Grid.Row="0" 
-                Width="100"
-                Height="25"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Right"
-                Margin="0 0 0 20"
-                SelectedValuePath="Content"
-                Style="{StaticResource ComboBoxStyle}">
-                    <ComboBoxItem Content="Chimes"/>
-                    <ComboBoxItem Content="Echo"/>
-                    <ComboBoxItem Content="Mechanics"/>
-                    <ComboBoxItem Content="Retro"/>
-                    <ComboBoxItem Content="Ticks"/>
+                    Grid.Column="1" 
+                    Grid.Row="0" 
+                    Width="100"
+                    Height="25"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"
+                    Margin="0 0 0 20"
+                    SelectedValuePath="Tag"
+                    SelectedValue="{Binding AlarmSound, Mode=TwoWay}"
+                    Style="{StaticResource ComboBoxStyle}">
+                    <ComboBoxItem Tag="0" Content="Chimes"/>
+                    <ComboBoxItem Tag="1" Content="Echo"/>
+                    <ComboBoxItem Tag="2" Content="Mechanics"/>
+                    <ComboBoxItem Tag="3" Content="Retro"/>
+                    <ComboBoxItem Tag="4" Content="Ticks"/>
                 </ComboBox>
                 <TextBlock 
-                Text="Volume"
-                Grid.Column="0"
-                Grid.Row="1"
-                VerticalAlignment="Center"
-                Margin="0 0 0 20"
-                Style="{StaticResource TextBlockFormLabelStyle}"/>
+                    Text="Volume"
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    VerticalAlignment="Center"
+                    Margin="0 0 0 20"
+                    Style="{StaticResource TextBlockFormLabelStyle}"/>
                 <Slider 
-                Grid.Column="1"
-                Grid.Row="1"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Right"
-                Margin="0 0 0 20"
-                Width="100"
-                Style="{StaticResource VolumeSliderStyle}"/>
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    Margin="0 0 0 20"
+                    Width="100"
+                    Value="{Binding Volume, Mode=TwoWay}"
+                    Style="{StaticResource VolumeSliderStyle}"/>
 
                 <TextBlock 
-                Text="Repeat Forever"
-                Grid.Column="0"
-                Grid.Row="2"
-                VerticalAlignment="Center"
-                Style="{StaticResource TextBlockFormLabelStyle}"/>
+                    Text="Repeat Forever"
+                    Grid.Column="0"
+                    Grid.Row="2"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource TextBlockFormLabelStyle}"/>
 
                 <ToggleButton 
-                Grid.Column="1"
-                Grid.Row="2"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Right"
-                Style="{StaticResource ToggleButtonStyle}"/>
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    IsChecked="{Binding IsRepeatForever, Mode=TwoWay}"
+                    Style="{StaticResource ToggleButtonStyle}"/>
 
             </Grid>
             <!--#endregion Ring-->
@@ -228,12 +236,11 @@
                 Margin="0 0 40 0"
                 Style="{StaticResource TextBlockFormLabelLargeStyle}"/>
             <Separator 
-            Grid.Row="2"
-            Grid.Column="1"
-            Style="{StaticResource VerticalSeparatorStyle}"
-            Width="1"
-            Margin="0 0 20 30"
-            />
+                Grid.Row="2"
+                Grid.Column="1"
+                Style="{StaticResource VerticalSeparatorStyle}"
+                Width="1"
+                Margin="0 0 20 30"/>
             <TextBlock 
                 Text="Push Notification"
                 Grid.Column="2"
@@ -243,6 +250,7 @@
                 Style="{StaticResource TextBlockFormLabelStyle}"/>
 
             <ToggleButton 
+                IsChecked="{Binding PushNotificationEnabled, Mode=TwoWay}"
                 Grid.Column="2"
                 Grid.Row="2"
                 VerticalAlignment="Center"
@@ -260,12 +268,11 @@
                 Margin="0 0 40 0"
                 Style="{StaticResource TextBlockFormLabelLargeStyle}"/>
             <Separator 
-            Grid.Row="3"
-            Grid.Column="1"
-            Style="{StaticResource VerticalSeparatorStyle}"
-            Width="1"
-            Margin="0 0 20 30"
-            />
+                Grid.Row="3"
+                Grid.Column="1"
+                Style="{StaticResource VerticalSeparatorStyle}"
+                Width="1"
+                Margin="0 0 20 30"/>
             <TextBlock 
                 Text="Dark Mode"
                 Grid.Column="2"
@@ -275,6 +282,7 @@
                 Style="{StaticResource TextBlockFormLabelStyle}"/>
 
             <ToggleButton 
+                IsChecked="{Binding DarkModeEnabled, Mode=TwoWay}"
                 Grid.Column="2"
                 Grid.Row="3"
                 VerticalAlignment="Center"
@@ -292,12 +300,11 @@
                 Margin="0 0 40 0"
                 Style="{StaticResource TextBlockFormLabelLargeStyle}"/>
             <Separator 
-            Grid.Row="4"
-            Grid.Column="1"
-            Style="{StaticResource VerticalSeparatorStyle}"
-            Width="1"
-            Margin="0 0 20 0"
-            />
+                Grid.Row="4"
+                Grid.Column="1"
+                Style="{StaticResource VerticalSeparatorStyle}"
+                Width="1"
+                Margin="0 0 20 0"/>
             <Grid Grid.Column="2"
                   Grid.Row="4"
                   VerticalAlignment="Center">
@@ -313,6 +320,7 @@
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
 
                 <controls:HotkeyTextBox 
+                    Hotkey="{Binding StartHotkey}"
                     Grid.Row="0"
                     Width="100"
                     Margin="0 0 0 20"
@@ -326,11 +334,11 @@
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
 
                 <controls:HotkeyTextBox 
+                    Hotkey="{Binding PauseHotkey}"
                     Grid.Row="1"
                     Width="100"
                     HorizontalAlignment="Right"
                     Style="{StaticResource TextBoxStyle}"/>
-
             </Grid>
             <!--#endregion Hotkeys-->
         </Grid>

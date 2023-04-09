@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.Models.DTOs
 {
-    public class TaskDTO
+    public class SqlTaskDTO
     {
         public int Id          {get; set;}
         public string Name       {get; set;} = string.Empty;

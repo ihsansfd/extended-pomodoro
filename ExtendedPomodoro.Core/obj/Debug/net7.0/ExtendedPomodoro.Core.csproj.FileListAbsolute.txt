@@ -1,0 +1,12 @@
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\bin\Debug\net7.0\ExtendedPomodoro.Core.deps.json
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\bin\Debug\net7.0\ExtendedPomodoro.Core.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\bin\Debug\net7.0\ExtendedPomodoro.Core.pdb
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\obj\Debug\net7.0\ExtendedPomodoro.Core.csproj.AssemblyReference.cache
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\obj\Debug\net7.0\ExtendedPomodoro.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\obj\Debug\net7.0\ExtendedPomodoro.Core.AssemblyInfoInputs.cache
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\obj\Debug\net7.0\ExtendedPomodoro.Core.AssemblyInfo.cs
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\obj\Debug\net7.0\ExtendedPomodoro.Core.csproj.CoreCompileInputs.cache
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\obj\Debug\net7.0\ExtendedPomodoro.Core.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\obj\Debug\net7.0\refint\ExtendedPomodoro.Core.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\obj\Debug\net7.0\ExtendedPomodoro.Core.pdb
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Core\obj\Debug\net7.0\ref\ExtendedPomodoro.Core.dll

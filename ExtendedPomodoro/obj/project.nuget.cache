@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "uxv0z1C0l1q39vpPIJMBS7r2lJAWz3sQV2dEYnWD/YWgIobnr30viX1pv2txCfuH3PY4CKQskE2M5I11YR92YQ==",
+  "dgSpecHash": "+sZeYYwRAqaNhgVwT4zfLLQOY0tDPCBcPmRmrrW0KrKmU33LDP3WhXQgzZp1PYPwUhraCTeSetShTi1B0I7aVw==",
   "success": true,
   "projectFilePath": "C:\\Users\\ihsan\\source\\repos\\ExtendedPomodoro\\ExtendedPomodoro\\ExtendedPomodoro.csproj",
   "expectedPackageFiles": [
@@ -11,6 +11,7 @@
     "C:\\Users\\ihsan\\.nuget\\packages\\microsoft.data.sqlite.core\\7.0.4\\microsoft.data.sqlite.core.7.0.4.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.39\\microsoft.xaml.behaviors.wpf.1.1.39.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\sqlite\\3.13.0\\sqlite.3.13.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.4\\sqlitepclraw.bundle_e_sqlite3.2.1.4.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.core\\2.1.4\\sqlitepclraw.core.2.1.4.nupkg.sha512",

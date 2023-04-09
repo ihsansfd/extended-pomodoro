@@ -117,6 +117,22 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
+      "Microsoft.Xaml.Behaviors.Wpf/1.1.39": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0-windows7.0/Microsoft.Xaml.Behaviors.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0-windows7.0/Microsoft.Xaml.Behaviors.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WPF"
+        ]
+      },
       "SQLite/3.13.0": {
         "type": "package",
         "compile": {
@@ -294,6 +310,16 @@
         },
         "runtime": {
           "lib/netcoreapp2.1/_._": {}
+        }
+      },
+      "ExtendedPomodoro.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/ExtendedPomodoro.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ExtendedPomodoro.Core.dll": {}
         }
       },
       "ExtendedPomodoro.Models/1.0.0": {
@@ -504,6 +530,31 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Microsoft.Xaml.Behaviors.Wpf/1.1.39": {
+      "sha512": "8PZKqw9QOcu42xk8puY4P1+EXHL9YGOR9b7qhaYx5cILHul456H073tj99vyPcCt0W0781T9RwHqkx507ZyUpQ==",
+      "type": "package",
+      "path": "microsoft.xaml.behaviors.wpf/1.1.39",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Design/Microsoft.Xaml.Behaviors.Design.dll",
+        "lib/net45/Microsoft.Xaml.Behaviors.dll",
+        "lib/net45/Microsoft.Xaml.Behaviors.pdb",
+        "lib/net45/Microsoft.Xaml.Behaviors.xml",
+        "lib/net5.0-windows7.0/Design/Microsoft.Xaml.Behaviors.DesignTools.dll",
+        "lib/net5.0-windows7.0/Microsoft.Xaml.Behaviors.dll",
+        "lib/net5.0-windows7.0/Microsoft.Xaml.Behaviors.pdb",
+        "lib/net5.0-windows7.0/Microsoft.Xaml.Behaviors.xml",
+        "lib/netcoreapp3.1/Design/Microsoft.Xaml.Behaviors.DesignTools.dll",
+        "lib/netcoreapp3.1/Microsoft.Xaml.Behaviors.dll",
+        "lib/netcoreapp3.1/Microsoft.Xaml.Behaviors.pdb",
+        "lib/netcoreapp3.1/Microsoft.Xaml.Behaviors.xml",
+        "microsoft.xaml.behaviors.wpf.1.1.39.nupkg.sha512",
+        "microsoft.xaml.behaviors.wpf.nuspec",
+        "tools/Install.ps1"
+      ]
+    },
     "SQLite/3.13.0": {
       "sha512": "MJfRiz2p6aMVOxrxGMdVzhpzI0oxTgZSwC8eVuOpV8L7yYaFUu8q/OFYwv9P0/aZ/pdEu24O6gma6wZJMTun9A==",
       "type": "package",
@@ -636,6 +687,11 @@
         "version.txt"
       ]
     },
+    "ExtendedPomodoro.Core/1.0.0": {
+      "type": "project",
+      "path": "../ExtendedPomodoro.Core/ExtendedPomodoro.Core.csproj",
+      "msbuildProject": "../ExtendedPomodoro.Core/ExtendedPomodoro.Core.csproj"
+    },
     "ExtendedPomodoro.Models/1.0.0": {
       "type": "project",
       "path": "../ExtendedPomodoro.Models/ExtendedPomodoro.Models.csproj",
@@ -646,9 +702,11 @@
     "net7.0-windows7.0": [
       "CommunityToolkit.Mvvm >= 8.1.0",
       "Dapper >= 2.0.123",
+      "ExtendedPomodoro.Core >= 1.0.0",
       "ExtendedPomodoro.Models >= 1.0.0",
       "MahApps.Metro.IconPacks.BootstrapIcons >= 4.11.0",
       "Microsoft.Extensions.DependencyInjection >= 7.0.0",
+      "Microsoft.Xaml.Behaviors.Wpf >= 1.1.39",
       "SQLite >= 3.13.0"
     ]
   },
@@ -679,6 +737,9 @@
         "net7.0-windows7.0": {
           "targetAlias": "net7.0-windows",
           "projectReferences": {
+            "C:\\Users\\ihsan\\source\\repos\\ExtendedPomodoro\\ExtendedPomodoro.Core\\ExtendedPomodoro.Core.csproj": {
+              "projectPath": "C:\\Users\\ihsan\\source\\repos\\ExtendedPomodoro\\ExtendedPomodoro.Core\\ExtendedPomodoro.Core.csproj"
+            },
             "C:\\Users\\ihsan\\source\\repos\\ExtendedPomodoro\\ExtendedPomodoro.Models\\ExtendedPomodoro.Models.csproj": {
               "projectPath": "C:\\Users\\ihsan\\source\\repos\\ExtendedPomodoro\\ExtendedPomodoro.Models\\ExtendedPomodoro.Models.csproj"
             }
@@ -710,6 +771,10 @@
           "Microsoft.Extensions.DependencyInjection": {
             "target": "Package",
             "version": "[7.0.0, )"
+          },
+          "Microsoft.Xaml.Behaviors.Wpf": {
+            "target": "Package",
+            "version": "[1.1.39, )"
           },
           "SQLite": {
             "target": "Package",

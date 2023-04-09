@@ -3,6 +3,7 @@
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:core="clr-namespace:ExtendedPomodoro.Core"
+                    xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
                     >
 
     <Style TargetType="Button" x:Key="MainHoverColorButton">
@@ -175,11 +176,13 @@
                     </ControlTemplate.Resources>
                     <Border 
                         x:Name="PART_Border"
-                        Background="{StaticResource BorderBackground}"
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}"
                         Tag="{TemplateBinding Tag}"
                         CornerRadius="10">
+                        <Border.Background>
+                            <SolidColorBrush Color="{Binding Source={StaticResource BorderBackground}, Path=Color}"/>
+                        </Border.Background>
                         <Button 
                             x:Name="PART_Toggler" 
                             HorizontalAlignment="Left"
@@ -235,7 +238,7 @@
                                         Duration="0:0:0.200" 
                                         Storyboard.TargetName="PART_Border" 
                                         Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                        ToBrush="{StaticResource TogglerBackground}"
+                                        ToBrush="{StaticResource BorderBackground}"
                                         />
                                     </Storyboard>
                                 </BeginStoryboard>

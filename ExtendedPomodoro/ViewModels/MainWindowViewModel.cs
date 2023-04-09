@@ -23,17 +23,21 @@ namespace ExtendedPomodoro.ViewModels
         private ObservableObject _currentViewModel;
 
         [RelayCommand]
-        public void NavigateToTimer()
+        public async Task NavigateToTimer()
         {
             _navigationViewModel.SetCurrentViewModel(_timerViewModel);
+            await _timerViewModel.InstantiateTasks();
         }
 
         [RelayCommand]
-        public void NavigateToStats() => _navigationViewModel.SetCurrentViewModel(_statsViewModel); 
+        public void NavigateToStats() => _navigationViewModel.SetCurrentViewModel(_statsViewModel);
 
         [RelayCommand]
 
-        public void NavigateToSettings() => _navigationViewModel.SetCurrentViewModel(_settingsViewModel);
+        public async Task NavigateToSettings() { 
+             _navigationViewModel.SetCurrentViewModel(_settingsViewModel);
+             await _settingsViewModel.LoadSettings();
+         }
 
         [RelayCommand]
         public async Task NavigateToTasks()

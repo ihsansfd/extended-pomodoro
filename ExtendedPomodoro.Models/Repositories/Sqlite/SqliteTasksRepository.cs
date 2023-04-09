@@ -52,7 +52,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                     Offset = limit * (page - 1)
                 };
 
-                IEnumerable<TaskDTO> records = await db.QueryAsync<TaskDTO>(GET_TASKS_QUERY, data);
+                IEnumerable<SqlTaskDTO> records = await db.QueryAsync<SqlTaskDTO>(GET_TASKS_QUERY, data);
 
                 foreach(var record in records) yield return ConvertToTaskDomain(record);
             }
@@ -135,7 +135,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             }
         }
 
-        private static TaskDomain ConvertToTaskDomain(TaskDTO taskDTO)
+        private static TaskDomain ConvertToTaskDomain(SqlTaskDTO taskDTO)
         {
             return new(
                     taskDTO.Id,

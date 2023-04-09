@@ -19,7 +19,6 @@ namespace ExtendedPomodoro.ViewModels
         {
             ReadTasksViewModel = readTasksViewModel;
             CreateTaskViewModel = createTaskViewModel;
-            Task.Run(InstantiateTasks);
         }
 
         public async Task InstantiateTasks()
