@@ -13,6 +13,12 @@
         <Setter Property="Foreground" Value="{StaticResource Black}"/>
     </Style>
 
+    <Style TargetType="TextBlock" x:Key="TextBlockFormLabelLargeStyle">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontFamily" Value="{StaticResource FWSemiBold}"/>
+        <Setter Property="Foreground" Value="{StaticResource Black}"/>
+    </Style>
+    
     <Style TargetType="TextBlock" x:Key="TextBlockFormValueStyle">
         <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
         <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>

@@ -143,6 +143,7 @@
     <!--#region Buttons-->
 
     <Style TargetType="{x:Type controls:IconOnlyButton}">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:IconOnlyButton}">

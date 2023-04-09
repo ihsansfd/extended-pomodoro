@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\App.xaml
-17487227758
+19547448144
 1-2092025167
 42521422811
 209-1720512019
-MainWindow.xaml;Styles\Buttons.xaml;Styles\ComboBoxes.xaml;Styles\Fonts.xaml;Styles\Menu.xaml;Styles\Modals.xaml;Styles\TextBlocks.xaml;Styles\TextBoxes.xaml;Themes\DarkTheme.xaml;Themes\Generic.xaml;Themes\LightTheme.xaml;Views\Components\ModalCreateTaskUserControl.xaml;Views\SettingsView.xaml;Views\StatsView.xaml;Views\TasksView.xaml;Views\TimerView.xaml;Views\windowtest.xaml;
+MainWindow.xaml;Styles\Buttons.xaml;Styles\ComboBoxes.xaml;Styles\Fonts.xaml;Styles\Menu.xaml;Styles\Modals.xaml;Styles\Others.xaml;Styles\Popups.xaml;Styles\TextBlocks.xaml;Styles\TextBoxes.xaml;Themes\DarkTheme.xaml;Themes\Generic.xaml;Themes\LightTheme.xaml;Views\Components\ModalCreateTaskUserControl.xaml;Views\SettingsView.xaml;Views\StatsView.xaml;Views\TasksView.xaml;Views\TimerView.xaml;Views\windowtest.xaml;
 
 True
 

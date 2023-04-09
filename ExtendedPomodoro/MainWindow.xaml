@@ -73,8 +73,12 @@
                     />
             </StackPanel>
         </controls:DrawerSidebarMenu>
-        <Grid HorizontalAlignment="Center" Margin="0 20 0 0">
-            <Frame Content="{Binding CurrentViewModel}" NavigationUIVisibility="Hidden"/>
-        </Grid>
+            <Frame 
+            Margin="0 20 0 20" 
+            Content="{Binding CurrentViewModel}" 
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            NavigationUIVisibility="Hidden"
+            />
     </Grid>
 </Window>

@@ -30,12 +30,13 @@
     </Page.Resources>
 
     <Grid>
-        <Grid Width="400">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Button 
+        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            <Grid Width="400">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button 
             Style="{StaticResource IconizedButtonStyle}"
             Grid.Row="0" 
             Tag="PlusCircle"
@@ -44,23 +45,23 @@
             Click="ButtonCreateTask_Click"
             />
 
-            <WrapPanel Grid.Row="0" HorizontalAlignment="Right">
+                <WrapPanel Grid.Row="0" HorizontalAlignment="Right">
 
-                <!--tag is used for determining active color-->
-                <Button 
+                    <!--tag is used for determining active color-->
+                    <Button 
                     Style="{StaticResource LeftTabbedButtonStyle}" 
                     Tag="{Binding ReadTasksViewModel.IsDisplayingCompletedTasks, Converter={StaticResource InvertBoolConv}}"
                     Command="{Binding ReadTasksViewModel.DisplayInProgressTasksCommand}"
                     >In Progress</Button>
-                <Button 
+                    <Button 
                     Style="{StaticResource RightTabbedButtonStyle}"
                     Tag="{Binding ReadTasksViewModel.IsDisplayingCompletedTasks}" 
                     Command="{Binding ReadTasksViewModel.DisplayCompletedTasksCommand}"
                     >Completed</Button>
-            </WrapPanel>
+                </WrapPanel>
 
-            <!--Showing tasks-->
-            <controls:TasksListView 
+                <!--Showing tasks-->
+                <controls:TasksListView 
                 ItemsSource="{Binding Source={StaticResource TasksCollectionViewSource}, Mode=OneWay}" 
                 BorderThickness="0"
                 Grid.Row="1" 
@@ -70,27 +71,27 @@
                 IsLoadMoreButtonShown="{Binding ReadTasksViewModel.AreThereMoreTasks}"
                 FocusVisualStyle="{x:Null}"
                 >
-                <controls:TasksListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border 
+                    <controls:TasksListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border 
                             CornerRadius="13"
                             BorderThickness="1" 
                             Height="25"
                             Margin="0 0 0 5"
                             BorderBrush="{StaticResource Black}">
-                            <Border.Resources>
-                                <services:BindingProxy x:Key="CurrentDataContext" Data="{Binding}"/>
-                            </Border.Resources>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
+                                <Border.Resources>
+                                    <services:BindingProxy x:Key="CurrentDataContext" Data="{Binding}"/>
+                                </Border.Resources>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <Grid Grid.Column="0">
-                                    <TextBlock 
+                                    <Grid Grid.Column="0">
+                                        <TextBlock 
                                     FontSize="{StaticResource FSSmall}" 
                                     FontFamily="{StaticResource FWRegular}"
                                     VerticalAlignment="Center"
@@ -101,9 +102,9 @@
                                     Foreground="{StaticResource Black}"
                                     Text="{Binding Name}"
                                     />
-                                </Grid>
+                                    </Grid>
 
-                                <controls:IconOnlyButton Grid.Column="1"
+                                    <controls:IconOnlyButton Grid.Column="1"
                                                          Cursor="Hand"
                                                          Kind="ArrowUpRightCircle"
                                                          Foreground="{StaticResource Info}"
@@ -112,7 +113,7 @@
                                                          Click="ButtonTaskDetail_Click"
                                                          Height="16"/>
 
-                                <controls:IconOnlyButton Grid.Column="2"
+                                    <controls:IconOnlyButton Grid.Column="2"
                                                          Cursor="Hand"
                                                          Kind="XCircle"
                                                          Foreground="{StaticResource Danger}"
@@ -124,7 +125,7 @@
                                                                    RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
                                                          CommandParameter="{Binding Id}"/>
 
-                                <controls:IconOnlyButton Grid.Column="3"
+                                    <controls:IconOnlyButton Grid.Column="3"
                                                          Cursor="Hand"
                                                          Kind="CheckCircle"
                                                          Foreground="{StaticResource Success}"
@@ -137,15 +138,15 @@
                                                             Converter={StaticResource InvertBoolToVisibilityConv}}"
                                                          Command="{Binding DataContext.UpdateTaskViewModel.UpdateTaskStateCommand, 
                                                             RelativeSource={RelativeSource AncestorType={x:Type Page}}}">
-                                    <controls:IconOnlyButton.CommandParameter>
-                                        <vms:UpdateTaskStateDomainViewModel
+                                        <controls:IconOnlyButton.CommandParameter>
+                                            <vms:UpdateTaskStateDomainViewModel
                                             TaskId="{Binding Data.Id,
                                                     Source={StaticResource CurrentDataContext}}"
                                             IntendedTaskState="1"/>
-                                    </controls:IconOnlyButton.CommandParameter>
-                                </controls:IconOnlyButton>
+                                        </controls:IconOnlyButton.CommandParameter>
+                                    </controls:IconOnlyButton>
 
-                                <controls:IconOnlyButton Grid.Column="3"
+                                    <controls:IconOnlyButton Grid.Column="3"
                                                          Cursor="Hand"
                                                          Kind="ArrowLeftCircle"
                                                          Foreground="{StaticResource Orange}"
@@ -159,51 +160,52 @@
                                                          Command="{Binding DataContext.UpdateTaskViewModel.UpdateTaskStateCommand, 
                                                             RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
                                                          >
-                                    <controls:IconOnlyButton.CommandParameter>
-                                        <vms:UpdateTaskStateDomainViewModel
+                                        <controls:IconOnlyButton.CommandParameter>
+                                            <vms:UpdateTaskStateDomainViewModel
                                             TaskId="{Binding Data.Id,
                                                     Source={StaticResource CurrentDataContext}}"
                                             IntendedTaskState="0"/>
-                                    </controls:IconOnlyButton.CommandParameter>
-                                </controls:IconOnlyButton>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </controls:TasksListView.ItemTemplate>
-                <controls:TasksListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                    <ContentPresenter />
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </controls:TasksListView.ItemContainerStyle>
-                <controls:TasksListView.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock 
+                                        </controls:IconOnlyButton.CommandParameter>
+                                    </controls:IconOnlyButton>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </controls:TasksListView.ItemTemplate>
+                    <controls:TasksListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </controls:TasksListView.ItemContainerStyle>
+                    <controls:TasksListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock 
                                     Margin="5 10 0 5"
                                     Text="{Binding Items[0].CreatedAt}" 
                                     FontSize="{StaticResource FSSmall}" 
                                     FontFamily="{StaticResource FWMedium}"
                                     Foreground="{StaticResource Black}"/>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                    </GroupStyle>
-                </controls:TasksListView.GroupStyle>
-                <controls:TasksListView.Resources>
-                    <Style TargetType="ScrollBar">
-                        <Setter Property="Margin" Value="10 0 0 0"/>
-                    </Style>
-                </controls:TasksListView.Resources>
-            </controls:TasksListView>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </controls:TasksListView.GroupStyle>
+                    <controls:TasksListView.Resources>
+                        <Style TargetType="ScrollBar">
+                            <Setter Property="Margin" Value="10 0 0 0"/>
+                        </Style>
+                    </controls:TasksListView.Resources>
+                </controls:TasksListView>
 
-        </Grid>
+            </Grid>
+        </ScrollViewer>
 
         <components:ModalCreateTaskUserControl 
             x:Name="ModalCreateTask"

@@ -45,6 +45,12 @@
     <Page Update="Styles\Modals.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Styles\Others.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Styles\Popups.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Styles\TextBlocks.xaml">
       <SubType>Designer</SubType>
     </Page>

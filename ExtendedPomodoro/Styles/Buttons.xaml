@@ -160,7 +160,6 @@
         </Setter>
     </Style>
 
-    <!--Todo: Make the color static-->
     <!--region ToggleButton-->
     <Style TargetType="ToggleButton" x:Key="ToggleButtonStyle">
         <Setter Property="Width" Value="50"/>
@@ -213,7 +212,8 @@
                                         Duration="0:0:0.200" 
                                         Storyboard.TargetName="PART_Border" 
                                         Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                        ToBrush="{StaticResource HoverBrush}"/>
+                                        ToBrush="{StaticResource HoverBrush}"
+                                        />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger.Actions>
@@ -235,7 +235,8 @@
                                         Duration="0:0:0.200" 
                                         Storyboard.TargetName="PART_Border" 
                                         Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                        ToBrush="{StaticResource BorderBackground}"/>
+                                        ToBrush="{StaticResource TogglerBackground}"
+                                        />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger.Actions>
@@ -360,6 +361,20 @@
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Foreground" Value="{StaticResource SliderThumb.Static.Foreground}"/>
         <Setter Property="Template" Value="{StaticResource SliderHorizontal}"/>
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <ToolTip 
+                    Content="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.Value, UpdateSourceTrigger=PropertyChanged}"
+                    ContentStringFormat="0"
+                    Style="{StaticResource TooltipStyle}"
+                    />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VolumeSliderStyle" TargetType="{x:Type Slider}" BasedOn="{StaticResource SliderStyle}">
+        <Setter Property="Maximum" Value="100"/>
+        <Setter Property="TickFrequency" Value="1"/>
     </Style>
     <!--endregion Slider-->
 
