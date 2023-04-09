@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using ExtendedPomodoro.Core.Extensions;
+using CommunityToolkit.Mvvm.Input;
+using ExtendedPomodoro.FrameworkExtensions.Extensions;
 using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.Repositories;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -17,36 +19,58 @@ namespace ExtendedPomodoro.ViewModels
         private ISettingsRepository _repository;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Pomodoro duration is required")]
         private double _pomodoroDurationInMinutes;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Short break duration is required")]
         private double _shortBreakDurationInMinutes;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Long break duration is required")]
         private double _longBreakDurationInMinutes;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Long break interval is required")]
         private int _longBreakInterval;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Daily pomodoro target is required")]
         private int _dailyPomodoroTarget;
 
         [ObservableProperty]
-        private bool _isAutoStart;
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Is autostart is required")]
+        private bool _isAutostart;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Alarm Sound is required")]
         private int _alarmSound;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Volume is required")]
         private int _volume;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Is repeat forever is required")]
         private bool _isRepeatForever;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Is push notification enabled is required")]
         private bool _pushNotificationEnabled;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Is dark mode enabled is required")]
         private bool _darkModeEnabled;
 
         [ObservableProperty]
@@ -68,7 +92,7 @@ namespace ExtendedPomodoro.ViewModels
             LongBreakDurationInMinutes = settingsDomain.LongBreakDuration.TotalSeconds.SecondsToMinutes();
             LongBreakInterval = settingsDomain.LongBreakInterval;
             DailyPomodoroTarget = settingsDomain.DailyPomodoroTarget;
-            IsAutoStart = settingsDomain.IsAutostart;
+            IsAutostart = settingsDomain.IsAutostart;
             AlarmSound = (int) settingsDomain.AlarmSound;
             Volume = settingsDomain.Volume;
             IsRepeatForever = settingsDomain.IsRepeatForever;
@@ -78,11 +102,49 @@ namespace ExtendedPomodoro.ViewModels
             PauseHotkey = ConvertToHotkey(settingsDomain.PauseHotkey);
         }
 
+        [RelayCommand]
+        public async Task UpdateSettings()
+        {
+            ValidateAllProperties();
+
+            if(HasErrors) return;
+
+            await _repository.UpdateSettings(new SettingsDomain(
+                TimeSpan.FromMinutes(PomodoroDurationInMinutes),
+                TimeSpan.FromMinutes(ShortBreakDurationInMinutes),
+                TimeSpan.FromMinutes(LongBreakDurationInMinutes),
+                LongBreakInterval,
+                DailyPomodoroTarget,
+                IsAutostart,
+                (AlarmSound) AlarmSound,
+                Volume,
+                IsRepeatForever,
+                PushNotificationEnabled,
+                DarkModeEnabled,
+                ConvertToHotkeyDomain(StartHotkey),
+                ConvertToHotkeyDomain(PauseHotkey)
+                ));
+        }
+
+        [RelayCommand]
+        public async Task ResetToDefaultSettings()
+        {
+            await _repository.ResetToDefaultSettings();
+            await LoadSettings();
+        }
+
         private Hotkey? ConvertToHotkey(HotkeyDomain? hotkeyDomain)
         {
             if(hotkeyDomain == null) return null;
 
             return new Hotkey((Key) hotkeyDomain.Key, (ModifierKeys) hotkeyDomain.ModifierKeys);
+        }
+
+        private HotkeyDomain? ConvertToHotkeyDomain(Hotkey? hotkey)
+        {
+            if (hotkey == null) return null;
+
+            return new HotkeyDomain((int) hotkey.Modifiers, (int) hotkey.Key);
         }
     }
 }

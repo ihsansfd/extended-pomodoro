@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\App.xaml
 19547448144
 1-2092025167
-41-1541998028
+42-544650279
 211-800603607
 MainWindow.xaml;Styles\Buttons.xaml;Styles\ComboBoxes.xaml;Styles\Fonts.xaml;Styles\Menu.xaml;Styles\Modals.xaml;Styles\Others.xaml;Styles\Popups.xaml;Styles\TextBlocks.xaml;Styles\TextBoxes.xaml;Themes\DarkTheme.xaml;Themes\Generic.xaml;Themes\LightTheme.xaml;Views\Components\ModalCreateTaskUserControl.xaml;Views\SettingsView.xaml;Views\StatsView.xaml;Views\TasksView.xaml;Views\TimerView.xaml;Views\windowtest.xaml;
 
-True
+False
 

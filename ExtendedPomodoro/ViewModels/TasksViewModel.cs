@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using ExtendedPomodoro.Core.Extensions;
+using ExtendedPomodoro.FrameworkExtensions.Extensions;
 
 namespace ExtendedPomodoro.ViewModels
 {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Animation;
 using System.Windows.Media;
 
-namespace ExtendedPomodoro.Core
+namespace ExtendedPomodoro.FrameworkExtensions
 {
 
     // A simple extension for making animation for solidcolorbrush instead of color

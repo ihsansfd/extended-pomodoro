@@ -6,8 +6,9 @@
       xmlns:local="clr-namespace:ExtendedPomodoro.Views"
       xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
       xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
+      xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="400"
+      d:DesignHeight="650" d:DesignWidth="400"
       d:DataContext="{d:DesignInstance Type=vms:SettingsViewModel}"
       Title="SettingsView">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -54,7 +55,13 @@
                         Text="{Binding PomodoroDurationInMinutes}"
                         Width="70"
                         Margin="0 0 8.5 0"
-                        Style="{StaticResource TextBoxStyle}"/>
+                        Style="{StaticResource TextBoxStyle}">
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="LostFocus">
+                                <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                        </TextBox>
                     </StackPanel>
 
                     <StackPanel HorizontalAlignment="Center">
@@ -67,7 +74,13 @@
                             Grid.Row="1"
                             Grid.Column="1"
                             Width="70"
-                            Style="{StaticResource TextBoxStyle}"/>
+                            Style="{StaticResource TextBoxStyle}">
+                            <behaviors:Interaction.Triggers>
+                                <behaviors:EventTrigger EventName="LostFocus">
+                                    <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                                </behaviors:EventTrigger>
+                            </behaviors:Interaction.Triggers>
+                        </TextBox>
                     </StackPanel>
 
                     <StackPanel HorizontalAlignment="Right">
@@ -78,7 +91,13 @@
                         <TextBox 
                             Text="{Binding LongBreakDurationInMinutes}"
                             Width="70"
-                            Style="{StaticResource TextBoxStyle}"/>
+                            Style="{StaticResource TextBoxStyle}">
+                            <behaviors:Interaction.Triggers>
+                                <behaviors:EventTrigger EventName="LostFocus">
+                                    <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                                </behaviors:EventTrigger>
+                            </behaviors:Interaction.Triggers>
+                        </TextBox>
                     </StackPanel>
                 </Grid>
                 <Grid>
@@ -105,7 +124,13 @@
                         Width="70"
                         HorizontalAlignment="Right"
                         Margin="0 0 0 20"
-                        Style="{StaticResource TextBoxStyle}"/>
+                        Style="{StaticResource TextBoxStyle}">
+                            <behaviors:Interaction.Triggers>
+                                <behaviors:EventTrigger EventName="LostFocus">
+                                    <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                                </behaviors:EventTrigger>
+                            </behaviors:Interaction.Triggers>
+                    </TextBox>
 
                     <TextBlock 
                         Text="Daily Pomodoro Target"
@@ -121,7 +146,13 @@
                         Width="70"
                         HorizontalAlignment="Right"
                         Margin="0 0 0 20"
-                        Style="{StaticResource TextBoxStyle}"/>
+                        Style="{StaticResource TextBoxStyle}">
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="LostFocus">
+                                <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                    </TextBox>
 
                     <TextBlock 
                         Text="Autostart Next Session"
@@ -130,11 +161,20 @@
                         VerticalAlignment="Center"
                         Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <ToggleButton
-                        IsChecked="{Binding IsAutoStart, Mode=TwoWay}"
+                        IsChecked="{Binding IsAutostart, Mode=TwoWay}"
                         Grid.Column="1"
                         Grid.Row="2"
                         HorizontalAlignment="Right"
-                        Style="{StaticResource ToggleButtonStyle}"/>
+                        Style="{StaticResource ToggleButtonStyle}">
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="Checked">
+                                <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                            </behaviors:EventTrigger>
+                            <behaviors:EventTrigger EventName="Unchecked">
+                                <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                                </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                    </ToggleButton>
                 </Grid>
             </StackPanel>
             <!--endregion Timer-->
@@ -186,11 +226,18 @@
                     SelectedValuePath="Tag"
                     SelectedValue="{Binding AlarmSound, Mode=TwoWay}"
                     Style="{StaticResource ComboBoxStyle}">
-                    <ComboBoxItem Tag="0" Content="Chimes"/>
-                    <ComboBoxItem Tag="1" Content="Echo"/>
-                    <ComboBoxItem Tag="2" Content="Mechanics"/>
-                    <ComboBoxItem Tag="3" Content="Retro"/>
-                    <ComboBoxItem Tag="4" Content="Ticks"/>
+                    <ComboBox.Items>
+                        <ComboBoxItem Tag="0" Content="Chimes"/>
+                        <ComboBoxItem Tag="1" Content="Echo"/>
+                        <ComboBoxItem Tag="2" Content="Mechanics"/>
+                        <ComboBoxItem Tag="3" Content="Retro"/>
+                        <ComboBoxItem Tag="4" Content="Ticks"/>
+                    </ComboBox.Items>
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="SelectionChanged">
+                            <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
                 </ComboBox>
                 <TextBlock 
                     Text="Volume"
@@ -206,8 +253,17 @@
                     HorizontalAlignment="Right"
                     Margin="0 0 0 20"
                     Width="100"
-                    Value="{Binding Volume, Mode=TwoWay}"
-                    Style="{StaticResource VolumeSliderStyle}"/>
+                    Value="{Binding Volume, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+                    Style="{StaticResource VolumeSliderStyle}">
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="PreviewKeyUp">
+                            <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                        </behaviors:EventTrigger>
+                        <behaviors:EventTrigger EventName="PreviewMouseUp">
+                            <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+                </Slider>
 
                 <TextBlock 
                     Text="Repeat Forever"
@@ -222,7 +278,16 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Right"
                     IsChecked="{Binding IsRepeatForever, Mode=TwoWay}"
-                    Style="{StaticResource ToggleButtonStyle}"/>
+                    Style="{StaticResource ToggleButtonStyle}">
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="Checked">
+                            <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                        </behaviors:EventTrigger>
+                        <behaviors:EventTrigger EventName="Unchecked">
+                            <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+                </ToggleButton>
 
             </Grid>
             <!--#endregion Ring-->
@@ -256,7 +321,16 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right"
                 Margin="0 0 0 30"
-                Style="{StaticResource ToggleButtonStyle}"/>
+                Style="{StaticResource ToggleButtonStyle}">
+                <behaviors:Interaction.Triggers>
+                    <behaviors:EventTrigger EventName="Checked">
+                        <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                    </behaviors:EventTrigger>
+                    <behaviors:EventTrigger EventName="Unchecked">
+                        <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                    </behaviors:EventTrigger>
+                </behaviors:Interaction.Triggers>
+            </ToggleButton>
             <!--#endregion Notification-->
             
             <!--#region Theme-->
@@ -288,7 +362,16 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right"
                 Margin="0 0 0 30"
-                Style="{StaticResource ToggleButtonStyle}"/>
+                Style="{StaticResource ToggleButtonStyle}">
+                <behaviors:Interaction.Triggers>
+                    <behaviors:EventTrigger EventName="Checked">
+                        <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                    </behaviors:EventTrigger>
+                    <behaviors:EventTrigger EventName="Unchecked">
+                        <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                    </behaviors:EventTrigger>
+                </behaviors:Interaction.Triggers>
+            </ToggleButton>
             <!--#endregion Theme-->
 
             <!--#region Hotkeys-->
@@ -304,7 +387,7 @@
                 Grid.Column="1"
                 Style="{StaticResource VerticalSeparatorStyle}"
                 Width="1"
-                Margin="0 0 20 0"/>
+                Margin="0 0 20 30"/>
             <Grid Grid.Column="2"
                   Grid.Row="4"
                   VerticalAlignment="Center">
@@ -325,12 +408,19 @@
                     Width="100"
                     Margin="0 0 0 20"
                     HorizontalAlignment="Right"
-                    Style="{StaticResource TextBoxStyle}"/>
+                    Style="{StaticResource TextBoxStyle}">
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="LostFocus">
+                            <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+                </controls:HotkeyTextBox>
 
                 <TextBlock 
                     Text="Pause"
                     Grid.Row="1"
                     VerticalAlignment="Center"
+                    Margin="0 0 0 30"
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
 
                 <controls:HotkeyTextBox 
@@ -338,9 +428,41 @@
                     Grid.Row="1"
                     Width="100"
                     HorizontalAlignment="Right"
-                    Style="{StaticResource TextBoxStyle}"/>
+                    Margin="0 0 0 30"
+                    Style="{StaticResource TextBoxStyle}">
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="LostFocus">
+                            <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+                    </controls:HotkeyTextBox>
             </Grid>
             <!--#endregion Hotkeys-->
+                
+            <!--#region Default Settings -->
+            <TextBlock 
+                Text="Default Settings"
+                Grid.Row="5"
+                Grid.Column="0"
+                HorizontalAlignment="Left"
+                Margin="0 0 40 0"
+                Style="{StaticResource TextBlockFormLabelLargeStyle}"/>
+            <Separator 
+                Grid.Row="5"
+                Grid.Column="1"
+                Style="{StaticResource VerticalSeparatorStyle}"
+                Width="1"
+                Margin="0 0 20 0"/>
+            <Button 
+                Content="Reset"
+                Command="{Binding ResetToDefaultSettingsCommand}"
+                Grid.Column="2"
+                Grid.Row="5"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Style="{StaticResource ButtonStyle}"/>
+
+            <!--#endregion Default Settings -->
         </Grid>
 
     </ScrollViewer>

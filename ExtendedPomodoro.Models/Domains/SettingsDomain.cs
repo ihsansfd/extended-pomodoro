@@ -24,7 +24,6 @@ namespace ExtendedPomodoro.Models.Domains
     public record class HotkeyDomain(int ModifierKeys, int Key);
 
     public record class SettingsDomain(
-        SettingsType SettingsType,
         TimeSpan PomodoroDuration,
         TimeSpan ShortBreakDuration,
         TimeSpan LongBreakDuration,

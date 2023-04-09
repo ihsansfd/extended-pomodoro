@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExtendedPomodoro.Core.Extensions
+namespace ExtendedPomodoro.FrameworkExtensions.Extensions
 {
     public static class CommonExtensions
     {
