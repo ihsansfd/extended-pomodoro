@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "+sZeYYwRAqaNhgVwT4zfLLQOY0tDPCBcPmRmrrW0KrKmU33LDP3WhXQgzZp1PYPwUhraCTeSetShTi1B0I7aVw==",
+  "dgSpecHash": "xekATBV+M582BF+PugK4bJYJ4TkFTK8Q6azZ7kkw9ObK7I31jiSRyGOSPzTaWtvoqN6Xigw+7Zp0M8LCZZpbmQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\ihsan\\source\\repos\\ExtendedPomodoro\\ExtendedPomodoro\\ExtendedPomodoro.csproj",
   "expectedPackageFiles": [
@@ -17,7 +17,8 @@
     "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.core\\2.1.4\\sqlitepclraw.core.2.1.4.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.4\\sqlitepclraw.lib.e_sqlite3.2.1.4.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.4\\sqlitepclraw.provider.e_sqlite3.2.1.4.nupkg.sha512",
-    "C:\\Users\\ihsan\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512"
+    "C:\\Users\\ihsan\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\xamlradialprogressbar\\1.0.3\\xamlradialprogressbar.1.0.3.nupkg.sha512"
   ],
   "logs": []
 }

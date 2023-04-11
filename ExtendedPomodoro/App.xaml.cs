@@ -5,6 +5,7 @@ using ExtendedPomodoro.Models.DbSetup;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.Repositories;
 using ExtendedPomodoro.Models.Repositories.Sqlite;
+using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using ExtendedPomodoro.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,12 +34,15 @@ namespace ExtendedPomodoro
             InitializeDb();
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             var mainWindow = Services.GetRequiredService<MainWindow>();
-            mainWindow.DataContext = Services.GetRequiredService<MainWindowViewModel>();
+            var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
+            await mainWindowViewModel.Initialize();
+            mainWindow.DataContext = mainWindowViewModel;
+
             mainWindow.Show();
 
         }
@@ -53,7 +57,7 @@ namespace ExtendedPomodoro
         {
             var services = new ServiceCollection();
             services.AddSingleton<DbConfig>(
-                (s) => new(ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString)
+                (_) => new(ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString)
                 );
             services.AddSingleton<TasksHelper>();
             services.AddTransient<ReadTasksViewModel>();
@@ -69,6 +73,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<IDatabaseSetup, SqliteDbSetup>();
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<TimerViewModel>();
+            services.AddSingleton<TimerSessionState>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<StatsViewModel>();

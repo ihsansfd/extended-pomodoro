@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!--TODO: refactor name "color" to foreground or background -->
     <SolidColorBrush x:Key="Primary">#FF6363</SolidColorBrush>
     <SolidColorBrush x:Key="Black">#311717</SolidColorBrush>
     <SolidColorBrush x:Key="Black-50">#988b8b</SolidColorBrush>
@@ -20,7 +21,7 @@
     <SolidColorBrush x:Key="White">#FFFFFF</SolidColorBrush>
     <SolidColorBrush x:Key="MainHoverColor">#FF6363</SolidColorBrush>
     <SolidColorBrush x:Key="MainActiveColor">#FF6363</SolidColorBrush>
-
+    <SolidColorBrush x:Key="MainColor">#311717</SolidColorBrush>
     <SolidColorBrush x:Key="TextColor">#311717</SolidColorBrush>
     <SolidColorBrush x:Key="BorderColor">#988b8b</SolidColorBrush>
     <SolidColorBrush x:Key="ContainerBackground">#988b8b</SolidColorBrush>

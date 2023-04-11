@@ -91,3 +91,4 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-w
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\Microsoft.Xaml.Behaviors.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\ExtendedPomodoro.Core.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\ExtendedPomodoro.Core.pdb
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\XamlRadialProgressBar.dll

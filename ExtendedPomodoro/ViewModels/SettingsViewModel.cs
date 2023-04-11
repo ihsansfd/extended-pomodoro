@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.ComponentModel.DataAnnotations;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -84,7 +85,7 @@ namespace ExtendedPomodoro.ViewModels
             _repository = repository;
         }
 
-        public async Task LoadSettings()
+        public async Task Initialize()
         {
             SettingsDomain settingsDomain = await _repository.GetSettings();
             PomodoroDurationInMinutes = settingsDomain.PomodoroDuration.TotalSeconds.SecondsToMinutes();
@@ -124,13 +125,14 @@ namespace ExtendedPomodoro.ViewModels
                 ConvertToHotkeyDomain(StartHotkey),
                 ConvertToHotkeyDomain(PauseHotkey)
                 ));
+
         }
 
         [RelayCommand]
         public async Task ResetToDefaultSettings()
         {
             await _repository.ResetToDefaultSettings();
-            await LoadSettings();
+            await Initialize();
         }
 
         private Hotkey? ConvertToHotkey(HotkeyDomain? hotkeyDomain)

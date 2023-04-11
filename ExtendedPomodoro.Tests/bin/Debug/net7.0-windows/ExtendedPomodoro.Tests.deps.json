@@ -1283,6 +1283,14 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
+      "XamlRadialProgressBar/1.0.3": {
+        "runtime": {
+          "lib/netcoreapp3.1/XamlRadialProgressBar.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "xunit/2.4.2": {
         "dependencies": {
           "xunit.analyzers": "1.0.0",
@@ -1350,7 +1358,8 @@
           "MahApps.Metro.IconPacks.BootstrapIcons": "4.11.0",
           "Microsoft.Extensions.DependencyInjection": "7.0.0",
           "Microsoft.Xaml.Behaviors.Wpf": "1.1.39",
-          "SQLite": "3.13.0"
+          "SQLite": "3.13.0",
+          "XamlRadialProgressBar": "1.0.3"
         },
         "runtime": {
           "ExtendedPomodoro.dll": {}
@@ -2063,6 +2072,13 @@
       "sha512": "sha512-5zJ0XDxAIg8iy+t4aMnQAu0MqVbqyvfoUVl1yDV61xdo3Vth45oA2FoY4pPkxYAH5f8ixpmTqXeEIya95x0aCQ==",
       "path": "system.xml.xdocument/4.3.0",
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
+    },
+    "XamlRadialProgressBar/1.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-loSQXgOKkSXfjWbDXTKCy6yv4ECPJRUcFh1Sbi3WseW0opSnXyJUXEPsRl/KevdFYEqKrZwZ4BSA0ANzSFhiSA==",
+      "path": "xamlradialprogressbar/1.0.3",
+      "hashPath": "xamlradialprogressbar.1.0.3.nupkg.sha512"
     },
     "xunit/2.4.2": {
       "type": "package",

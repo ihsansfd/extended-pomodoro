@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "wo43fa7H0MxcOVJZ92Gu+FAboeRyuH31IQeho8TsK7QHwVk2G6jf51rso28+Yu1yB0LlZqXAlDVvEPuj/Mj4SA==",
+  "dgSpecHash": "2UDp5b5qbC86f93mxB9xvXQmeh2pMDZIY+cix7S0bTj6xWqY99vsRrec3ySEGI08GBugz5/066yUZoYKgTwaZA==",
   "success": true,
   "projectFilePath": "C:\\Users\\ihsan\\source\\repos\\ExtendedPomodoro\\ExtendedPomodoro.Tests\\ExtendedPomodoro.Tests.csproj",
   "expectedPackageFiles": [
@@ -102,6 +102,7 @@
     "C:\\Users\\ihsan\\.nuget\\packages\\system.threading.timer\\4.3.0\\system.threading.timer.4.3.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\xamlradialprogressbar\\1.0.3\\xamlradialprogressbar.1.0.3.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\xunit\\2.4.2\\xunit.2.4.2.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\xunit.abstractions\\2.0.3\\xunit.abstractions.2.0.3.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\xunit.analyzers\\1.0.0\\xunit.analyzers.1.0.0.nupkg.sha512",

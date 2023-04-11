@@ -22,11 +22,29 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private ObservableObject _currentViewModel;
 
+        public MainWindowViewModel(NavigationViewModel navigationViewModel,
+          TimerViewModel timerViewModel, SettingsViewModel settingsViewModel, StatsViewModel statsViewModel, TasksViewModel tasksViewModel)
+        {
+            _navigationViewModel = navigationViewModel;
+            _timerViewModel = timerViewModel;
+            _settingsViewModel = settingsViewModel;
+            _tasksViewModel = tasksViewModel;
+            _statsViewModel = statsViewModel;
+
+            StrongReferenceMessenger.Default.Register<CurrentViewModelMessage>(this);
+        }
+
+        public async Task Initialize()
+        {
+            await NavigateToTimer();
+
+        }
+
         [RelayCommand]
         public async Task NavigateToTimer()
         {
             _navigationViewModel.SetCurrentViewModel(_timerViewModel);
-            await _timerViewModel.InstantiateTasks();
+            await _timerViewModel.Initialize();
         }
 
         [RelayCommand]
@@ -36,7 +54,7 @@ namespace ExtendedPomodoro.ViewModels
 
         public async Task NavigateToSettings() { 
              _navigationViewModel.SetCurrentViewModel(_settingsViewModel);
-             await _settingsViewModel.LoadSettings();
+             await _settingsViewModel.Initialize();
          }
 
         [RelayCommand]
@@ -47,20 +65,6 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         public void Receive(CurrentViewModelMessage currentViewModelMessage) => CurrentViewModel = currentViewModelMessage.Message;
-
-        public MainWindowViewModel(NavigationViewModel navigationViewModel, 
-            TimerViewModel timerViewModel, SettingsViewModel settingsViewModel, StatsViewModel statsViewModel, TasksViewModel tasksViewModel)
-        {
-            _navigationViewModel = navigationViewModel;
-            CurrentViewModel = _navigationViewModel.CurrentViewModel;
-
-            _timerViewModel = timerViewModel;
-            _settingsViewModel = settingsViewModel;
-            _tasksViewModel = tasksViewModel;
-            _statsViewModel = statsViewModel;
-
-            StrongReferenceMessenger.Default.Register<CurrentViewModelMessage>(this);
-        }
 
     }
 }

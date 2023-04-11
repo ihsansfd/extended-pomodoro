@@ -4,10 +4,10 @@
     
     <!--Region: Font Family-->
     
-    <FontFamily x:Key="FWRegular">pack://application;,,,/Fonts/#Inter Regular</FontFamily>
-    <FontFamily x:Key="FWSemiBold">pack://application;,,,/Fonts/#Inter SemiBold</FontFamily>
-    <FontFamily x:Key="FWMedium">pack://application;,,,/Fonts/#Inter Medium</FontFamily>
-    <FontFamily x:Key="FWLight">pack://application;,,,/Fonts/#Inter Light</FontFamily>
+    <FontFamily x:Key="FWRegular">pack://application;,,,/Assets/Fonts/#Inter Regular</FontFamily>
+    <FontFamily x:Key="FWSemiBold">pack://application;,,,/Assets/Fonts/#Inter SemiBold</FontFamily>
+    <FontFamily x:Key="FWMedium">pack://application;,,,/Assets/Fonts/#Inter Medium</FontFamily>
+    <FontFamily x:Key="FWLight">pack://application;,,,/Assets/Fonts/#Inter Light</FontFamily>
 
     <!--End Region-->
 
@@ -17,7 +17,7 @@
     <sys:Double x:Key="FSSmall">12</sys:Double>
     <sys:Double x:Key="FSRegular">16</sys:Double>
     <sys:Double x:Key="FSMedium">21</sys:Double>
-
+    <sys:Double x:Key="FSLarge">38</sys:Double>
     <!--End Region-->
 
 

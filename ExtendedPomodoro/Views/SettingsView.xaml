@@ -212,8 +212,7 @@
                         Kind="VolumeDownFill"
                         Foreground="{StaticResource TextColor}"
                         Width="12"
-                        Height="12"
-                    />
+                        Height="12"/>
                 </WrapPanel>
                 <ComboBox 
                     Grid.Column="1" 

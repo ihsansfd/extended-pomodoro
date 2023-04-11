@@ -312,6 +312,15 @@
           "lib/netcoreapp2.1/_._": {}
         }
       },
+      "XamlRadialProgressBar/1.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/XamlRadialProgressBar.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/XamlRadialProgressBar.dll": {}
+        }
+      },
       "ExtendedPomodoro.Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
@@ -687,6 +696,20 @@
         "version.txt"
       ]
     },
+    "XamlRadialProgressBar/1.0.3": {
+      "sha512": "loSQXgOKkSXfjWbDXTKCy6yv4ECPJRUcFh1Sbi3WseW0opSnXyJUXEPsRl/KevdFYEqKrZwZ4BSA0ANzSFhiSA==",
+      "type": "package",
+      "path": "xamlradialprogressbar/1.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/icon.jpg",
+        "lib/net452/XamlRadialProgressBar.DotNet.dll",
+        "lib/netcoreapp3.1/XamlRadialProgressBar.dll",
+        "xamlradialprogressbar.1.0.3.nupkg.sha512",
+        "xamlradialprogressbar.nuspec"
+      ]
+    },
     "ExtendedPomodoro.Core/1.0.0": {
       "type": "project",
       "path": "../ExtendedPomodoro.Core/ExtendedPomodoro.Core.csproj",
@@ -707,7 +730,8 @@
       "MahApps.Metro.IconPacks.BootstrapIcons >= 4.11.0",
       "Microsoft.Extensions.DependencyInjection >= 7.0.0",
       "Microsoft.Xaml.Behaviors.Wpf >= 1.1.39",
-      "SQLite >= 3.13.0"
+      "SQLite >= 3.13.0",
+      "XamlRadialProgressBar >= 1.0.3"
     ]
   },
   "packageFolders": {
@@ -779,6 +803,10 @@
           "SQLite": {
             "target": "Package",
             "version": "[3.13.0, )"
+          },
+          "XamlRadialProgressBar": {
+            "target": "Package",
+            "version": "[1.0.3, )"
           }
         },
         "imports": [

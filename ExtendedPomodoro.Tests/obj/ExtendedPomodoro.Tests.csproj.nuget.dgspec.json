@@ -274,6 +274,10 @@
             "SQLite": {
               "target": "Package",
               "version": "[3.13.0, )"
+            },
+            "XamlRadialProgressBar": {
+              "target": "Package",
+              "version": "[1.0.3, )"
             }
           },
           "imports": [
