@@ -108,7 +108,7 @@ namespace ExtendedPomodoro.ViewModels
 
         private double CalculateProgress(TimeSpan timerSetFor, TimeSpan remainingTime)
         {
-            return (timerSetFor - remainingTime) / timerSetFor;
+            return (timerSetFor - remainingTime) / timerSetFor * 100;
         }
     }
 
@@ -130,11 +130,8 @@ namespace ExtendedPomodoro.ViewModels
             _context = context;
             _configuration = configuration;
             await _configuration.Initialize();
-            if (_context.CurrentTimerSession.GetType() == typeof(TimerSessionState))
-            {
-                _context.CurrentTimerSession = _pomodoroSessionState;
-                _context.CurrentTimerSession.Initialize();
-            }
+            _context.CurrentTimerSession = _pomodoroSessionState;
+            _context.CurrentTimerSession.Initialize();
         }
 
         public virtual void Initialize() { }
