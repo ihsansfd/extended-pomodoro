@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ExtendedPomodoro.Views"
       xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
       xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
       xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
@@ -46,21 +45,21 @@
                 <Grid Margin="0 0 0 20">
                     <StackPanel HorizontalAlignment="Left">
                         <TextBlock 
-                        Text="Pomodoro"
-                        Grid.Row="0"
-                        Margin="0 0 0 5"
-                        Grid.Column="0"
-                        Style="{StaticResource TextBlockFormLabelStyle}"/>
+                            Text="Pomodoro"
+                            Grid.Row="0"
+                            Margin="0 0 0 5"
+                            Grid.Column="0"
+                            Style="{StaticResource TextBlockFormLabelStyle}"/>
                         <TextBox 
-                        Text="{Binding PomodoroDurationInMinutes}"
-                        Width="70"
-                        Margin="0 0 8.5 0"
-                        Style="{StaticResource TextBoxStyle}">
-                        <behaviors:Interaction.Triggers>
-                            <behaviors:EventTrigger EventName="LostFocus">
-                                <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
-                            </behaviors:EventTrigger>
-                        </behaviors:Interaction.Triggers>
+                            Text="{Binding PomodoroDurationInMinutes}"
+                            Width="70"
+                            Margin="0 0 8.5 0"
+                            Style="{StaticResource TextBoxStyle}">
+                            <behaviors:Interaction.Triggers>
+                                <behaviors:EventTrigger EventName="LostFocus">
+                                    <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                                </behaviors:EventTrigger>
+                            </behaviors:Interaction.Triggers>
                         </TextBox>
                     </StackPanel>
 
@@ -125,11 +124,11 @@
                         HorizontalAlignment="Right"
                         Margin="0 0 0 20"
                         Style="{StaticResource TextBoxStyle}">
-                            <behaviors:Interaction.Triggers>
-                                <behaviors:EventTrigger EventName="LostFocus">
-                                    <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
-                                </behaviors:EventTrigger>
-                            </behaviors:Interaction.Triggers>
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="LostFocus">
+                                <behaviors:InvokeCommandAction Command="{Binding UpdateSettingsCommand}"/>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
                     </TextBox>
 
                     <TextBlock 
@@ -191,8 +190,7 @@
                 Grid.Column="1"
                 Style="{StaticResource VerticalSeparatorStyle}"
                 Width="1"
-                Margin="0 0 20 30"
-            />
+                Margin="0 0 20 30"/>
             <Grid Grid.Row="1" Grid.Column="2" Margin="0 0 0 30">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>

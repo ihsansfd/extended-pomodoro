@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ExtendedPomodoro.Views"
       xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
       xmlns:components="clr-namespace:ExtendedPomodoro.Views.Components"
       xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
@@ -20,9 +19,10 @@
         <converters:TaskStateConverter x:Key="TaskStateConv"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
 
-        <CollectionViewSource x:Key="TasksCollectionViewSource" 
-                              Source="{Binding ReadTasksViewModel.Tasks}" 
-                              IsLiveGroupingRequested="True">
+        <CollectionViewSource 
+            x:Key="TasksCollectionViewSource" 
+            Source="{Binding ReadTasksViewModel.Tasks}" 
+            IsLiveGroupingRequested="True">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="CreatedAt"/>
             </CollectionViewSource.GroupDescriptions>
@@ -37,48 +37,46 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Button 
-            Style="{StaticResource IconizedButtonStyle}"
-            Grid.Row="0" 
-            Tag="PlusCircle"
-            Content="Add new"
-            HorizontalAlignment="Left"
-            Click="ButtonCreateTask_Click"
-            />
+                    Style="{StaticResource IconizedButtonStyle}"
+                    Grid.Row="0" 
+                    Tag="PlusCircle"
+                    Content="Add new"
+                    HorizontalAlignment="Left"
+                    Click="ButtonCreateTask_Click"/>
 
                 <WrapPanel Grid.Row="0" HorizontalAlignment="Right">
 
                     <!--tag is used for determining active color-->
                     <Button 
-                    Style="{StaticResource LeftTabbedButtonStyle}" 
-                    Tag="{Binding ReadTasksViewModel.IsDisplayingCompletedTasks, Converter={StaticResource InvertBoolConv}}"
-                    Command="{Binding ReadTasksViewModel.DisplayInProgressTasksCommand}"
-                    >In Progress</Button>
+                        Style="{StaticResource LeftTabbedButtonStyle}" 
+                        Tag="{Binding ReadTasksViewModel.IsDisplayingCompletedTasks, Converter={StaticResource InvertBoolConv}}"
+                        Command="{Binding ReadTasksViewModel.DisplayInProgressTasksCommand}"
+                        Content="In Progress"/>
                     <Button 
-                    Style="{StaticResource RightTabbedButtonStyle}"
-                    Tag="{Binding ReadTasksViewModel.IsDisplayingCompletedTasks}" 
-                    Command="{Binding ReadTasksViewModel.DisplayCompletedTasksCommand}"
-                    >Completed</Button>
+                        Style="{StaticResource RightTabbedButtonStyle}"
+                        Tag="{Binding ReadTasksViewModel.IsDisplayingCompletedTasks}" 
+                        Command="{Binding ReadTasksViewModel.DisplayCompletedTasksCommand}"
+                        Content="Completed"/>
                 </WrapPanel>
 
                 <!--Showing tasks-->
                 <controls:TasksListView 
-                ItemsSource="{Binding Source={StaticResource TasksCollectionViewSource}, Mode=OneWay}" 
-                BorderThickness="0"
-                Grid.Row="1" 
-                Margin="0 10 0 0"
-                LoadMoreButtonStyle="{StaticResource ButtonStyle}"
-                LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"
-                IsLoadMoreButtonShown="{Binding ReadTasksViewModel.AreThereMoreTasks}"
-                FocusVisualStyle="{x:Null}"
-                >
+                    ItemsSource="{Binding Source={StaticResource TasksCollectionViewSource}, Mode=OneWay}" 
+                    BorderThickness="0"
+                    Grid.Row="1" 
+                    Margin="0 10 0 0"
+                    LoadMoreButtonStyle="{StaticResource ButtonStyle}"
+                    LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"
+                    IsLoadMoreButtonShown="{Binding ReadTasksViewModel.AreThereMoreTasks}"
+                    FocusVisualStyle="{x:Null}">
                     <controls:TasksListView.ItemTemplate>
                         <DataTemplate>
                             <Border 
-                            CornerRadius="13"
-                            BorderThickness="1" 
-                            Height="25"
-                            Margin="0 0 0 5"
-                            BorderBrush="{StaticResource Black}">
+                                CornerRadius="13"
+                                BorderThickness="1" 
+                                Height="25"
+                                Margin="0 0 0 5"
+                                BorderBrush="{StaticResource Black}">
                                 <Border.Resources>
                                     <services:BindingProxy x:Key="CurrentDataContext" Data="{Binding}"/>
                                 </Border.Resources>
@@ -92,79 +90,80 @@
 
                                     <Grid Grid.Column="0">
                                         <TextBlock 
-                                    FontSize="{StaticResource FSSmall}" 
-                                    FontFamily="{StaticResource FWRegular}"
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Left"
-                                    MaxWidth="250"
-                                    TextTrimming="CharacterEllipsis"
-                                    Margin="10 0 0 0"
-                                    Foreground="{StaticResource Black}"
-                                    Text="{Binding Name}"
-                                    />
+                                            FontSize="{StaticResource FSSmall}" 
+                                            FontFamily="{StaticResource FWRegular}"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"
+                                            MaxWidth="250"
+                                            TextTrimming="CharacterEllipsis"
+                                            Margin="10 0 0 0"
+                                            Foreground="{StaticResource Black}"
+                                            Text="{Binding Name}"/>
                                     </Grid>
 
-                                    <controls:IconOnlyButton Grid.Column="1"
-                                                         Cursor="Hand"
-                                                         Kind="ArrowUpRightCircle"
-                                                         Foreground="{StaticResource Info}"
-                                                         HoverColor="{StaticResource InfoDarker}"
-                                                         Width="16"
-                                                         Click="ButtonTaskDetail_Click"
-                                                         Height="16"/>
+                                    <controls:IconOnlyButton 
+                                        Grid.Column="1"
+                                        Cursor="Hand"
+                                        Kind="ArrowUpRightCircle"
+                                        Foreground="{StaticResource Info}"
+                                        HoverColor="{StaticResource InfoDarker}"
+                                        Width="16"
+                                        Click="ButtonTaskDetail_Click"
+                                        Height="16"/>
 
-                                    <controls:IconOnlyButton Grid.Column="2"
-                                                         Cursor="Hand"
-                                                         Kind="XCircle"
-                                                         Foreground="{StaticResource Danger}"
-                                                         HoverColor="{StaticResource DangerDarker}"
-                                                         Margin="5 0 0 0"
-                                                         Width="16"
-                                                         Height="16"
-                                                         Command="{Binding DataContext.DeleteTaskViewModel.DeleteTaskCommand, 
-                                                                   RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
-                                                         CommandParameter="{Binding Id}"/>
+                                    <controls:IconOnlyButton 
+                                        Grid.Column="2"
+                                        Cursor="Hand"
+                                        Kind="XCircle"
+                                        Foreground="{StaticResource Danger}"
+                                        HoverColor="{StaticResource DangerDarker}"
+                                        Margin="5 0 0 0"
+                                        Width="16"
+                                        Height="16"
+                                        Command="{Binding DataContext.DeleteTaskViewModel.DeleteTaskCommand, 
+                                                RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
+                                       CommandParameter="{Binding Id}"/>
 
-                                    <controls:IconOnlyButton Grid.Column="3"
-                                                         Cursor="Hand"
-                                                         Kind="CheckCircle"
-                                                         Foreground="{StaticResource Success}"
-                                                         HoverColor="{StaticResource SuccessDarker}"
-                                                         Margin="5 0 10 0"
-                                                         Width="16"
-                                                         Height="16"
-                                                         Visibility="{Binding DataContext.ReadTasksViewModel.IsDisplayingCompletedTasks, 
-                                                            RelativeSource={RelativeSource AncestorType={x:Type Page}},
-                                                            Converter={StaticResource InvertBoolToVisibilityConv}}"
-                                                         Command="{Binding DataContext.UpdateTaskViewModel.UpdateTaskStateCommand, 
-                                                            RelativeSource={RelativeSource AncestorType={x:Type Page}}}">
+                                    <controls:IconOnlyButton 
+                                        Grid.Column="3"
+                                        Cursor="Hand"
+                                        Kind="CheckCircle"
+                                        Foreground="{StaticResource Success}"
+                                        HoverColor="{StaticResource SuccessDarker}"
+                                        Margin="5 0 10 0"
+                                        Width="16"
+                                        Height="16"
+                                        Visibility="{Binding DataContext.ReadTasksViewModel.IsDisplayingCompletedTasks, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type Page}},
+                                        Converter={StaticResource InvertBoolToVisibilityConv}}"
+                                        Command="{Binding DataContext.UpdateTaskViewModel.UpdateTaskStateCommand, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type Page}}}">
                                         <controls:IconOnlyButton.CommandParameter>
                                             <vms:UpdateTaskStateDomainViewModel
-                                            TaskId="{Binding Data.Id,
-                                                    Source={StaticResource CurrentDataContext}}"
-                                            IntendedTaskState="1"/>
+                                                TaskId="{Binding Data.Id, Source={StaticResource CurrentDataContext}}"
+                                                IntendedTaskState="1"/>
                                         </controls:IconOnlyButton.CommandParameter>
                                     </controls:IconOnlyButton>
 
-                                    <controls:IconOnlyButton Grid.Column="3"
-                                                         Cursor="Hand"
-                                                         Kind="ArrowLeftCircle"
-                                                         Foreground="{StaticResource Orange}"
-                                                         HoverColor="{StaticResource OrangeDarker}"
-                                                         Margin="5 0 10 0"
-                                                         Width="16"
-                                                         Height="16"
-                                                         Visibility="{Binding DataContext.ReadTasksViewModel.IsDisplayingCompletedTasks, 
-                                                                    RelativeSource={RelativeSource AncestorType={x:Type Page}},
-                                                                    Converter={StaticResource BoolToVisibilityConv}}"
-                                                         Command="{Binding DataContext.UpdateTaskViewModel.UpdateTaskStateCommand, 
-                                                            RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
+                                    <controls:IconOnlyButton 
+                                        Grid.Column="3"
+                                        Cursor="Hand"
+                                        Kind="ArrowLeftCircle"
+                                        Foreground="{StaticResource Orange}"
+                                        HoverColor="{StaticResource OrangeDarker}"
+                                        Margin="5 0 10 0"
+                                        Width="16"
+                                        Height="16"
+                                        Visibility="{Binding DataContext.ReadTasksViewModel.IsDisplayingCompletedTasks, 
+                                                RelativeSource={RelativeSource AncestorType={x:Type Page}},
+                                                Converter={StaticResource BoolToVisibilityConv}}"
+                                        Command="{Binding DataContext.UpdateTaskViewModel.UpdateTaskStateCommand, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
                                                          >
                                         <controls:IconOnlyButton.CommandParameter>
                                             <vms:UpdateTaskStateDomainViewModel
-                                            TaskId="{Binding Data.Id,
-                                                    Source={StaticResource CurrentDataContext}}"
-                                            IntendedTaskState="0"/>
+                                                TaskId="{Binding Data.Id, Source={StaticResource CurrentDataContext}}"
+                                                IntendedTaskState="0"/>
                                         </controls:IconOnlyButton.CommandParameter>
                                     </controls:IconOnlyButton>
                                 </Grid>
@@ -188,11 +187,11 @@
                             <GroupStyle.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock 
-                                    Margin="5 10 0 5"
-                                    Text="{Binding Items[0].CreatedAt}" 
-                                    FontSize="{StaticResource FSSmall}" 
-                                    FontFamily="{StaticResource FWMedium}"
-                                    Foreground="{StaticResource Black}"/>
+                                        Margin="5 10 0 5"
+                                        Text="{Binding Items[0].CreatedAt}" 
+                                        FontSize="{StaticResource FSSmall}" 
+                                        FontFamily="{StaticResource FWMedium}"
+                                        Foreground="{StaticResource Black}"/>
                                 </DataTemplate>
                             </GroupStyle.HeaderTemplate>
                         </GroupStyle>
@@ -214,11 +213,12 @@
             CreateTaskViewModel="{Binding CreateTaskViewModel}"/>
 
         <!--Modal edit task/view task detail popup-->
-        <controls:Modal x:Name="ModalViewTaskDetail"
-                        Width="340" 
-                        Height="300"
-                        IsShown="False"
-                        Style="{StaticResource DefaultModalStyle}">
+        <controls:Modal 
+            x:Name="ModalViewTaskDetail"
+            Width="340" 
+            Height="300"
+            IsShown="False"
+            Style="{StaticResource DefaultModalStyle}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid Grid.IsSharedSizeScope="True">
                     <Grid.ColumnDefinitions>
@@ -232,9 +232,10 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Visibility="Collapsed" 
-                               x:Name="IdTaskDetail"
-                               Text="{Binding UpdateTaskViewModel.Id, Mode=TwoWay}"/>
+                    <TextBlock 
+                        Visibility="Collapsed" 
+                        x:Name="IdTaskDetail"
+                        Text="{Binding UpdateTaskViewModel.Id, Mode=TwoWay}"/>
                     <TextBlock 
                         Text="Title"
                         Margin="0 0 20 15"

@@ -125,6 +125,7 @@ namespace ExtendedPomodoro.ViewModels
         protected static ShortBreakSessionState _shortBreakSessionState = new();
         protected static LongBreakSessionState _longBreakSessionState = new();
 
+        // Need to be called before anything else
         public async Task InitialSetup(TimerViewModel context, SettingsViewModel configuration)
         {
             _context = context;
@@ -134,9 +135,7 @@ namespace ExtendedPomodoro.ViewModels
             _context.CurrentTimerSession.Initialize();
         }
 
-        public virtual void Initialize() { }
-
-        public virtual void Start()
+        public void Start()
         {
             _isPaused = false;
 
@@ -152,7 +151,7 @@ namespace ExtendedPomodoro.ViewModels
             OnCanPauseChange();
         }
 
-        public virtual void Pause()
+        public void Pause()
         {
             if (!_isRunning) return;
             _isPaused = true;
@@ -161,12 +160,15 @@ namespace ExtendedPomodoro.ViewModels
             OnCanPauseChange();
         }
 
-        public virtual void Reset()
+        public void Reset()
         {
             StopFromRunning();
             Initialize();
             OnCanPauseChange();
         }
+
+        public virtual void Initialize() { }
+
 
         public virtual void Skip()
         {
@@ -179,7 +181,7 @@ namespace ExtendedPomodoro.ViewModels
             StopFromRunning();
         }
 
-        protected virtual void StopFromRunning()
+        protected void StopFromRunning()
         {
             _timer.Stop();
             _isRunning = false;
@@ -227,7 +229,7 @@ namespace ExtendedPomodoro.ViewModels
         {
             base.Skip();
             _totalPomodoroCompletedSkipIncluded++;
-            if (_totalPomodoroCompletedSkipIncluded % 4 == 0) SwitchToLongBreakSession();
+            if (_totalPomodoroCompletedSkipIncluded % _configuration.LongBreakInterval == 0) SwitchToLongBreakSession();
             else SwitchToShortBreakSession();
         }
     }
