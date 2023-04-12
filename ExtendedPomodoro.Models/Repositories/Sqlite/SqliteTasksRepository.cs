@@ -52,7 +52,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                     Offset = limit * (page - 1)
                 };
 
-                IEnumerable<SqlTaskDTO> records = await db.QueryAsync<SqlTaskDTO>(GET_TASKS_QUERY, data);
+                IEnumerable<SqliteTaskDTO> records = await db.QueryAsync<SqliteTaskDTO>(GET_TASKS_QUERY, data);
 
                 foreach(var record in records) yield return ConvertToTaskDomain(record);
             }
@@ -75,7 +75,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             }
         }
 
-        public async Task CreateTask(CreateTaskDomain task)
+        public async Task CreateTask(CreateTaskDomain domain)
         {
             using(var db = _connectionFactory.Connect())
             {
@@ -83,9 +83,9 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
 
                 object data = new
                 {
-                    Name = task.Name,
-                    Description = task.Description,
-                    EstPomodoro = task.EstPomodoro,
+                    Name = domain.Name,
+                    Description = domain.Description,
+                    EstPomodoro = domain.EstPomodoro,
                     CreatedAt = now,
                     UpdatedAt = now,
                 };
@@ -108,17 +108,17 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             }
         } 
 
-        public async Task UpdateTask(UpdateTaskDomain task)
+        public async Task UpdateTask(UpdateTaskDomain domain)
         {
             using (var db = _connectionFactory.Connect())
             {
                 object data = new
                 {
-                    Id = task.Id,
-                    Name = task.Name,
-                    Description = task.Description,
-                    EstPomodoro = task.EstPomodoro,
-                    IsTaskCompleted = ConvertTaskStateToInt(task.Taskstate),
+                    Id = domain.Id,
+                    Name = domain.Name,
+                    Description = domain.Description,
+                    EstPomodoro = domain.EstPomodoro,
+                    IsTaskCompleted = ConvertTaskStateToInt(domain.Taskstate),
                     UpdatedAt = DateTime.Now,
                 };
 
@@ -135,18 +135,18 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             }
         }
 
-        private static TaskDomain ConvertToTaskDomain(SqlTaskDTO taskDTO)
+        private static TaskDomain ConvertToTaskDomain(SqliteTaskDTO dto)
         {
             return new(
-                    taskDTO.Id,
-                    taskDTO.Name,
-                    taskDTO.Description,
-                    taskDTO.EstPomodoro,
-                    taskDTO.ActPomodoro,
-                    taskDTO.CreatedAt,
-                    taskDTO.UpdatedAt,
-                    taskDTO.IsTaskCompleted == 1 ? TaskState.COMPLETED : TaskState.IN_PROGRESS,
-                    TimeSpan.FromSeconds(taskDTO.TimeSpent)
+                    dto.Id,
+                    dto.Name,
+                    dto.Description,
+                    dto.EstPomodoro,
+                    dto.ActPomodoro,
+                    dto.CreatedAt,
+                    dto.UpdatedAt,
+                    dto.IsTaskCompleted == 1 ? TaskState.COMPLETED : TaskState.IN_PROGRESS,
+                    TimeSpan.FromSeconds(dto.TimeSpentInSeconds)
                 );
         }
 

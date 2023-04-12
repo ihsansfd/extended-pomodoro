@@ -39,31 +39,31 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         {
             using (var db = _connectionFactory.Connect())
             {
-                var record = await db.QuerySingleAsync<SqlSettingsDTO>(SELECT_MAIN_SETTINGS_QUERY);
+                var record = await db.QuerySingleAsync<SqliteSettingsDTO>(SELECT_MAIN_SETTINGS_QUERY);
 
                 return ConvertToSettingsDomain(record);
             }
         }
 
-        public async Task UpdateSettings(SettingsDomain settingsDomain)
+        public async Task UpdateSettings(SettingsDomain domain)
         {
             using (var db = _connectionFactory.Connect())
             {
-                SqlSettingsDTO data = new()
+                SqliteSettingsDTO data = new()
                 {
-                    PomodoroDuration = (int) settingsDomain.PomodoroDuration.TotalSeconds,
-                    ShortBreakDuration = (int) settingsDomain.ShortBreakDuration.TotalSeconds,
-                    LongBreakDuration = (int) settingsDomain.LongBreakDuration.TotalSeconds,
-                    LongBreakInterval = settingsDomain.LongBreakInterval,
-                    DailyPomodoroTarget = settingsDomain.DailyPomodoroTarget,
-                    IsAutostart = settingsDomain.IsAutostart,
-                    AlarmSound = (int) settingsDomain.AlarmSound,
-                    Volume = settingsDomain.Volume,
-                    IsRepeatForever = settingsDomain.IsRepeatForever,
-                    PushNotificationEnabled = settingsDomain.PushNotificationEnabled,
-                    DarkModeEnabled = settingsDomain.DarkModeEnabled,
-                    StartHotkey = settingsDomain.StartHotkey != null ? JsonSerializer.Serialize(settingsDomain.StartHotkey) : null,
-                    PauseHotkey = settingsDomain.PauseHotkey != null ? JsonSerializer.Serialize(settingsDomain.PauseHotkey) : null,
+                    PomodoroDuration = (int) domain.PomodoroDuration.TotalSeconds,
+                    ShortBreakDuration = (int) domain.ShortBreakDuration.TotalSeconds,
+                    LongBreakDuration = (int) domain.LongBreakDuration.TotalSeconds,
+                    LongBreakInterval = domain.LongBreakInterval,
+                    DailyPomodoroTarget = domain.DailyPomodoroTarget,
+                    IsAutostart = domain.IsAutostart,
+                    AlarmSound = (int) domain.AlarmSound,
+                    Volume = domain.Volume,
+                    IsRepeatForever = domain.IsRepeatForever,
+                    PushNotificationEnabled = domain.PushNotificationEnabled,
+                    DarkModeEnabled = domain.DarkModeEnabled,
+                    StartHotkey = domain.StartHotkey != null ? JsonSerializer.Serialize(domain.StartHotkey) : null,
+                    PauseHotkey = domain.PauseHotkey != null ? JsonSerializer.Serialize(domain.PauseHotkey) : null,
                 };
 
                 await db.ExecuteAsync(UPDATE_MAIN_SETTINGS_QUERY, data);
@@ -74,13 +74,13 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         {
             using (var db = _connectionFactory.Connect())
             {
-                var data = await db.QuerySingleAsync<SqlSettingsDTO>(SELECT_DEFAULT_SETTINGS_QUERY);
+                var data = await db.QuerySingleAsync<SqliteSettingsDTO>(SELECT_DEFAULT_SETTINGS_QUERY);
 
                 await db.ExecuteAsync(UPDATE_MAIN_SETTINGS_QUERY, data);
             }
         }
 
-        private static SettingsDomain ConvertToSettingsDomain(SqlSettingsDTO dto)
+        private static SettingsDomain ConvertToSettingsDomain(SqliteSettingsDTO dto)
         {
             return new SettingsDomain(
                 TimeSpan.FromSeconds(dto.PomodoroDuration),

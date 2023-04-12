@@ -67,6 +67,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<SqliteTasksRepository>();
             services.AddSingleton<ITasksRepository, SqliteTasksRepository>();
             services.AddSingleton<ISettingsRepository, SqliteSettingsRepository>();
+            services.AddSingleton<ISessionsRepository, SqliteSessionsRepository>();
             services.AddSingleton<SqliteDbConnectionFactory>();
             services.AddSingleton<SqliteDbSetup>();
             services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();

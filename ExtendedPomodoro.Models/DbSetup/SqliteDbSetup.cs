@@ -19,12 +19,12 @@ namespace ExtendedPomodoro.Models.DbSetup
                 EstPomodoro INT,
                 ActPomodoro INT DEFAULT 0 NOT NULL,
                 IsTaskCompleted INT(1) DEFAULT 0 NOT NULL,
-                TimeSpent INT DEFAULT 0 NOT NULL,
+                TimeSpentInSeconds INT DEFAULT 0 NOT NULL,
                 CreatedAt TEXT,
                 UpdatedAt TEXT
-            )";
+            );";
 
-        private const string DEFAULT_SETTINGS_CONFIGURATION_QUERY =
+        private const string CREATE_SETTINGS_TABLE_QUERY =
             @"
             CREATE TABLE IF NOT EXISTS tblSettings (
                 SettingsType VARCHAR(20) UNIQUE NOT NULL,
@@ -41,42 +41,37 @@ namespace ExtendedPomodoro.Models.DbSetup
                 DarkModeEnabled INT(1) NOT NULL,
                 StartHotkey VARCHAR(50),
                 PauseHotkey VARCHAR(50)
-            );
+            );";
 
+        private const string INSERT_DEFAULT_SETTINGS_QUERY =
+            @"
             INSERT OR IGNORE INTO tblSettings VALUES ('MAIN',1500,300,900,4,10,0,0,50,0,1,0,
             '{""ModifierKeys"":5, ""Key"":62}', '{""ModifierKeys"":5, ""Key"":59}');
 
              INSERT OR IGNORE INTO tblSettings VALUES ('DEFAULT',1500,300,900,4,10,0,0,50,0,1,0,
-            '{""ModifierKeys"":5, ""Key"":62}', '{""ModifierKeys"":5, ""Key"":59}');
-            ";
+            '{""ModifierKeys"":5, ""Key"":62}', '{""ModifierKeys"":5, ""Key"":59}'
+            );";
 
-        //private const string CREATE_SESSIONS_TABLE = @"CREATE TABLE IF NOT EXISTS tblTasks (
-        //        Id TEXT PRIMARY KEY, 
-        //        TimeSpentInSeconds INT,
-        //        CreatedAt TEXT,
-        //        UpdatedAt TEXT
-        //    )";
+        private const string CREATE_DAILY_SESSIONS_TABLE_QUERY = 
+            @"CREATE TABLE IF NOT EXISTS tblDailySessions (
+                SessionDate TEXT PRIMARY KEY NOT NULL,
+                TimeSpentInSeconds INT DEFAULT 0 NOT NULL,
+                TotalPomodoroCompleted INT DEFAULT 0 NOT NULL,
+                TotalShortBreaksCompleted INT DEFAULT 0 NOT NULL,
+                TotalLongBreaksCompleted INT DEFAULT 0 NOT NULL,
+                CreatedAt TEXT,
+                UpdatedAt TEXT
+            );";
 
-        //private const string CREATE_POMODORO_TABLE = @"CREATE TABLE IF NOT EXISTS tblTasks (
-        //        Id TEXT PRIMARY KEY,
-        //        Duration INT
-        //        TaskId INT
-        //        CreatedAt TEXT
-        //        FOREIGN KEY (TaskId)
-        //            REFERENCES tblTasks (Id) 
-        //    )";
-
-        //private const string CREATE_SHORTBREAKS_TABLE = @"CREATE TABLE IF NOT EXISTS tblTasks (
-        //        Id TEXT PRIMARY KEY,
-        //        Duration INT
-        //        CreatedAt TEXT
-        //    )";
-
-        //private const string CREATE_LONGBREAKS_TABLE = @"CREATE TABLE IF NOT EXISTS tblTasks (
-        //        Id TEXT PRIMARY KEY,
-        //        Duration INT
-        //        CreatedAt TEXT
-        //    )";
+        private const string CREATE_DAILY_SESSION_TASK_LINKS_TABLE_QUERY =
+            @"CREATE TABLE IF NOT EXISTS tblDailySessionTaskLinks (
+                SessionDate TEXT NOT NULL,
+                TaskId INTEGER NOT NULL,
+                IsTaskCompletedInThisSession INT(1) DEFAULT 0 NOT NULL,
+                PRIMARY KEY (SessionDate, TaskId)
+                FOREIGN KEY(SessionDate) REFERENCES tblDailySessions (SessionDate),
+                FOREIGN KEY(TaskId) REFERENCES tblTasks (Id)
+                );";
 
         public SqliteDbSetup(SqliteDbConnectionFactory connectionFactory) {
             _connectionFactory = connectionFactory;
@@ -84,9 +79,14 @@ namespace ExtendedPomodoro.Models.DbSetup
 
         public void Setup()
         {
+            var query = CREATE_TASKS_TABLE_QUERY +
+                        CREATE_SETTINGS_TABLE_QUERY +
+                        INSERT_DEFAULT_SETTINGS_QUERY +
+                        CREATE_DAILY_SESSIONS_TABLE_QUERY +
+                        CREATE_DAILY_SESSION_TASK_LINKS_TABLE_QUERY;
+
             using var connection = _connectionFactory.Connect();
-            connection.Execute(CREATE_TASKS_TABLE_QUERY);
-            connection.Execute(DEFAULT_SETTINGS_CONFIGURATION_QUERY);
+            connection.Execute(query);
         }
     }
 }

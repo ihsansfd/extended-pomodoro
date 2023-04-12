@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.Models.DTOs
 {
-    public class SqlSettingsDTO {
+    public class SqliteSettingsDTO {
         public string SettingsType { get; set;} = "MAIN";
         public int PomodoroDuration {get; set;}
         public int ShortBreakDuration {get; set;}
