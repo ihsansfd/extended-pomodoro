@@ -79,16 +79,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         {
             using(var db = _connectionFactory.Connect())
             {
-                var now = DateTime.Now;
-
-                object data = new
-                {
-                    Name = domain.Name,
-                    Description = domain.Description,
-                    EstPomodoro = domain.EstPomodoro,
-                    CreatedAt = now,
-                    UpdatedAt = now,
-                };
+                var data = ConvertToSqliteCreateTaskDTO(domain);
 
                 await db.ExecuteAsync(CREATE_TASK_QUERY, data);
             }
@@ -112,15 +103,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         {
             using (var db = _connectionFactory.Connect())
             {
-                object data = new
-                {
-                    Id = domain.Id,
-                    Name = domain.Name,
-                    Description = domain.Description,
-                    EstPomodoro = domain.EstPomodoro,
-                    IsTaskCompleted = ConvertTaskStateToInt(domain.Taskstate),
-                    UpdatedAt = DateTime.Now,
-                };
+                var data = ConvertToSqliteUpdateTaskDTO(domain);
 
                 await db.ExecuteAsync(UPDATE_TASK_QUERY, data);
             }
@@ -130,9 +113,35 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         {
             using(var db = _connectionFactory.Connect())
             {
-
                 await db.ExecuteAsync(DELETE_TASK_QUERY, new { Id = taskId });
             }
+        }
+
+        private static SqliteCreateTaskDTO ConvertToSqliteCreateTaskDTO(CreateTaskDomain domain)
+        {
+            var now = DateTime.Now;
+
+            return new SqliteCreateTaskDTO()
+            {
+                Name = domain.Name,
+                Description = domain.Description,
+                EstPomodoro = domain.EstPomodoro,
+                CreatedAt = now,
+                UpdatedAt = now,
+            };
+        }
+
+        private static SqliteUpdateTaskDTO ConvertToSqliteUpdateTaskDTO(UpdateTaskDomain domain)
+        {
+            return new SqliteUpdateTaskDTO()
+            {
+                Id = domain.Id,
+                Name = domain.Name,
+                Description = domain.Description,
+                EstPomodoro = domain.EstPomodoro,
+                IsTaskCompleted = ConvertTaskStateToInt(domain.Taskstate),
+                UpdatedAt = DateTime.Now,
+            };
         }
 
         private static TaskDomain ConvertToTaskDomain(SqliteTaskDTO dto)
