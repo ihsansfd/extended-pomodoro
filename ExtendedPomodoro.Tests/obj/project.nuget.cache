@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "2UDp5b5qbC86f93mxB9xvXQmeh2pMDZIY+cix7S0bTj6xWqY99vsRrec3ySEGI08GBugz5/066yUZoYKgTwaZA==",
+  "dgSpecHash": "G5eZfODWpttoGf33y03WpTPTerm9GZ9Rq6Z2x/bGXHgGG1IBjB7d1c5L0+UXBAseNMcChpCD+npJLRDjoXFOLw==",
   "success": true,
   "projectFilePath": "C:\\Users\\ihsan\\source\\repos\\ExtendedPomodoro\\ExtendedPomodoro.Tests\\ExtendedPomodoro.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ihsan\\.nuget\\packages\\communitytoolkit.mvvm\\8.1.0\\communitytoolkit.mvvm.8.1.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
+    "C:\\Users\\ihsan\\.nuget\\packages\\hardcodet.notifyicon.wpf\\1.1.0\\hardcodet.notifyicon.wpf.1.1.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\mahapps.metro.iconpacks.bootstrapicons\\4.11.0\\mahapps.metro.iconpacks.bootstrapicons.4.11.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\microsoft.codecoverage\\17.3.2\\microsoft.codecoverage.17.3.2.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\microsoft.csharp\\4.0.1\\microsoft.csharp.4.0.1.nupkg.sha512",
@@ -40,7 +41,6 @@
     "C:\\Users\\ihsan\\.nuget\\packages\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
-    "C:\\Users\\ihsan\\.nuget\\packages\\sqlite\\3.13.0\\sqlite.3.13.0.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.4\\sqlitepclraw.bundle_e_sqlite3.2.1.4.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.core\\2.1.4\\sqlitepclraw.core.2.1.4.nupkg.sha512",
     "C:\\Users\\ihsan\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.4\\sqlitepclraw.lib.e_sqlite3.2.1.4.nupkg.sha512",

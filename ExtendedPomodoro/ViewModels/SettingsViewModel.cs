@@ -126,6 +126,7 @@ namespace ExtendedPomodoro.ViewModels
                 ConvertToHotkeyDomain(PauseHotkey)
                 ));
 
+            StrongReferenceMessenger.Default.Send(new SettingsUpdateInfoMessage());
         }
 
         [RelayCommand]

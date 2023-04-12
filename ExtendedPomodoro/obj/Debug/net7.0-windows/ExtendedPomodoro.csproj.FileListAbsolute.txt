@@ -19,10 +19,6 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-w
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\MahApps.Metro.IconPacks.Core.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\runtimes\linux-x64\native\libsqlite3.so
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\runtimes\osx-x64\native\libsqlite3.dylib
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\runtimes\win7-x64\native\sqlite3.dll
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\runtimes\win7-x86\native\sqlite3.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\MainWindow.g.cs
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\App.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\MainWindow.baml
@@ -92,3 +88,6 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-w
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\ExtendedPomodoro.Core.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\ExtendedPomodoro.Core.pdb
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\XamlRadialProgressBar.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\bin\Debug\net7.0-windows\Hardcodet.NotifyIcon.Wpf.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\SessionFinishBalloonTipsUserControl.g.cs
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\SessionFinishBalloonTipsUserControl.baml

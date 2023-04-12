@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.Views.Components;
+using Hardcodet.Wpf.TaskbarNotification;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,9 @@ namespace ExtendedPomodoro.Views
     /// <summary>
     /// Interaction logic for TimerView.xaml
     /// </summary>
-    public partial class TimerView : Page, IRecipient<TasksComboBoxAddNewButtonPressedMessage>
+    public partial class TimerView : Page,
+        IRecipient<TasksComboBoxAddNewButtonPressedMessage>,
+        IRecipient<TimerSessionFinishInfoMessage>
     {
         public TimerView()
         {
@@ -28,10 +32,34 @@ namespace ExtendedPomodoro.Views
             StrongReferenceMessenger.Default.RegisterAll(this);
         }
 
-        void IRecipient<TasksComboBoxAddNewButtonPressedMessage>.Receive(TasksComboBoxAddNewButtonPressedMessage message)
+        public void Receive(TasksComboBoxAddNewButtonPressedMessage message)
         {
             ModalCreateTask.IsShown = true;
             TasksComboBox.IsDropDownOpen = false;
+        }
+
+        public void Receive(TimerSessionFinishInfoMessage timerSessionFinishInfo)
+        {
+            if(timerSessionFinishInfo.PushNotificationEnabled)
+            {
+                ShowCompletedBalloonTips(timerSessionFinishInfo.Message, 
+                    timerSessionFinishInfo.FinishedSession, timerSessionFinishInfo.NextSession);
+            }   
+        }
+
+        private void ShowCompletedBalloonTips(string message, string finishedSession, string nextSession)
+        {
+            TaskbarIcon tbi = new TaskbarIcon();
+
+            var theBalloonTips = new SessionFinishBalloonTipsUserControl()
+            {
+                Message = message,
+                FinishedSession = finishedSession,
+                NextSession = nextSession,
+                AutoCloseAfter = 15000 // in milliseconds
+            };
+
+            tbi.ShowCustomBalloon(theBalloonTips, System.Windows.Controls.Primitives.PopupAnimation.Slide, 15000);
         }
 
         ~TimerView()

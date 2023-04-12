@@ -31,4 +31,10 @@
         <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
     </Style>
 
+    <Style TargetType="TextBlock" x:Key="TextBlockBalloonTipsTitle">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily" Value="{StaticResource FWMedium}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+    </Style>
+
 </ResourceDictionary>

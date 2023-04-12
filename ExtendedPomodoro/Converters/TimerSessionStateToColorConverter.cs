@@ -17,14 +17,28 @@ namespace ExtendedPomodoro.Converters
         {
             if(value is TimerSessionState session)
             {
-                if (session is PomodoroSessionState) { 
+                if (session is PomodoroSessionState)
                     return ((SolidColorBrush) Application.Current.FindResource("Primary")).Color;
-                }
+
                 if (session is ShortBreakSessionState)
                     return ((SolidColorBrush)Application.Current.FindResource("Info")).Color;
+
                 if (session is LongBreakSessionState)
                     return ((SolidColorBrush)Application.Current.FindResource("Success")).Color;
             }
+
+            if (value is string sessionString)
+            {
+                if (sessionString.Contains("Pomodoro"))
+                    return ((SolidColorBrush)Application.Current.FindResource("Primary")).Color;
+
+                if (sessionString.Contains("Short Break"))
+                    return ((SolidColorBrush)Application.Current.FindResource("Info")).Color;
+
+                if (sessionString.Contains("Long Break"))
+                    return ((SolidColorBrush)Application.Current.FindResource("Success")).Color;
+            }
+
             return ((SolidColorBrush)Application.Current.FindResource("Primary")).Color;
         }
 

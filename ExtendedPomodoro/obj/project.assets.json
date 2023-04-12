@@ -31,6 +31,22 @@
           }
         }
       },
+      "Hardcodet.NotifyIcon.Wpf/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0-windows7.0/Hardcodet.NotifyIcon.Wpf.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0-windows7.0/Hardcodet.NotifyIcon.Wpf.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App"
+        ]
+      },
       "MahApps.Metro.IconPacks.BootstrapIcons/4.11.0": {
         "type": "package",
         "compile": {
@@ -132,33 +148,6 @@
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WPF"
         ]
-      },
-      "SQLite/3.13.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard1.0/_._": {}
-        },
-        "runtime": {
-          "lib/netstandard1.0/_._": {}
-        },
-        "runtimeTargets": {
-          "runtimes/linux-x64/native/libsqlite3.so": {
-            "assetType": "native",
-            "rid": "linux-x64"
-          },
-          "runtimes/osx-x64/native/libsqlite3.dylib": {
-            "assetType": "native",
-            "rid": "osx-x64"
-          },
-          "runtimes/win7-x64/native/sqlite3.dll": {
-            "assetType": "native",
-            "rid": "win7-x64"
-          },
-          "runtimes/win7-x86/native/sqlite3.dll": {
-            "assetType": "native",
-            "rid": "win7-x86"
-          }
-        }
       },
       "SQLitePCLRaw.bundle_e_sqlite3/2.1.4": {
         "type": "package",
@@ -395,6 +384,29 @@
         "lib/netstandard2.0/Dapper.xml"
       ]
     },
+    "Hardcodet.NotifyIcon.Wpf/1.1.0": {
+      "sha512": "FFEkdRSidMrbMfQVwhCzq6KtSyR1qQojqtiUrkCyjnOOuMf7W3TNQkzFnBBxYxFe7uLk5mz7M38wFh1qdWyfvg==",
+      "type": "package",
+      "path": "hardcodet.notifyicon.wpf/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "hardcodet.notifyicon.wpf.1.1.0.nupkg.sha512",
+        "hardcodet.notifyicon.wpf.nuspec",
+        "icon.png",
+        "lib/net45/Hardcodet.NotifyIcon.Wpf.dll",
+        "lib/net45/Hardcodet.NotifyIcon.Wpf.xml",
+        "lib/net462/Hardcodet.NotifyIcon.Wpf.dll",
+        "lib/net462/Hardcodet.NotifyIcon.Wpf.xml",
+        "lib/net472/Hardcodet.NotifyIcon.Wpf.dll",
+        "lib/net472/Hardcodet.NotifyIcon.Wpf.xml",
+        "lib/net5.0-windows7.0/Hardcodet.NotifyIcon.Wpf.dll",
+        "lib/net5.0-windows7.0/Hardcodet.NotifyIcon.Wpf.xml",
+        "lib/netcoreapp3.1/Hardcodet.NotifyIcon.Wpf.dll",
+        "lib/netcoreapp3.1/Hardcodet.NotifyIcon.Wpf.xml"
+      ]
+    },
     "MahApps.Metro.IconPacks.BootstrapIcons/4.11.0": {
       "sha512": "PiKLp5u58E852bkx1EhqWbCt1Xsyeqyyr+GKXFzJ9OfaKc6pWT2HvskQdlJdRVyGQae8A+3jnzxwUYoh3IlYuQ==",
       "type": "package",
@@ -564,27 +576,6 @@
         "tools/Install.ps1"
       ]
     },
-    "SQLite/3.13.0": {
-      "sha512": "MJfRiz2p6aMVOxrxGMdVzhpzI0oxTgZSwC8eVuOpV8L7yYaFUu8q/OFYwv9P0/aZ/pdEu24O6gma6wZJMTun9A==",
-      "type": "package",
-      "path": "sqlite/3.13.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "build/net45/SQLite.props",
-        "lib/netstandard1.0/_._",
-        "runtimes/linux-x64/native/libsqlite3.so",
-        "runtimes/osx-x64/native/libsqlite3.dylib",
-        "runtimes/win10-arm/nativeassets/uap10.0/sqlite3.dll",
-        "runtimes/win10-x64/nativeassets/uap10.0/sqlite3.dll",
-        "runtimes/win10-x86/nativeassets/uap10.0/sqlite3.dll",
-        "runtimes/win7-x64/native/sqlite3.dll",
-        "runtimes/win7-x86/native/sqlite3.dll",
-        "sqlite-version.txt",
-        "sqlite.3.13.0.nupkg.sha512",
-        "sqlite.nuspec"
-      ]
-    },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.4": {
       "sha512": "EWI1olKDjFEBMJu0+3wuxwziIAdWDVMYLhuZ3Qs84rrz+DHwD00RzWPZCa+bLnHCf3oJwuFZIRsHT5p236QXww==",
       "type": "package",
@@ -727,10 +718,10 @@
       "Dapper >= 2.0.123",
       "ExtendedPomodoro.Core >= 1.0.0",
       "ExtendedPomodoro.Models >= 1.0.0",
+      "Hardcodet.NotifyIcon.Wpf >= 1.1.0",
       "MahApps.Metro.IconPacks.BootstrapIcons >= 4.11.0",
       "Microsoft.Extensions.DependencyInjection >= 7.0.0",
       "Microsoft.Xaml.Behaviors.Wpf >= 1.1.39",
-      "SQLite >= 3.13.0",
       "XamlRadialProgressBar >= 1.0.3"
     ]
   },
@@ -788,6 +779,10 @@
             "target": "Package",
             "version": "[2.0.123, )"
           },
+          "Hardcodet.NotifyIcon.Wpf": {
+            "target": "Package",
+            "version": "[1.1.0, )"
+          },
           "MahApps.Metro.IconPacks.BootstrapIcons": {
             "target": "Package",
             "version": "[4.11.0, )"
@@ -799,10 +794,6 @@
           "Microsoft.Xaml.Behaviors.Wpf": {
             "target": "Package",
             "version": "[1.1.39, )"
-          },
-          "SQLite": {
-            "target": "Package",
-            "version": "[3.13.0, )"
           },
           "XamlRadialProgressBar": {
             "target": "Package",

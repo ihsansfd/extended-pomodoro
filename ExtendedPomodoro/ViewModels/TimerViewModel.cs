@@ -15,9 +15,13 @@ using System.Windows.Media;
 namespace ExtendedPomodoro.ViewModels
 {
     public partial class TimerViewModel : ObservableObject, 
-        IRecipient<TimerTimeChangeInfoMessage>
+        IRecipient<TimerTimeChangeInfoMessage>,
+        IRecipient<SettingsUpdateInfoMessage>,
+        IRecipient<StartSessionInfoMessage>
     {
         private SettingsViewModel _settingsViewModel;
+
+        private bool _hasBeenSetup;
 
         #region Tasks
 
@@ -81,11 +85,8 @@ namespace ExtendedPomodoro.ViewModels
         public async Task Initialize()
         {
             await ReadTasksViewModel.DisplayInProgressTasks();
-            if(NeedSessionSetup)
-            {
-                await CurrentTimerSession.InitialSetup(this, _settingsViewModel);
-                NeedSessionSetup = false;
-            }
+            if(!_hasBeenSetup) await CurrentTimerSession.InitialSetup(this, _settingsViewModel);
+            _hasBeenSetup = true;
         }
 
         public void Receive(TimerTimeChangeInfoMessage message)
@@ -93,12 +94,35 @@ namespace ExtendedPomodoro.ViewModels
             UpdateRemainingTime(message.RemainingTime);
             SessionProgress = CalculateProgress(message.TimerSetFor, message.RemainingTime);
 
+            if(message.RemainingTime.TotalSeconds <= 0)
+            {
+                CurrentTimerSession.Finish();
+            }
+
         }
 
         public void UpdateRemainingTime(TimeSpan remainingTime)
         {
             RemainingTime = remainingTime;
             FormatRemainingTime();
+        }
+
+        /// <summary>
+        /// If there are changes in settings while the timer hasn't run, reinitialized.
+        /// </summary>
+        /// <param name="message"></param>
+        public void Receive(SettingsUpdateInfoMessage message)
+        {
+            if (SessionProgress <= 0.0) CurrentTimerSession.Initialize();
+        }
+
+        /// <summary>
+        /// Give information to the listeners that session has finished. View will handle its logic (display notification, etc).
+        /// </summary>
+        /// <param name="message"></param>
+        public void OnFinishSession(TimerSessionFinishInfoMessage message)
+        {
+            StrongReferenceMessenger.Default.Send(message);
         }
 
         private void FormatRemainingTime()
@@ -109,6 +133,11 @@ namespace ExtendedPomodoro.ViewModels
         private double CalculateProgress(TimeSpan timerSetFor, TimeSpan remainingTime)
         {
             return (timerSetFor - remainingTime) / timerSetFor * 100;
+        }
+
+        public void Receive(StartSessionInfoMessage message)
+        {
+            if(message.IsStartSession) StartSession();
         }
     }
 
@@ -169,7 +198,6 @@ namespace ExtendedPomodoro.ViewModels
 
         public virtual void Initialize() { }
 
-
         public virtual void Skip()
         {
             StopFromRunning();
@@ -179,6 +207,7 @@ namespace ExtendedPomodoro.ViewModels
         public virtual void Finish()
         {
             StopFromRunning();
+            OnCanPauseChange();
         }
 
         protected void StopFromRunning()
@@ -223,14 +252,35 @@ namespace ExtendedPomodoro.ViewModels
         public override void Finish()
         {
             base.Finish();
+            _totalPomodoroCompleted++;
+            _totalPomodoroCompletedSkipIncluded++;
+
+            if(IsSwitchToLongBreak())
+            {
+                SwitchToLongBreakSession();
+                _context.OnFinishSession(new(
+                "Pomodoro session has completed.", "Pomodoro", "Long Break", _configuration.PushNotificationEnabled));
+            }
+          
+            else
+            {
+                SwitchToShortBreakSession();
+                _context.OnFinishSession(new(
+                "Pomodoro session has completed.", "Pomodoro", "Short Break", _configuration.PushNotificationEnabled));
+            }
         }
 
         public override void Skip()
         {
             base.Skip();
             _totalPomodoroCompletedSkipIncluded++;
-            if (_totalPomodoroCompletedSkipIncluded % _configuration.LongBreakInterval == 0) SwitchToLongBreakSession();
+            if (IsSwitchToLongBreak()) SwitchToLongBreakSession();
             else SwitchToShortBreakSession();
+        }
+
+        private bool IsSwitchToLongBreak()
+        {
+            return _totalPomodoroCompletedSkipIncluded % _configuration.LongBreakInterval == 0;
         }
     }
 
@@ -249,6 +299,8 @@ namespace ExtendedPomodoro.ViewModels
         {
             base.Finish();
             SwitchToPomodoroSession();
+            _context.OnFinishSession(new(
+                "Short Break session has completed.", "Short Break", "Pomodoro", _configuration.PushNotificationEnabled));
         }
 
         public override void Skip()
@@ -272,6 +324,8 @@ namespace ExtendedPomodoro.ViewModels
         {
             base.Finish();
             SwitchToPomodoroSession();
+            _context.OnFinishSession(new(
+                "Long Break session has completed.", "Long Break", "Pomodoro", _configuration.PushNotificationEnabled));
         }
 
         public override void Skip()

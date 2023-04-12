@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\App.xaml
-19547448144
+20-306066827
 1-2092025167
-451565151395
-2121702464126
-MainWindow.xaml;Styles\Buttons.xaml;Styles\ComboBoxes.xaml;Styles\Fonts.xaml;Styles\Menu.xaml;Styles\Modals.xaml;Styles\Others.xaml;Styles\Popups.xaml;Styles\TextBlocks.xaml;Styles\TextBoxes.xaml;Themes\DarkTheme.xaml;Themes\Generic.xaml;Themes\LightTheme.xaml;Views\Components\ModalCreateTaskUserControl.xaml;Views\SettingsView.xaml;Views\StatsView.xaml;Views\TasksView.xaml;Views\TimerView.xaml;Views\windowtest.xaml;
+48114912268
+2222071486874
+MainWindow.xaml;Styles\Buttons.xaml;Styles\ComboBoxes.xaml;Styles\Fonts.xaml;Styles\Menu.xaml;Styles\Modals.xaml;Styles\Others.xaml;Styles\Popups.xaml;Styles\TextBlocks.xaml;Styles\TextBoxes.xaml;Themes\DarkTheme.xaml;Themes\Generic.xaml;Themes\LightTheme.xaml;Views\Components\ModalCreateTaskUserControl.xaml;Views\Components\SessionFinishBalloonTipsUserControl.xaml;Views\SettingsView.xaml;Views\StatsView.xaml;Views\TasksView.xaml;Views\TimerView.xaml;Views\windowtest.xaml;
 
 False
 
