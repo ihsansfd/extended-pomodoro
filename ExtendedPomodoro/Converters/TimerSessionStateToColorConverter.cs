@@ -29,13 +29,13 @@ namespace ExtendedPomodoro.Converters
 
             if (value is string sessionString)
             {
-                if (sessionString.Contains("Pomodoro"))
+                if (sessionString == nameof(PomodoroSessionState))
                     return ((SolidColorBrush)Application.Current.FindResource("Primary")).Color;
 
-                if (sessionString.Contains("Short Break"))
+                if (sessionString is nameof(ShortBreakSessionState))
                     return ((SolidColorBrush)Application.Current.FindResource("Info")).Color;
 
-                if (sessionString.Contains("Long Break"))
+                if (sessionString is nameof(LongBreakSessionState))
                     return ((SolidColorBrush)Application.Current.FindResource("Success")).Color;
             }
 

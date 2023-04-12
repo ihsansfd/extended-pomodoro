@@ -52,9 +52,6 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private string _remainingTimeFormatted;
 
-        [ObservableProperty]
-        private string _sessionMessage;
-
         [RelayCommand]
         public void StartSession() => CurrentTimerSession.Start();
 
@@ -117,7 +114,7 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         /// <summary>
-        /// Give information to the listeners that session has finished. View will handle its logic (display notification, etc).
+        /// Give information to the listeners that session has finished. View will handle its logic (display notification, alarm, etc).
         /// </summary>
         /// <param name="message"></param>
         public void OnFinishSession(TimerSessionFinishInfoMessage message)
@@ -144,6 +141,9 @@ namespace ExtendedPomodoro.ViewModels
 
     public class TimerSessionState
     {
+        public virtual string Name { get; } = string.Empty;
+        public virtual string SessionMessage { get; } = string.Empty;
+
         protected bool _isRunning { get; set; }
         protected bool _isPaused { get; set; }
         protected static TimerViewModel _context;
@@ -215,18 +215,24 @@ namespace ExtendedPomodoro.ViewModels
             _timer.Stop();
             _isRunning = false;
         }
-        protected void SwitchToPomodoroSession()  {
-             _context.CurrentTimerSession = _pomodoroSessionState;
-             _context.CurrentTimerSession.Initialize();
-        }
-        protected void SwitchToShortBreakSession()
+        
+
+        protected void FinishTo(TimerSessionState nextSession)
         {
-            _context.CurrentTimerSession = _shortBreakSessionState;
-            _context.CurrentTimerSession.Initialize();
+            _context.OnFinishSession(new
+                (_context.CurrentTimerSession, nextSession, _configuration.PushNotificationEnabled));
+
+            SwitchTo(nextSession);
         }
-        protected void SwitchToLongBreakSession()
+
+        protected void SkipTo(TimerSessionState nextSession)
         {
-            _context.CurrentTimerSession = _longBreakSessionState;
+            SwitchTo(nextSession);
+        }
+
+        private void SwitchTo(TimerSessionState session)
+        {
+            _context.CurrentTimerSession = session;
             _context.CurrentTimerSession.Initialize();
         }
 
@@ -238,6 +244,9 @@ namespace ExtendedPomodoro.ViewModels
 
     public class PomodoroSessionState : TimerSessionState
     {
+        public override string Name { get; } = "Pomodoro";
+        public override string SessionMessage { get; } = "Stay Focus";
+
         private static int _totalPomodoroCompleted { get; set; } = 0;
         private static int _totalPomodoroCompletedSkipIncluded { get; set; } = 0;
 
@@ -246,7 +255,6 @@ namespace ExtendedPomodoro.ViewModels
             var timerSetFor = TimeSpan.FromMinutes(_configuration.PomodoroDurationInMinutes);
             _timer.Initialize(timerSetFor);
             _context.UpdateRemainingTime(timerSetFor);
-            _context.SessionMessage = "Stay Focus";
         }
 
         public override void Finish()
@@ -257,16 +265,12 @@ namespace ExtendedPomodoro.ViewModels
 
             if(IsSwitchToLongBreak())
             {
-                SwitchToLongBreakSession();
-                _context.OnFinishSession(new(
-                "Pomodoro session has completed.", "Pomodoro", "Long Break", _configuration.PushNotificationEnabled));
+                FinishTo(_longBreakSessionState);
             }
           
             else
             {
-                SwitchToShortBreakSession();
-                _context.OnFinishSession(new(
-                "Pomodoro session has completed.", "Pomodoro", "Short Break", _configuration.PushNotificationEnabled));
+                FinishTo(_shortBreakSessionState);
             }
         }
 
@@ -274,8 +278,8 @@ namespace ExtendedPomodoro.ViewModels
         {
             base.Skip();
             _totalPomodoroCompletedSkipIncluded++;
-            if (IsSwitchToLongBreak()) SwitchToLongBreakSession();
-            else SwitchToShortBreakSession();
+            if (IsSwitchToLongBreak()) SkipTo(_longBreakSessionState);
+            else SkipTo(_shortBreakSessionState);
         }
 
         private bool IsSwitchToLongBreak()
@@ -286,52 +290,51 @@ namespace ExtendedPomodoro.ViewModels
 
     public class ShortBreakSessionState : TimerSessionState
     {
+        public override string Name { get; } = "Short Break";
+        public override string SessionMessage { get; } = "Short Break";
 
         public override void Initialize()
         {
             var timerSetFor = TimeSpan.FromMinutes(_configuration.ShortBreakDurationInMinutes);
             _timer.Initialize(timerSetFor);
             _context.UpdateRemainingTime(timerSetFor);
-            _context.SessionMessage = "Short Break";
         }
 
         public override void Finish()
         {
             base.Finish();
-            SwitchToPomodoroSession();
-            _context.OnFinishSession(new(
-                "Short Break session has completed.", "Short Break", "Pomodoro", _configuration.PushNotificationEnabled));
+            FinishTo(_pomodoroSessionState);
         }
 
         public override void Skip()
         {
             base.Skip();
-            SwitchToPomodoroSession();
+            SkipTo(_pomodoroSessionState);
         }
     }
 
     public class LongBreakSessionState : TimerSessionState
     {
+        public override string Name { get; } = "Long Break";
+        public override string SessionMessage { get; } = "Long Break";
+
         public override void Initialize()
         {
             var timerSetFor = TimeSpan.FromMinutes(_configuration.LongBreakDurationInMinutes);
             _timer.Initialize(timerSetFor);
             _context.UpdateRemainingTime(timerSetFor);
-            _context.SessionMessage = "Long Break";
         }
 
         public override void Finish()
         {
             base.Finish();
-            SwitchToPomodoroSession();
-            _context.OnFinishSession(new(
-                "Long Break session has completed.", "Long Break", "Pomodoro", _configuration.PushNotificationEnabled));
+            FinishTo(_pomodoroSessionState);
         }
 
         public override void Skip()
         {
             base.Skip();
-            SwitchToPomodoroSession();
+            SkipTo(_pomodoroSessionState);
         }
     }
 }

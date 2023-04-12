@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,14 +64,14 @@ namespace ExtendedPomodoro.Views.Components
         public static readonly DependencyProperty AutoCloseAfterProperty =
             DependencyProperty.Register("AutoCloseAfter", typeof(int), typeof(SessionFinishBalloonTipsUserControl), new PropertyMetadata(15000));
 
-        public string FinishedSession
+        public TimerSessionState FinishedSession
         {
-            get { return (string)GetValue(FinishedSessionProperty); }
+            get { return (TimerSessionState)GetValue(FinishedSessionProperty); }
             set { SetValue(FinishedSessionProperty, value); }
         }
 
         public static readonly DependencyProperty FinishedSessionProperty =
-            DependencyProperty.Register("FinishedSession", typeof(string), typeof(SessionFinishBalloonTipsUserControl), new PropertyMetadata("The session"));
+            DependencyProperty.Register("FinishedSession", typeof(TimerSessionState), typeof(SessionFinishBalloonTipsUserControl));
 
         public string Message
         {
@@ -79,16 +80,16 @@ namespace ExtendedPomodoro.Views.Components
         }
 
         public static readonly DependencyProperty MessageProperty =
-            DependencyProperty.Register("Message", typeof(string), typeof(SessionFinishBalloonTipsUserControl), new PropertyMetadata("The session has completed."));
+            DependencyProperty.Register("Message", typeof(string), typeof(SessionFinishBalloonTipsUserControl));
 
-        public string NextSession
+        public TimerSessionState NextSession
         {
-            get { return (string)GetValue(NextSessionProperty); }
+            get { return (TimerSessionState)GetValue(NextSessionProperty); }
             set { SetValue(NextSessionProperty, value); }
         }
 
         public static readonly DependencyProperty NextSessionProperty =
-            DependencyProperty.Register("NextSession", typeof(string), typeof(SessionFinishBalloonTipsUserControl), new PropertyMetadata("Next Session"));
+            DependencyProperty.Register("NextSession", typeof(TimerSessionState), typeof(SessionFinishBalloonTipsUserControl));
 
         private void OK_Button_Click(object sender, RoutedEventArgs e)
         {

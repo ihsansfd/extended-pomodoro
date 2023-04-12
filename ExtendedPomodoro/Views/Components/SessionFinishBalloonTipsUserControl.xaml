@@ -28,8 +28,10 @@
                 VerticalAlignment="Top" 
                 HorizontalAlignment="Center"
                 Margin="0 20 0 0"
-                Text="{Binding Message}"
-                Style="{StaticResource TextBlockBalloonTipsTitle}"/>
+                Style="{StaticResource TextBlockBalloonTipsTitle}">
+                <Run Text="{Binding FinishedSession.Name, Mode=OneTime}"/>
+                <Run>session has completed.</Run>
+            </TextBlock>
 
             <!--#region the icon path-->
             <Viewbox 
@@ -101,7 +103,8 @@
                     Style="{StaticResource ButtonStyle}">
                     <TextBlock>
                         <Run>Start </Run>
-                        <Run Text="{Binding NextSession}"/>
+                        <Run Text="{Binding NextSession.Name, Mode=OneTime}"/>
+                        <Run>Session</Run>
                     </TextBlock>
                 </Button>
             </WrapPanel>

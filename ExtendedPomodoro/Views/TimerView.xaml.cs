@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.ViewModels;
 using ExtendedPomodoro.Views.Components;
 using Hardcodet.Wpf.TaskbarNotification;
 using System;
@@ -42,18 +43,16 @@ namespace ExtendedPomodoro.Views
         {
             if(timerSessionFinishInfo.PushNotificationEnabled)
             {
-                ShowCompletedBalloonTips(timerSessionFinishInfo.Message, 
-                    timerSessionFinishInfo.FinishedSession, timerSessionFinishInfo.NextSession);
+                ShowCompletedBalloonTips(timerSessionFinishInfo.FinishedSession, timerSessionFinishInfo.NextSession);
             }   
         }
 
-        private void ShowCompletedBalloonTips(string message, string finishedSession, string nextSession)
+        private void ShowCompletedBalloonTips(TimerSessionState finishedSession, TimerSessionState nextSession)
         {
             TaskbarIcon tbi = new TaskbarIcon();
 
             var theBalloonTips = new SessionFinishBalloonTipsUserControl()
             {
-                Message = message,
                 FinishedSession = finishedSession,
                 NextSession = nextSession,
                 AutoCloseAfter = 15000 // in milliseconds
