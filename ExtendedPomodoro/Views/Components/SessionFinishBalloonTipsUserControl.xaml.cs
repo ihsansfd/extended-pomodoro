@@ -52,7 +52,7 @@ namespace ExtendedPomodoro.Views.Components
 
             _remainingTimeInSecondsRunText.Text = _remainingTimeAlive.TotalSeconds.ToString();
 
-            if(_remainingTimeAlive <= TimeSpan.Zero) Close();
+            if (_remainingTimeAlive <= TimeSpan.Zero) Close();
         }
 
         public int AutoCloseAfter
@@ -101,12 +101,18 @@ namespace ExtendedPomodoro.Views.Components
             _aliveTimer.Stop();
             _aliveTimer.Tick -= OnAliveTimerTickChanged;
             Visibility = Visibility.Collapsed;
+            StrongReferenceMessenger.Default.Send(new SessionFinishBalloonMessage(true));
         }
 
         private void ButtonStartNextSession_Click(object sender, RoutedEventArgs e)
         {
             StrongReferenceMessenger.Default.Send(new StartSessionInfoMessage());
             Close();
+        }
+
+        ~SessionFinishBalloonTipsUserControl()
+        {
+            StrongReferenceMessenger.Default.UnregisterAll(this);
         }
     }
 }

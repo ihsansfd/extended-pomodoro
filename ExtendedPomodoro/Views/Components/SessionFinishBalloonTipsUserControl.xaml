@@ -29,7 +29,7 @@
                 HorizontalAlignment="Center"
                 Margin="0 20 0 0"
                 Style="{StaticResource TextBlockBalloonTipsTitle}">
-                <Run Text="{Binding FinishedSession.Name, Mode=OneTime}"/>
+                <Run Text="{Binding FinishedSession.Name, Mode=OneWay}"/>
                 <Run>session has completed.</Run>
             </TextBlock>
 
@@ -103,7 +103,7 @@
                     Style="{StaticResource ButtonStyle}">
                     <TextBlock>
                         <Run>Start </Run>
-                        <Run Text="{Binding NextSession.Name, Mode=OneTime}"/>
+                        <Run Text="{Binding NextSession.Name, Mode=OneWay}"/>
                         <Run>Session</Run>
                     </TextBlock>
                 </Button>

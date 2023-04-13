@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\AlarmSounds\Chimes.mp3" />
+    <None Remove="Assets\AlarmSounds\Echo.mp3" />
+    <None Remove="Assets\AlarmSounds\Mechanics.mp3" />
+    <None Remove="Assets\AlarmSounds\Retro.mp3" />
+    <None Remove="Assets\AlarmSounds\Ticks.mp3" />
     <None Remove="Assets\Fonts\Inter-Black.ttf" />
     <None Remove="Assets\Fonts\Inter-Bold.ttf" />
     <None Remove="Assets\Fonts\Inter-ExtraBold.ttf" />
@@ -21,6 +26,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Assets\AlarmSounds\Chimes.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\AlarmSounds\Echo.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\AlarmSounds\Mechanics.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\AlarmSounds\Retro.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\AlarmSounds\Ticks.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="extended-pomodoro-icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -2,6 +2,11 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\ne
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\testhost.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.deps.json
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.runtimeconfig.json
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Assets\AlarmSounds\Chimes.mp3
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Assets\AlarmSounds\Echo.mp3
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Assets\AlarmSounds\Mechanics.mp3
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Assets\AlarmSounds\Retro.mp3
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Assets\AlarmSounds\Ticks.mp3
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\extended-pomodoro-icon.ico
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.exe
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\testhost.exe
@@ -14,6 +19,7 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\ne
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.Tests.pdb
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\CommunityToolkit.Mvvm.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Dapper.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Hardcodet.NotifyIcon.Wpf.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\MahApps.Metro.IconPacks.BootstrapIcons.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\MahApps.Metro.IconPacks.Core.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Microsoft.VisualStudio.CodeCoverage.Shim.dll
@@ -27,11 +33,13 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\ne
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Microsoft.TestPlatform.CrossPlatEngine.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Microsoft.TestPlatform.Utilities.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Microsoft.VisualStudio.TestPlatform.Common.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Microsoft.Xaml.Behaviors.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Newtonsoft.Json.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\NuGet.Frameworks.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\SQLitePCLRaw.batteries_v2.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\SQLitePCLRaw.core.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\SQLitePCLRaw.provider.e_sqlite3.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\XamlRadialProgressBar.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\xunit.abstractions.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\xunit.assert.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\xunit.core.dll
@@ -124,11 +132,13 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\ne
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.Core.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.Models.dll
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.Models.pdb
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.pdb
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.dll.config
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.Core.pdb
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\net7.0-windows\ExtendedPomodoro.Tests.csproj.AssemblyReference.cache
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\net7.0-windows\ExtendedPomodoro.Tests.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\net7.0-windows\ExtendedPomodoro.Tests.AssemblyInfoInputs.cache
@@ -140,8 +150,3 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\ne
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\net7.0-windows\ExtendedPomodoro.Tests.pdb
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\net7.0-windows\ExtendedPomodoro.Tests.genruntimeconfig.cache
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\obj\Debug\net7.0-windows\ref\ExtendedPomodoro.Tests.dll
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Microsoft.Xaml.Behaviors.dll
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.Core.dll
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\ExtendedPomodoro.Core.pdb
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\XamlRadialProgressBar.dll
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro.Tests\bin\Debug\net7.0-windows\Hardcodet.NotifyIcon.Wpf.dll

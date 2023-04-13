@@ -73,6 +73,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
             services.AddSingleton<IDatabaseSetup, SqliteDbSetup>();
             services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<AlarmSoundService>();
             services.AddSingleton<TimerViewModel>();
             services.AddSingleton<TimerSessionState>();
             services.AddSingleton<MainWindow>();

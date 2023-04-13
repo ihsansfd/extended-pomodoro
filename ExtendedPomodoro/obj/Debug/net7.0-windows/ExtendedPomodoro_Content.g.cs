@@ -8,6 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/alarmsounds/chimes.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/alarmsounds/echo.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/alarmsounds/mechanics.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/alarmsounds/retro.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/alarmsounds/ticks.mp3")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("extended-pomodoro-icon.ico")]
 
 

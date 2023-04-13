@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Services;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -20,7 +21,6 @@ namespace ExtendedPomodoro.ViewModels
         IRecipient<StartSessionInfoMessage>
     {
         private SettingsViewModel _settingsViewModel;
-
         private bool _hasBeenSetup;
 
         #region Tasks
@@ -69,13 +69,15 @@ namespace ExtendedPomodoro.ViewModels
         public TimerViewModel(ReadTasksViewModel readTasksViewModel, 
             CreateTaskViewModel createTaskViewModel, 
             TimerSessionState timerSessionState,
-            SettingsViewModel settingsViewModel)
+            SettingsViewModel settingsViewModel
+            )
         {
 
             ReadTasksViewModel = readTasksViewModel;
             CreateTaskViewModel = createTaskViewModel;
             CurrentTimerSession = timerSessionState;
             _settingsViewModel = settingsViewModel;
+
             StrongReferenceMessenger.Default.RegisterAll(this);
         }
 
@@ -225,7 +227,13 @@ namespace ExtendedPomodoro.ViewModels
         protected void FinishTo(TimerSessionState nextSession)
         {
             _context.OnFinishSession(new
-                (_context.CurrentTimerSession, nextSession, _configuration.PushNotificationEnabled));
+                (_context.CurrentTimerSession, 
+                nextSession, 
+                (AlarmSound)_configuration.AlarmSound,
+                _configuration.PushNotificationEnabled, 
+                _configuration.IsRepeatForever,
+                _configuration.Volume
+                ));
 
             SwitchTo(nextSession);
         }
