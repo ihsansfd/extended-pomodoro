@@ -64,6 +64,12 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public void ResetSession() => CurrentTimerSession.Reset();
 
+        [RelayCommand]
+        public void StartSessionFromHotkey() => CurrentTimerSession.Start();
+
+        [RelayCommand]
+        public void PauseSessionFromHotkey() => CurrentTimerSession.Pause();
+
         #endregion
 
         public TimerViewModel(ReadTasksViewModel readTasksViewModel, 
@@ -168,6 +174,8 @@ namespace ExtendedPomodoro.ViewModels
 
         public void Start()
         {
+            if (AlreadyStarting()) return;
+
             _isPaused = false;
 
             if (_isRunning)
@@ -184,6 +192,8 @@ namespace ExtendedPomodoro.ViewModels
 
         public void Pause()
         {
+            if (_isPaused) return;
+
             if (!_isRunning) return;
             _isPaused = true;
             _timer.Pause();
@@ -247,6 +257,11 @@ namespace ExtendedPomodoro.ViewModels
         {
             _context.CurrentTimerSession = session;
             _context.CurrentTimerSession.Initialize();
+        }
+        
+        private bool AlreadyStarting()
+        {
+            return !_isPaused && _isRunning;
         }
 
         public void OnCanPauseChange()

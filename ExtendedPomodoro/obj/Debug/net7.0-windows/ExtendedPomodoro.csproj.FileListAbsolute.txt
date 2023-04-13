@@ -58,7 +58,9 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-w
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Themes\DarkTheme.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Themes\LightTheme.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\MainWindow.g.cs
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\ModalContentSessionFinishUserControl.g.cs
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\ModalCreateTaskUserControl.g.cs
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\SessionFinishBalloonTipsUserControl.g.cs
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\SettingsView.g.cs
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\StatsView.g.cs
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\TasksView.g.cs
@@ -77,7 +79,9 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-w
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\Modals.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Styles\TextBoxes.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Themes\Generic.baml
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\ModalContentSessionFinishUserControl.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\ModalCreateTaskUserControl.baml
+C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\SessionFinishBalloonTipsUserControl.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\SettingsView.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\StatsView.baml
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\TasksView.baml
@@ -94,7 +98,3 @@ C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-w
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\ExtendedPomodoro.pdb
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\ExtendedPomodoro.genruntimeconfig.cache
 C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\ref\ExtendedPomodoro.dll
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\SessionFinishBalloonTipsUserControl.g.cs
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\SessionFinishBalloonTipsUserControl.baml
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\ModalContentSessionFinishUserControl.g.cs
-C:\Users\ihsan\source\repos\ExtendedPomodoro\ExtendedPomodoro\obj\Debug\net7.0-windows\Views\Components\ModalContentSessionFinishUserControl.baml
