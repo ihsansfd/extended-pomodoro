@@ -13,7 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -24,7 +26,6 @@ namespace ExtendedPomodoro
     /// </summary>
     public partial class App : Application
     {
-
         private ServiceProvider Services { get; }
 
         public App()
@@ -38,6 +39,8 @@ namespace ExtendedPomodoro
         {
             base.OnStartup(e);
 
+            EnsureOnlyOneInstanceIsRunning();
+
             var mainWindow = Services.GetRequiredService<MainWindow>();
             var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
             await mainWindowViewModel.Initialize();
@@ -45,6 +48,19 @@ namespace ExtendedPomodoro
 
             mainWindow.Show();
 
+        }
+
+        private void EnsureOnlyOneInstanceIsRunning()
+        {
+            Process proc = Process.GetCurrentProcess();
+            int count = Process.GetProcesses().Where(p =>
+                p.ProcessName == proc.ProcessName).Count();
+
+            if (count > 1)
+            {
+                MessageBox.Show("Application is already running...");
+                App.Current.Shutdown();
+            }
         }
 
         private void InitializeDb()

@@ -98,9 +98,8 @@ namespace ExtendedPomodoro.Views
             {
                 ModalSessionFinish.ClearValue(ContentProperty);
                 ModalSessionFinish.IsShown = false;
+                _alarmSoundService.Stop();
             }
-
-            _alarmSoundService.Stop();
         }
 
         public void Receive(ModalContentSessionFinishMessage message)
@@ -109,10 +108,8 @@ namespace ExtendedPomodoro.Views
             {
                 _currentSessionFinishBalloon?.Close();
                 ModalSessionFinish.IsShown = false;
+                _alarmSoundService.Stop();
             }
-
-            _alarmSoundService.Stop();
-
         }
 
         ~TimerView()
