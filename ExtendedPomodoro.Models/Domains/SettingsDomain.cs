@@ -35,7 +35,7 @@ namespace ExtendedPomodoro.Models.Domains
         bool IsRepeatForever,
         bool PushNotificationEnabled,
         bool DarkModeEnabled,
-        HotkeyDomain? StartHotkey,
-        HotkeyDomain? PauseHotkey
+        HotkeyDomain? StartHotkeyDomain,
+        HotkeyDomain? PauseHotkeyDomain
      );
 }

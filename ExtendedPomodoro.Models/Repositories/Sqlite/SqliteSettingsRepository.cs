@@ -62,8 +62,8 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                     IsRepeatForever = domain.IsRepeatForever,
                     PushNotificationEnabled = domain.PushNotificationEnabled,
                     DarkModeEnabled = domain.DarkModeEnabled,
-                    StartHotkey = domain.StartHotkey != null ? JsonSerializer.Serialize(domain.StartHotkey) : null,
-                    PauseHotkey = domain.PauseHotkey != null ? JsonSerializer.Serialize(domain.PauseHotkey) : null,
+                    StartHotkey = domain.StartHotkeyDomain != null ? JsonSerializer.Serialize(domain.StartHotkeyDomain) : null,
+                    PauseHotkey = domain.PauseHotkeyDomain != null ? JsonSerializer.Serialize(domain.PauseHotkeyDomain) : null,
                 };
 
                 await db.ExecuteAsync(UPDATE_MAIN_SETTINGS_QUERY, data);

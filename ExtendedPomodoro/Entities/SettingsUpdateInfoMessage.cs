@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExtendedPomodoro.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,5 @@ using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.Entities
 {
-    public class SettingsUpdateInfoMessage
-    {
-    }
+    public record class SettingsUpdateInfoMessage(SettingsViewModel SettingsViewModel);
 }

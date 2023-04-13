@@ -9,6 +9,7 @@ using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using ExtendedPomodoro.Views;
 using Microsoft.Extensions.DependencyInjection;
+using NHotkey.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -48,6 +49,17 @@ namespace ExtendedPomodoro
 
             mainWindow.Show();
 
+            await RegisterHotkeys();
+        }
+
+        private async Task RegisterHotkeys()
+        {
+            var settingsRepo = Services.GetRequiredService<ISettingsRepository>();
+            var settings = await settingsRepo.GetSettings();
+
+            var hotkeyService = Services.GetRequiredService<HotkeyService>();
+            hotkeyService.RegisterOrUpdateStartTimerHotkey(settings.StartHotkeyDomain.ConvertToHotkey());
+            hotkeyService.RegisterOrUpdatePauseTimerHotkey(settings.PauseHotkeyDomain.ConvertToHotkey());
         }
 
         private void EnsureOnlyOneInstanceIsRunning()
@@ -75,6 +87,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<DbConfig>(
                 (_) => new(ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString)
                 );
+
             services.AddSingleton<TasksHelper>();
             services.AddTransient<ReadTasksViewModel>();
             services.AddTransient<CreateTaskViewModel>();
@@ -97,6 +110,8 @@ namespace ExtendedPomodoro
             services.AddSingleton<StatsViewModel>();
             services.AddSingleton<TasksViewModel>();
             services.AddSingleton<NavigationViewModel>((service) => new(service.GetRequiredService<TimerViewModel>()));
+            services.AddSingleton<HotkeyManager>((_s) => HotkeyManager.Current);
+            services.AddSingleton<HotkeyService>();
 
             return services.BuildServiceProvider();
         }

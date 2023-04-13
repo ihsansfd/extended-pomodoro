@@ -12,12 +12,15 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.ComponentModel.DataAnnotations;
 using CommunityToolkit.Mvvm.Messaging;
+using ExtendedPomodoro.Services;
+using ExtendedPomodoro.Helpers;
 
 namespace ExtendedPomodoro.ViewModels
 {
     public partial class SettingsViewModel : ObservableValidator
     {
         private ISettingsRepository _repository;
+        private HotkeyService _hotkeyService;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -99,8 +102,8 @@ namespace ExtendedPomodoro.ViewModels
             IsRepeatForever = settingsDomain.IsRepeatForever;
             PushNotificationEnabled = settingsDomain.PushNotificationEnabled;
             DarkModeEnabled = settingsDomain.DarkModeEnabled;
-            StartHotkey = ConvertToHotkey(settingsDomain.StartHotkey);
-            PauseHotkey = ConvertToHotkey(settingsDomain.PauseHotkey);
+            StartHotkey = settingsDomain.StartHotkeyDomain.ConvertToHotkey();
+            PauseHotkey = settingsDomain.PauseHotkeyDomain.ConvertToHotkey();
         }
 
         [RelayCommand]
@@ -122,11 +125,11 @@ namespace ExtendedPomodoro.ViewModels
                 IsRepeatForever,
                 PushNotificationEnabled,
                 DarkModeEnabled,
-                ConvertToHotkeyDomain(StartHotkey),
-                ConvertToHotkeyDomain(PauseHotkey)
+                StartHotkey.ConvertToHotkeyDomain(),
+                PauseHotkey.ConvertToHotkeyDomain()
                 ));
 
-            StrongReferenceMessenger.Default.Send(new SettingsUpdateInfoMessage());
+            StrongReferenceMessenger.Default.Send(new SettingsUpdateInfoMessage(this));
         }
 
         [RelayCommand]
@@ -136,18 +139,5 @@ namespace ExtendedPomodoro.ViewModels
             await Initialize();
         }
 
-        private Hotkey? ConvertToHotkey(HotkeyDomain? hotkeyDomain)
-        {
-            if(hotkeyDomain == null) return null;
-
-            return new Hotkey((Key) hotkeyDomain.Key, (ModifierKeys) hotkeyDomain.ModifierKeys);
-        }
-
-        private HotkeyDomain? ConvertToHotkeyDomain(Hotkey? hotkey)
-        {
-            if (hotkey == null) return null;
-
-            return new HotkeyDomain((int) hotkey.Modifiers, (int) hotkey.Key);
-        }
     }
 }

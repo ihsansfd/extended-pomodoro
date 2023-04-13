@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Services;
+using NHotkey;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -110,6 +111,16 @@ namespace ExtendedPomodoro.ViewModels
         {
             RemainingTime = remainingTime;
             FormatRemainingTime();
+        }
+
+        public void OnStartTimerByHotkey(object? sender, HotkeyEventArgs e)
+        {
+            StartSession();
+        }
+
+        public void OnPauseTimerByHotkey(object? sender, HotkeyEventArgs e)
+        {
+            PauseSession();
         }
 
         /// <summary>

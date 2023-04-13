@@ -12,12 +12,12 @@
         d:DataContext="{d:DesignInstance Type=vms:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="Extended Pomodoro" Height="440" Width="615" Icon="extended-pomodoro-icon.ico">
-    <Window.InputBindings>
+    <!--<Window.InputBindings>
         <KeyBinding Key="{Binding StartTimerKey}" Modifiers="{Binding StartTimerModifiers}"
             Command="{Binding TimerViewModel.StartSessionFromHotkeyCommand}"/>
         <KeyBinding Key="{Binding PauseTimerKey}" Modifiers="{Binding PauseTimerModifiers}"
             Command="{Binding TimerViewModel.PauseSessionFromHotkeyCommand}"/>
-    </Window.InputBindings>
+    </Window.InputBindings>-->
     <Window.Resources>
         <DataTemplate DataType="{x:Type vms:TimerViewModel}">
             <views:TimerView/>
