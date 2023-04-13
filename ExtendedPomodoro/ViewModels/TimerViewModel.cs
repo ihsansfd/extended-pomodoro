@@ -216,6 +216,11 @@ namespace ExtendedPomodoro.ViewModels
             _isRunning = false;
         }
         
+        protected void InitializeTo(TimeSpan timerSetFor)
+        {
+            _timer.Initialize(timerSetFor);
+            _context.UpdateRemainingTime(timerSetFor);
+        }
 
         protected void FinishTo(TimerSessionState nextSession)
         {
@@ -252,9 +257,9 @@ namespace ExtendedPomodoro.ViewModels
 
         public override void Initialize()
         {
+            base.Initialize();
             var timerSetFor = TimeSpan.FromMinutes(_configuration.PomodoroDurationInMinutes);
-            _timer.Initialize(timerSetFor);
-            _context.UpdateRemainingTime(timerSetFor);
+            InitializeTo(timerSetFor);
         }
 
         public override void Finish()
@@ -295,9 +300,9 @@ namespace ExtendedPomodoro.ViewModels
 
         public override void Initialize()
         {
+            base.Initialize();
             var timerSetFor = TimeSpan.FromMinutes(_configuration.ShortBreakDurationInMinutes);
-            _timer.Initialize(timerSetFor);
-            _context.UpdateRemainingTime(timerSetFor);
+            InitializeTo(timerSetFor);
         }
 
         public override void Finish()
@@ -321,8 +326,7 @@ namespace ExtendedPomodoro.ViewModels
         public override void Initialize()
         {
             var timerSetFor = TimeSpan.FromMinutes(_configuration.LongBreakDurationInMinutes);
-            _timer.Initialize(timerSetFor);
-            _context.UpdateRemainingTime(timerSetFor);
+            InitializeTo(timerSetFor);
         }
 
         public override void Finish()
