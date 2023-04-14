@@ -57,7 +57,7 @@ namespace ExtendedPomodoro
             var settingsRepo = Services.GetRequiredService<ISettingsRepository>();
             var settings = await settingsRepo.GetSettings();
 
-            var hotkeyService = Services.GetRequiredService<HotkeyService>();
+            var hotkeyService = Services.GetRequiredService<HotkeyLoaderService>();
             hotkeyService.RegisterOrUpdateStartTimerHotkey(settings.StartHotkeyDomain.ConvertToHotkey());
             hotkeyService.RegisterOrUpdatePauseTimerHotkey(settings.PauseHotkeyDomain.ConvertToHotkey());
         }
@@ -111,7 +111,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<TasksViewModel>();
             services.AddSingleton<NavigationViewModel>((service) => new(service.GetRequiredService<TimerViewModel>()));
             services.AddSingleton<HotkeyManager>((_s) => HotkeyManager.Current);
-            services.AddSingleton<HotkeyService>();
+            services.AddSingleton<HotkeyLoaderService>();
 
             return services.BuildServiceProvider();
         }

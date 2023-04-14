@@ -13,12 +13,12 @@ using System.Windows.Input;
 
 namespace ExtendedPomodoro.Services
 {
-    public class HotkeyService : IRecipient<SettingsUpdateInfoMessage>
+    public class HotkeyLoaderService : IRecipient<SettingsUpdateInfoMessage>
     {
         private HotkeyManager _hotkeyManager;
         private TimerViewModel _timerViewModel;
 
-        public HotkeyService(HotkeyManager hotkeyManager, TimerViewModel timerViewModel)
+        public HotkeyLoaderService(HotkeyManager hotkeyManager, TimerViewModel timerViewModel)
         {
             _hotkeyManager = hotkeyManager;
             _timerViewModel = timerViewModel;
@@ -53,6 +53,11 @@ namespace ExtendedPomodoro.Services
         {
             RegisterOrUpdateStartTimerHotkey(message.SettingsViewModel.StartHotkey);
             RegisterOrUpdatePauseTimerHotkey(message.SettingsViewModel.PauseHotkey);
+        }
+
+        ~HotkeyLoaderService()
+        {
+            StrongReferenceMessenger.Default.UnregisterAll(this);
         }
     }
 }

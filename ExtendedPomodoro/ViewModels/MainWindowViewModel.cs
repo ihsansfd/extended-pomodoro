@@ -15,7 +15,6 @@ namespace ExtendedPomodoro.ViewModels
 
     public partial class MainWindowViewModel : ObservableObject, 
         IRecipient<CurrentViewModelMessage>
-        //IRecipient<SettingsUpdateInfoMessage>
     {
         private readonly NavigationViewModel _navigationViewModel;
         public TimerViewModel TimerViewModel { get; }
@@ -26,18 +25,6 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private ObservableObject _currentViewModel;
 
-        //[ObservableProperty]
-        //private Key _startTimerKey;
-        
-        //[ObservableProperty]
-        //private ModifierKeys _startTimerModifiers;
-
-        //[ObservableProperty]
-        //private Key _pauseTimerKey;
-
-        //[ObservableProperty]
-        //private ModifierKeys _pauseTimerModifiers;
-
         public MainWindowViewModel(NavigationViewModel navigationViewModel,
           TimerViewModel timerViewModel, SettingsViewModel settingsViewModel, StatsViewModel statsViewModel, TasksViewModel tasksViewModel)
         {
@@ -46,8 +33,6 @@ namespace ExtendedPomodoro.ViewModels
             _settingsViewModel = settingsViewModel;
             _tasksViewModel = tasksViewModel;
             _statsViewModel = statsViewModel;
-
-            //InitializeHotkeys();
 
             StrongReferenceMessenger.Default.RegisterAll(this);
         }
@@ -83,18 +68,5 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         public void Receive(CurrentViewModelMessage currentViewModelMessage) => CurrentViewModel = currentViewModelMessage.Message;
-
-        //public void Receive(SettingsUpdateInfoMessage message)
-        //{
-        //    InitializeHotkeys();
-        //}
-
-        //private void InitializeHotkeys()
-        //{
-        //    StartTimerKey = _settingsViewModel.StartHotkey?.Key ?? Key.None;
-        //    StartTimerModifiers = _settingsViewModel.StartHotkey?.Modifiers ?? ModifierKeys.None;
-        //    PauseTimerKey = _settingsViewModel.PauseHotkey?.Key ?? Key.None;
-        //    PauseTimerModifiers = _settingsViewModel.PauseHotkey?.Modifiers ?? ModifierKeys.None;
-        //}
     }
 }

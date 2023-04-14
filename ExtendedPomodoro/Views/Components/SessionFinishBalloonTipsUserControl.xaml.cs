@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -22,37 +23,23 @@ namespace ExtendedPomodoro.Views.Components
     /// <summary>
     /// Interaction logic for SessionFinishBalloonTipsUserControl.xaml
     /// </summary>
-    public partial class SessionFinishBalloonTipsUserControl : UserControl
+    public partial class SessionFinishBalloonTipsUserControl : ICloseableControl
     {
-
-        private TimeSpan _remainingTimeAlive;
-        private DispatcherTimer _aliveTimer;
-
-        private Run _remainingTimeInSecondsRunText;
+        private AutoCloseControlService _autoCloseService;
 
         public SessionFinishBalloonTipsUserControl()
         {
             InitializeComponent();
             DataContext = this;
-
-            _remainingTimeInSecondsRunText = (Run)FindName("RemainingTimeInSecondsRunText");
-            _remainingTimeInSecondsRunText.Text = TimeSpan.FromMilliseconds(AutoCloseAfter).TotalSeconds.ToString();
-
-            _remainingTimeAlive = TimeSpan.FromMilliseconds(AutoCloseAfter);
-
-            _aliveTimer = new();
-            _aliveTimer.Interval = TimeSpan.FromSeconds(1);
-            _aliveTimer.Start();
-            _aliveTimer.Tick += OnAliveTimerTickChanged;
+            _autoCloseService = new AutoCloseControlService(this, PART_RemainingTimeInSecondsRun);
         }
 
-        private void OnAliveTimerTickChanged(object? sender, EventArgs e)
+        public override void OnApplyTemplate()
         {
-            _remainingTimeAlive = _remainingTimeAlive.Subtract(TimeSpan.FromSeconds(1));
+            base.OnApplyTemplate();
 
-            _remainingTimeInSecondsRunText.Text = _remainingTimeAlive.TotalSeconds.ToString();
-
-            if (_remainingTimeAlive <= TimeSpan.Zero) Close();
+            _autoCloseService.AutoCloseAfter = AutoCloseAfter;
+            _autoCloseService.Start();
         }
 
         public int AutoCloseAfter
@@ -62,7 +49,8 @@ namespace ExtendedPomodoro.Views.Components
         }
 
         public static readonly DependencyProperty AutoCloseAfterProperty =
-            DependencyProperty.Register("AutoCloseAfter", typeof(int), typeof(SessionFinishBalloonTipsUserControl), new PropertyMetadata(15000));
+            DependencyProperty.Register("AutoCloseAfter", 
+                typeof(int), typeof(SessionFinishBalloonTipsUserControl), new PropertyMetadata(15000));
 
         public TimerSessionState FinishedSession
         {
@@ -72,15 +60,6 @@ namespace ExtendedPomodoro.Views.Components
 
         public static readonly DependencyProperty FinishedSessionProperty =
             DependencyProperty.Register("FinishedSession", typeof(TimerSessionState), typeof(SessionFinishBalloonTipsUserControl));
-
-        public string Message
-        {
-            get { return (string)GetValue(MessageProperty); }
-            set { SetValue(MessageProperty, value); }
-        }
-
-        public static readonly DependencyProperty MessageProperty =
-            DependencyProperty.Register("Message", typeof(string), typeof(SessionFinishBalloonTipsUserControl));
 
         public TimerSessionState NextSession
         {
@@ -98,8 +77,7 @@ namespace ExtendedPomodoro.Views.Components
 
         public void Close()
         {
-            _aliveTimer.Stop();
-            _aliveTimer.Tick -= OnAliveTimerTickChanged;
+            Unregister();
             Visibility = Visibility.Collapsed;
             StrongReferenceMessenger.Default.Send(new SessionFinishBalloonMessage(true));
         }
@@ -110,9 +88,14 @@ namespace ExtendedPomodoro.Views.Components
             Close();
         }
 
-        ~SessionFinishBalloonTipsUserControl()
+        private void Unregister()
         {
             StrongReferenceMessenger.Default.UnregisterAll(this);
+        }
+
+        ~SessionFinishBalloonTipsUserControl()
+        {
+            Unregister();
         }
     }
 }

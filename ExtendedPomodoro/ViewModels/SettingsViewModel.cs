@@ -20,7 +20,7 @@ namespace ExtendedPomodoro.ViewModels
     public partial class SettingsViewModel : ObservableValidator
     {
         private ISettingsRepository _repository;
-        private HotkeyService _hotkeyService;
+        private HotkeyLoaderService _hotkeyService;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
