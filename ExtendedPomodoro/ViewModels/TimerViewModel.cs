@@ -235,6 +235,11 @@ namespace ExtendedPomodoro.ViewModels
             OnCanPauseChange();
         }
 
+        protected void AfterFinish()
+        {
+            if (_configuration.IsAutostart) _context.CurrentTimerSession.Start();
+        }
+
         protected void StopFromRunning()
         {
             _timer.Stop();
@@ -313,6 +318,8 @@ namespace ExtendedPomodoro.ViewModels
             {
                 FinishTo(_shortBreakSessionState);
             }
+
+            base.AfterFinish();
         }
 
         public override void Skip()
@@ -345,6 +352,7 @@ namespace ExtendedPomodoro.ViewModels
         {
             base.Finish();
             FinishTo(_pomodoroSessionState);
+            base.AfterFinish();
         }
 
         public override void Skip()
@@ -369,6 +377,7 @@ namespace ExtendedPomodoro.ViewModels
         {
             base.Finish();
             FinishTo(_pomodoroSessionState);
+            base.AfterFinish();
         }
 
         public override void Skip()
