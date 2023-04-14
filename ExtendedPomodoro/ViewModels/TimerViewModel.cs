@@ -49,7 +49,7 @@ namespace ExtendedPomodoro.ViewModels
             var _selectedTaskTemp = SelectedTask;
             SelectedTask = null;
 
-            await StoreSessionFinishInfo(CurrentTimerSession, _timeEllapsed);
+            await StoreDailySessionTimeSpentInfo(_timeEllapsed);
             await StoreTaskTimeSpent(_selectedTaskTemp.Id, _timeEllapsed);
             await StoreDailySessionTaskLinkCompleted(_selectedTaskTemp.Id);
             await UpdateTaskStateToComplete(_selectedTaskTemp.Id);
@@ -65,7 +65,7 @@ namespace ExtendedPomodoro.ViewModels
 
             var _selectedTaskTemp = SelectedTask;
             SelectedTask = null;
-            await StoreSessionFinishInfo(CurrentTimerSession, _timeEllapsed);
+            await StoreDailySessionTimeSpentInfo(_timeEllapsed);
             await StoreTaskTimeSpent(_selectedTaskTemp.Id, _timeEllapsed);
             _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
         }
@@ -205,6 +205,18 @@ namespace ExtendedPomodoro.ViewModels
             if (message.IsStartSession) StartSession();
         }
 
+        [RelayCommand]
+        public async Task HandleWindowClosed()
+        {
+            if (SelectedTask != null)
+            {
+                await StoreTaskTimeSpent(SelectedTask.Id, _timeEllapsed);
+            }
+
+            await StoreDailySessionTimeSpentInfo(_timeEllapsed);
+            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
+        }
+
         #endregion
 
         #region View Spesific
@@ -247,6 +259,12 @@ namespace ExtendedPomodoro.ViewModels
                 );
 
             await _sessionsRepository.UpsertDailySession(domain);
+        }
+
+        private async Task StoreDailySessionTimeSpentInfo(int timeSpent)
+        {
+            await _sessionsRepository.UpsertDailySessionTimeSpent(
+                DateOnly.FromDateTime(DateTime.Now), TimeSpan.FromSeconds(timeSpent));
         }
 
         private async Task StoreTaskTimeSpent(int taskId, int timeEllapsed)

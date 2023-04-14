@@ -10,6 +10,7 @@ namespace ExtendedPomodoro.Models.Repositories
     public interface ISessionsRepository
     {
         Task UpsertDailySession(UpsertDailySessionDomain domain);
+        Task UpsertDailySessionTimeSpent(DateOnly sessionDate, TimeSpan timeSpent);
         Task UpsertDailySessionTaskLink(DailySessionTaskLinkDomain domain);
     }
 }

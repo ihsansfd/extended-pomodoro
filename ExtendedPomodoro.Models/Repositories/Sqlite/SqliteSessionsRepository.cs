@@ -74,7 +74,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             {
                 var data = new
                 {
-                    SessionDate = sessionDate,
+                    SessionDate = sessionDate.ToString(),
                     TimeSpentInSeconds = timeSpent.TotalSeconds,
                     CreatedAt = now,
                     UpdatedAt = now
