@@ -32,6 +32,7 @@
             x:Name="TasksComboBox"
             ItemsSource="{Binding ReadTasksViewModel.Tasks}"
             DisplayMemberPath="Name"
+            SelectedValue="{Binding SelectedTask}"
             ButtonStyle="{StaticResource IconizedButtonStyle}"
             Style="{StaticResource TasksComboBoxStyle}"
             LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Models.Domains;
+using ExtendedPomodoro.Models.Repositories;
 using ExtendedPomodoro.Services;
 using NHotkey;
 using System;
@@ -21,13 +22,20 @@ namespace ExtendedPomodoro.ViewModels
         IRecipient<SettingsUpdateInfoMessage>,
         IRecipient<StartSessionInfoMessage>
     {
-        private SettingsViewModel _settingsViewModel;
+        private readonly SettingsViewModel _settingsViewModel;
+        private readonly ISessionsRepository _sessionsRepository;
+        private readonly ITasksRepository _tasksRepository;
         private bool _hasBeenSetup;
+
+        private int _timeEllapsed = 0;
 
         #region Tasks
 
         public ReadTasksViewModel ReadTasksViewModel { get; }
         public CreateTaskViewModel CreateTaskViewModel { get; }
+
+        [ObservableProperty]
+        private TaskDomainViewModel? _selectedTask;
 
         [RelayCommand]
         public void NotifTasksComboBoxAddNewButtonPressed() =>
@@ -35,7 +43,7 @@ namespace ExtendedPomodoro.ViewModels
 
         #endregion
 
-        #region Timer
+        #region Timer variables, props, and commands
 
         public TimeSpan RemainingTime;
 
@@ -80,10 +88,14 @@ namespace ExtendedPomodoro.ViewModels
 
         #endregion
 
+        #region bootstrap
+
         public TimerViewModel(ReadTasksViewModel readTasksViewModel, 
             CreateTaskViewModel createTaskViewModel, 
             TimerSessionState timerSessionState,
-            SettingsViewModel settingsViewModel
+            SettingsViewModel settingsViewModel,
+            ISessionsRepository sessionsRepository,
+            ITasksRepository tasksRepository
             )
         {
 
@@ -91,6 +103,8 @@ namespace ExtendedPomodoro.ViewModels
             CreateTaskViewModel = createTaskViewModel;
             CurrentTimerSession = timerSessionState;
             _settingsViewModel = settingsViewModel;
+            _sessionsRepository = sessionsRepository;
+            _tasksRepository = tasksRepository;
 
             StrongReferenceMessenger.Default.RegisterAll(this);
         }
@@ -102,23 +116,9 @@ namespace ExtendedPomodoro.ViewModels
             _hasBeenSetup = true;
         }
 
-        public void Receive(TimerTimeChangeInfoMessage message)
-        {
-            UpdateRemainingTime(message.RemainingTime);
-            SessionProgress = CalculateProgress(message.TimerSetFor, message.RemainingTime);
+        #endregion
 
-            if(message.RemainingTime.TotalSeconds <= 0)
-            {
-                CurrentTimerSession.Finish();
-            }
-
-        }
-
-        public void UpdateRemainingTime(TimeSpan remainingTime)
-        {
-            RemainingTime = remainingTime;
-            FormatRemainingTime();
-        }
+        #region messages and events
 
         public void OnStartTimerByHotkey(object? sender, HotkeyEventArgs e)
         {
@@ -132,6 +132,20 @@ namespace ExtendedPomodoro.ViewModels
             StrongReferenceMessenger.Default.Send(new TimerActionChangeInfoMessage(CurrentTimerSession, TimerAction.Pause, true));
         }
 
+        public void Receive(TimerTimeChangeInfoMessage message)
+        {
+            _timeEllapsed++;
+
+            UpdateRemainingTime(message.RemainingTime);
+            SessionProgress = CalculateProgress(message.TimerSetFor, message.RemainingTime);
+
+            if (message.RemainingTime.TotalSeconds <= 0)
+            {
+                CurrentTimerSession.Finish();
+            }
+
+        }
+
         /// <summary>
         /// If there are changes in settings while the timer hasn't run, reinitialized.
         /// </summary>
@@ -142,12 +156,34 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         /// <summary>
-        /// Give information to the listeners that session has finished. View will handle its logic (display notification, alarm, etc).
+        /// Do Finish logic.
+        /// Give information to the listeners that session has finished. 
+        /// View will handle its logic (display notification, alarm, etc).
         /// </summary>
         /// <param name="message"></param>
-        public void OnFinishSession(TimerSessionFinishInfoMessage message)
+        public async Task OnFinishSession(TimerSessionFinishInfoMessage message)
         {
             StrongReferenceMessenger.Default.Send(message);
+
+            await StoreSessionFinishInfo(message.FinishedSession, _timeEllapsed);
+            if(SelectedTask != null) await StoreTaskTimeSpent(SelectedTask.Id, _timeEllapsed);
+
+            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
+        }
+
+        public void Receive(StartSessionInfoMessage message)
+        {
+            if (message.IsStartSession) StartSession();
+        }
+
+        #endregion
+
+        #region View Spesific
+
+        public void UpdateRemainingTime(TimeSpan remainingTime)
+        {
+            RemainingTime = remainingTime;
+            FormatRemainingTime();
         }
 
         private void FormatRemainingTime()
@@ -160,10 +196,36 @@ namespace ExtendedPomodoro.ViewModels
             return (timerSetFor - remainingTime) / timerSetFor * 100;
         }
 
-        public void Receive(StartSessionInfoMessage message)
+        #endregion
+
+        #region Storing to Repository
+
+        private async Task StoreSessionFinishInfo(
+            TimerSessionState currentSessionState, int timeSpent)
         {
-            if(message.IsStartSession) StartSession();
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
+            int pomodoroCompleted = (currentSessionState is PomodoroSessionState) ? 1 : 0;
+            int shortBreakCompleted = (currentSessionState is ShortBreakSessionState) ? 1 : 0;
+            int longBreakCompleted = (currentSessionState is LongBreakSessionState) ? 1 : 0;
+
+            var domain = new UpsertDailySessionDomain(
+                today,
+                TimeSpan.FromSeconds(timeSpent),
+                pomodoroCompleted,
+                shortBreakCompleted,
+                longBreakCompleted
+                );
+
+            await _sessionsRepository.UpsertDailySession(domain);
         }
+
+        private async Task StoreTaskTimeSpent(int taskId, int timeEllapsed)
+        {
+            await _tasksRepository.UpdateTaskTimeSpent(taskId, TimeSpan.FromSeconds(timeEllapsed));
+        }
+
+        #endregion
     }
 
 
@@ -259,9 +321,9 @@ namespace ExtendedPomodoro.ViewModels
             _context.UpdateRemainingTime(timerSetFor);
         }
 
-        protected void FinishTo(TimerSessionState nextSession)
+        protected async void FinishTo(TimerSessionState nextSession)
         {
-            _context.OnFinishSession(new
+            await _context.OnFinishSession(new
                 (_context.CurrentTimerSession, 
                 nextSession, 
                 (AlarmSound)_configuration.AlarmSound,

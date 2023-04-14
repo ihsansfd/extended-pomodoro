@@ -8,7 +8,7 @@ namespace ExtendedPomodoro.Models.DTOs
 {
     public class SqliteUpsertDailySessionDTO
     {
-        public DateOnly SessionDate { get; set; }
+        public string SessionDate { get; set; }
         public int TimeSpentInSeconds {get; set;} 
         public int TotalPomodoroCompleted {get; set;}
         public int TotalShortBreaksCompleted {get; set;}

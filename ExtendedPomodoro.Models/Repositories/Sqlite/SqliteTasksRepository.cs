@@ -25,6 +25,9 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         private const string UPDATE_TASK_STATE_QUERY =
             @"UPDATE tblTasks SET IsTaskCompleted = @IsTaskCompleted WHERE Id = @Id";
 
+        private const string UPDATE_TASK_TIME_SPENT_QUERY =
+            @"UPDATE tblTasks SET TimeSpentInSeconds = TimeSpentInSeconds + @TimeSpentInSecondsIncrementBy WHERE Id = @Id";
+
         private const string GET_TASKS_QUERY =
             @"SELECT * FROM tblTasks WHERE IsTaskCompleted = @IsTaskCompleted
              ORDER BY datetime(CreatedAt) DESC LIMIT @Limit OFFSET @Offset";
@@ -98,6 +101,20 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                 await db.ExecuteAsync(UPDATE_TASK_STATE_QUERY, data);
             }
         } 
+
+        public async Task UpdateTaskTimeSpent(int taskId, TimeSpan timeSpent)
+        {
+            using (var db = _connectionFactory.Connect())
+            {
+                object data = new
+                {
+                    Id = taskId,
+                    TimeSpentInSecondsIncrementBy = timeSpent.TotalSeconds
+                };
+
+                await db.ExecuteAsync(UPDATE_TASK_TIME_SPENT_QUERY, data);
+            }
+        }
 
         public async Task UpdateTask(UpdateTaskDomain domain)
         {
