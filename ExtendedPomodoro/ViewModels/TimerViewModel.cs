@@ -46,28 +46,19 @@ namespace ExtendedPomodoro.ViewModels
         {
             if (SelectedTask == null) return;
 
-            var _selectedTaskTemp = SelectedTask;
-            SelectedTask = null;
-
-            await StoreDailySessionTimeSpentInfo(_timeEllapsed);
-            await StoreTaskTimeSpent(_selectedTaskTemp.Id, _timeEllapsed);
-            await StoreDailySessionTaskLinkCompleted(_selectedTaskTemp.Id);
-            await UpdateTaskStateToComplete(_selectedTaskTemp.Id);
+            await StoreDailySessionTaskLinkCompleted(SelectedTask.Id);
+            await UpdateTaskStateToComplete(SelectedTask.Id);
             await ReadTasksViewModel.LoadTasks();
+            await StoreAndResetTimeEllapsed();
 
-            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
+            SelectedTask = null;
         }
 
         [RelayCommand]
         public async Task CancelTask()
         {
-            if(SelectedTask == null) return;
-
-            var _selectedTaskTemp = SelectedTask;
+            await StoreAndResetTimeEllapsed();
             SelectedTask = null;
-            await StoreDailySessionTimeSpentInfo(_timeEllapsed);
-            await StoreTaskTimeSpent(_selectedTaskTemp.Id, _timeEllapsed);
-            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
         }
 
         #endregion
@@ -194,10 +185,8 @@ namespace ExtendedPomodoro.ViewModels
         {
             StrongReferenceMessenger.Default.Send(message);
 
-            await StoreSessionFinishInfo(message.FinishedSession, _timeEllapsed);
-            if(SelectedTask != null) await StoreTaskTimeSpent(SelectedTask.Id, _timeEllapsed);
-
-            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
+            await StoreSessionFinishInfo(message.FinishedSession);
+            await StoreAndResetTimeEllapsed();
         }
 
         public void Receive(StartSessionInfoMessage message)
@@ -208,13 +197,7 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public async Task HandleWindowClosed()
         {
-            if (SelectedTask != null)
-            {
-                await StoreTaskTimeSpent(SelectedTask.Id, _timeEllapsed);
-            }
-
-            await StoreDailySessionTimeSpentInfo(_timeEllapsed);
-            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
+            await StoreAndResetTimeEllapsed();
         }
 
         #endregion
@@ -242,7 +225,7 @@ namespace ExtendedPomodoro.ViewModels
         #region Storing to Repository
 
         private async Task StoreSessionFinishInfo(
-            TimerSessionState currentSessionState, int timeSpent)
+            TimerSessionState currentSessionState)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
 
@@ -252,7 +235,7 @@ namespace ExtendedPomodoro.ViewModels
 
             var domain = new UpsertDailySessionDomain(
                 today,
-                TimeSpan.FromSeconds(timeSpent),
+                TimeSpan.Zero,
                 pomodoroCompleted,
                 shortBreakCompleted,
                 longBreakCompleted
@@ -282,6 +265,14 @@ namespace ExtendedPomodoro.ViewModels
             var today = DateOnly.FromDateTime(DateTime.Now);
 
             await _sessionsRepository.UpsertDailySessionTaskLink(new(today.ToString(), taskId, true));
+        }
+
+        private async Task StoreAndResetTimeEllapsed()
+        {
+            if (SelectedTask != null) await StoreTaskTimeSpent(SelectedTask.Id, _timeEllapsed);
+
+            await StoreDailySessionTimeSpentInfo(_timeEllapsed);
+            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
         }
 
         #endregion
