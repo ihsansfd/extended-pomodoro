@@ -116,11 +116,13 @@ namespace ExtendedPomodoro.ViewModels
         public void OnStartTimerByHotkey(object? sender, HotkeyEventArgs e)
         {
             StartSession();
+            StrongReferenceMessenger.Default.Send(new TimerManipulatedByHotkeyMessage(CurrentTimerSession, HotkeyManipulation.Start));
         }
 
         public void OnPauseTimerByHotkey(object? sender, HotkeyEventArgs e)
         {
             PauseSession();
+            StrongReferenceMessenger.Default.Send(new TimerManipulatedByHotkeyMessage(CurrentTimerSession, HotkeyManipulation.Pause));
         }
 
         /// <summary>

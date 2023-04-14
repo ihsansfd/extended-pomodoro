@@ -77,7 +77,7 @@ namespace ExtendedPomodoro.Models.DbSetup
             _connectionFactory = connectionFactory;
         }
 
-        public void Setup()
+        public async Task Setup()
         {
             var query = CREATE_TASKS_TABLE_QUERY +
                         CREATE_SETTINGS_TABLE_QUERY +
@@ -86,7 +86,7 @@ namespace ExtendedPomodoro.Models.DbSetup
                         CREATE_DAILY_SESSION_TASK_LINKS_TABLE_QUERY;
 
             using var connection = _connectionFactory.Connect();
-            connection.Execute(query);
+            await connection.ExecuteAsync(query);
         }
     }
 }

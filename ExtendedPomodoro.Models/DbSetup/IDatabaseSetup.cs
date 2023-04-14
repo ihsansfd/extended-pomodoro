@@ -8,6 +8,6 @@ namespace ExtendedPomodoro.Models.DbSetup
 {
     public interface IDatabaseSetup
     {
-        void Setup();
+        Task Setup();
     }
 }

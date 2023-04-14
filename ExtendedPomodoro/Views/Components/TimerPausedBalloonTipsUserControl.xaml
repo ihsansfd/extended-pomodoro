@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="ExtendedPomodoro.Views.Components.TimerStartedBalloonTipsUserControl"
+﻿<UserControl x:Class="ExtendedPomodoro.Views.Components.TimerPausedBalloonTipsUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ExtendedPomodoro.Views.Components"
-             xmlns:conv="clr-namespace:ExtendedPomodoro.Converters"
+            xmlns:conv="clr-namespace:ExtendedPomodoro.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="225" d:DesignWidth="320">
     <UserControl.Resources>
@@ -26,14 +26,15 @@
                 Margin="0 20 0 0"
                 Style="{StaticResource TextBlockBalloonTipsTitle}">
                 <Run Text="{Binding CurrentSession.Name, Mode=OneWay}"/>
-                <Run>session has started.</Run>
+                <Run>session has paused.</Run>
             </TextBlock>
 
             <!--#region the icon path-->
-            <Viewbox Width="100" Height="100" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-                <Canvas Height="100" Width="100">
-                    <Path Data="M100 50C100 63.2608 94.7322 75.9785 85.3553 85.3553C75.9785 94.7322 63.2608 100 50 100C36.7392 100 24.0215 94.7322 14.6447 85.3553C5.26784 75.9785 0 63.2608 0 50C0 36.7392 5.26784 24.0215 14.6447 14.6447C24.0215 5.26784 36.7392 0 50 0C63.2608 0 75.9785 5.26784 85.3553 14.6447C94.7322 24.0215 100 36.7392 100 50ZM42.4375 31.8312C41.9702 31.4986 41.4204 31.3009 40.8483 31.2599C40.2761 31.2189 39.7037 31.3362 39.1938 31.5989C38.6839 31.8616 38.2561 32.2596 37.9573 32.7493C37.6586 33.2389 37.5004 33.8014 37.5 34.375V65.625C37.5004 66.1986 37.6586 66.7611 37.9573 67.2507C38.2561 67.7404 38.6839 68.1384 39.1938 68.4011C39.7037 68.6638 40.2761 68.7811 40.8483 68.7401C41.4204 68.6991 41.9702 68.5014 42.4375 68.1687L64.3125 52.5437C64.7176 52.2547 65.0478 51.873 65.2756 51.4306C65.5034 50.9881 65.6223 50.4977 65.6223 50C65.6223 49.5023 65.5034 49.0119 65.2756 48.5694C65.0478 48.127 64.7176 47.7453 64.3125 47.4562L42.4375 31.8312Z" 
-                          Fill="{StaticResource CurrentessionBackground}" />
+            <Viewbox Width="105" Height="105" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                <Canvas Height="105" Width="105">
+                    <Path 
+                        Data="M105 52.5C105 66.4239 99.4688 79.7775 89.6231 89.6231C79.7775 99.4688 66.4239 105 52.5 105C38.5761 105 25.2226 99.4688 15.3769 89.6231C5.53124 79.7775 0 66.4239 0 52.5C0 38.5761 5.53124 25.2226 15.3769 15.3769C25.2226 5.53124 38.5761 0 52.5 0C66.4239 0 79.7775 5.53124 89.6231 15.3769C99.4688 25.2226 105 38.5761 105 52.5ZM41.0156 32.8125C36.4875 32.8125 32.8125 36.4875 32.8125 41.0156V63.9844C32.8125 66.16 33.6768 68.2465 35.2151 69.7849C36.7535 71.3232 38.84 72.1875 41.0156 72.1875C43.1912 72.1875 45.2777 71.3232 46.8161 69.7849C48.3545 68.2465 49.2188 66.16 49.2188 63.9844V41.0156C49.2188 36.4875 45.5438 32.8125 41.0156 32.8125ZM63.9844 32.8125C59.4562 32.8125 55.7812 36.4875 55.7812 41.0156V63.9844C55.7812 66.16 56.6455 68.2465 58.1839 69.7849C59.7223 71.3232 61.8088 72.1875 63.9844 72.1875C66.16 72.1875 68.2465 71.3232 69.7849 69.7849C71.3232 68.2465 72.1875 66.16 72.1875 63.9844V41.0156C72.1875 36.4875 68.5125 32.8125 63.9844 32.8125Z" 
+                        Fill="{StaticResource CurrentessionBackground}" />
                 </Canvas>
             </Viewbox>
             <!--#endregion the icon path-->
@@ -47,5 +48,4 @@
             </WrapPanel>
         </Grid>
     </Border>
-
 </UserControl>

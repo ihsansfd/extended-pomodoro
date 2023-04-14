@@ -32,10 +32,14 @@ namespace ExtendedPomodoro.Views
         IRecipient<TasksComboBoxAddNewButtonPressedMessage>,
         IRecipient<TimerSessionFinishInfoMessage>,
         IRecipient<SessionFinishBalloonMessage>,
-        IRecipient<ModalContentSessionFinishMessage>
+        IRecipient<ModalContentSessionFinishMessage>,
+        IRecipient<TimerManipulatedByHotkeyMessage>
     {
-        AlarmSoundService _alarmSoundService = new();
-        SessionFinishBalloonTipsUserControl? _currentSessionFinishBalloon;
+        private readonly AlarmSoundService _alarmSoundService = new();
+        private readonly TaskbarIcon _taskbarIcon = new();
+
+        private ICloseableControl? _currentSessionFinishBalloon;
+        private ICloseableControl _currentTimerManiputedByHotkeyBalloon;
 
         public TimerView()
         {
@@ -77,19 +81,19 @@ namespace ExtendedPomodoro.Views
 
         private void ShowSessionFinishBalloonTips(TimerSessionState finishedSession, TimerSessionState nextSession)
         {
-            TaskbarIcon tbi = new TaskbarIcon();
-
             _currentSessionFinishBalloon?.Close();
 
-            var sessionFinishBalloon = _currentSessionFinishBalloon = new SessionFinishBalloonTipsUserControl()
+            var sessionFinishBalloon = new SessionFinishBalloonTipsUserControl()
             {
                 FinishedSession = finishedSession,
                 NextSession = nextSession,
                 AutoCloseAfter = 15000 // in milliseconds
             };
 
+            _currentSessionFinishBalloon = sessionFinishBalloon;
 
-            tbi.ShowCustomBalloon(sessionFinishBalloon, System.Windows.Controls.Primitives.PopupAnimation.Slide, 15000);
+
+            _taskbarIcon.ShowCustomBalloon(sessionFinishBalloon, System.Windows.Controls.Primitives.PopupAnimation.Slide, 15000);
         }
 
         public void Receive(SessionFinishBalloonMessage message)
@@ -109,6 +113,37 @@ namespace ExtendedPomodoro.Views
                 _currentSessionFinishBalloon?.Close();
                 ModalSessionFinish.IsShown = false;
                 _alarmSoundService.Stop();
+            }
+        }
+
+        public void Receive(TimerManipulatedByHotkeyMessage message)
+        {
+            _currentTimerManiputedByHotkeyBalloon?.Close();
+
+           if(message.Manipulation == HotkeyManipulation.Start)
+            {
+                var timerStartedBalloon = new TimerStartedBalloonTipsUserControl()
+                {
+                    CurrentSession = message.CurrentSession,
+                    AutoCloseAfter = 5000 // in milliseconds
+                };
+
+                _currentTimerManiputedByHotkeyBalloon = timerStartedBalloon;
+
+                _taskbarIcon.ShowCustomBalloon(timerStartedBalloon, System.Windows.Controls.Primitives.PopupAnimation.Slide, 5000);
+            }
+
+            else if (message.Manipulation == HotkeyManipulation.Pause)
+            {
+                var timerPausedBalloon = new TimerPausedBalloonTipsUserControl()
+                {
+                    CurrentSession = message.CurrentSession,
+                    AutoCloseAfter = 5000 // in milliseconds
+                };
+
+                _currentTimerManiputedByHotkeyBalloon = timerPausedBalloon;
+
+                _taskbarIcon.ShowCustomBalloon(timerPausedBalloon, System.Windows.Controls.Primitives.PopupAnimation.Slide, 5000);
             }
         }
 

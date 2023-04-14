@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using ExtendedPomodoro.Entities;
-using ExtendedPomodoro.Services;
+﻿using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -20,13 +18,13 @@ using System.Windows.Shapes;
 namespace ExtendedPomodoro.Views.Components
 {
     /// <summary>
-    /// Interaction logic for TimerStartedBalloonTipsUserControl.xaml
+    /// Interaction logic for TimerPausedBalloonTipsUserControl.xaml
     /// </summary>
-    public partial class TimerStartedBalloonTipsUserControl : UserControl, ICloseableControl
+    public partial class TimerPausedBalloonTipsUserControl : UserControl, ICloseableControl
     {
         private AutoCloseControlService _autoCloseService;
 
-        public TimerStartedBalloonTipsUserControl()
+        public TimerPausedBalloonTipsUserControl()
         {
             InitializeComponent();
             DataContext = this;
@@ -54,7 +52,7 @@ namespace ExtendedPomodoro.Views.Components
 
         public static readonly DependencyProperty AutoCloseAfterProperty =
             DependencyProperty.Register("AutoCloseAfter",
-                typeof(int), typeof(TimerStartedBalloonTipsUserControl), new PropertyMetadata(5000));
+                typeof(int), typeof(TimerPausedBalloonTipsUserControl), new PropertyMetadata(5000));
 
         public TimerSessionState CurrentSession
         {
@@ -63,7 +61,7 @@ namespace ExtendedPomodoro.Views.Components
         }
 
         public static readonly DependencyProperty CurrentSessionProperty =
-            DependencyProperty.Register("CurrentSession", typeof(TimerSessionState), typeof(TimerStartedBalloonTipsUserControl));
+            DependencyProperty.Register("CurrentSession", typeof(TimerSessionState), typeof(TimerPausedBalloonTipsUserControl));
 
         private void OK_Button_Click(object sender, RoutedEventArgs e)
         {

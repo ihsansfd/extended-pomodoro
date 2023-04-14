@@ -32,8 +32,6 @@ namespace ExtendedPomodoro
         public App()
         {
             Services = ConfigureServices();
-
-            InitializeDb();
         }
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -42,14 +40,21 @@ namespace ExtendedPomodoro
 
             EnsureOnlyOneInstanceIsRunning();
 
+            await InitializeDb();
+
+            await InitializeMainWindow();
+
+            await RegisterHotkeys();
+        }
+
+        private async Task InitializeMainWindow()
+        {
             var mainWindow = Services.GetRequiredService<MainWindow>();
             var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
             await mainWindowViewModel.Initialize();
             mainWindow.DataContext = mainWindowViewModel;
 
             mainWindow.Show();
-
-            await RegisterHotkeys();
         }
 
         private async Task RegisterHotkeys()
@@ -75,10 +80,10 @@ namespace ExtendedPomodoro
             }
         }
 
-        private void InitializeDb()
+        private async Task InitializeDb()
         {
             IDatabaseSetup dbSetup = Services.GetRequiredService<IDatabaseSetup>();
-            dbSetup.Setup();
+            await dbSetup.Setup();
         }
 
         private static ServiceProvider ConfigureServices()
