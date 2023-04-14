@@ -21,6 +21,11 @@ namespace ExtendedPomodoro.Models.Domains
         Ticks = 4,
     }
 
+    public enum SoundEffect
+    {
+        MouseClick = 0
+    }
+
     public record class HotkeyDomain(int ModifierKeys, int Key);
 
     public record class SettingsDomain(

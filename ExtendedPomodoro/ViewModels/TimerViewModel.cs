@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.ViewModels
 {
-    public partial class TimerViewModel : ObservableObject, 
+    public partial class TimerViewModel : ObservableObject,
         IRecipient<TimerTimeChangeInfoMessage>,
         IRecipient<SettingsUpdateInfoMessage>,
         IRecipient<StartSessionInfoMessage>
@@ -54,10 +54,17 @@ namespace ExtendedPomodoro.ViewModels
         private string _remainingTimeFormatted;
 
         [RelayCommand]
-        public void StartSession() => CurrentTimerSession.Start();
+        public void StartSession() {
+            CurrentTimerSession.Start();
+            StrongReferenceMessenger.Default.Send(new TimerActionChangeInfoMessage(CurrentTimerSession, TimerAction.Start, false));
+        }
 
         [RelayCommand]
-        public void PauseSession() => CurrentTimerSession.Pause();
+        public void PauseSession()
+        {
+            CurrentTimerSession.Pause();
+            StrongReferenceMessenger.Default.Send(new TimerActionChangeInfoMessage(CurrentTimerSession, TimerAction.Pause, false));
+        }
 
         [RelayCommand]
         public void SkipSession() => CurrentTimerSession.Skip();
@@ -115,14 +122,14 @@ namespace ExtendedPomodoro.ViewModels
 
         public void OnStartTimerByHotkey(object? sender, HotkeyEventArgs e)
         {
-            StartSession();
-            StrongReferenceMessenger.Default.Send(new TimerManipulatedByHotkeyMessage(CurrentTimerSession, HotkeyManipulation.Start));
+            CurrentTimerSession.Start();
+            StrongReferenceMessenger.Default.Send(new TimerActionChangeInfoMessage(CurrentTimerSession, TimerAction.Start, true));
         }
 
         public void OnPauseTimerByHotkey(object? sender, HotkeyEventArgs e)
         {
-            PauseSession();
-            StrongReferenceMessenger.Default.Send(new TimerManipulatedByHotkeyMessage(CurrentTimerSession, HotkeyManipulation.Pause));
+            CurrentTimerSession.Pause();
+            StrongReferenceMessenger.Default.Send(new TimerActionChangeInfoMessage(CurrentTimerSession, TimerAction.Pause, true));
         }
 
         /// <summary>

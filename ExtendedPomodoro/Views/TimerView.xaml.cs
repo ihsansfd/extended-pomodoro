@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Controls;
 using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using ExtendedPomodoro.Views.Components;
@@ -33,9 +34,9 @@ namespace ExtendedPomodoro.Views
         IRecipient<TimerSessionFinishInfoMessage>,
         IRecipient<SessionFinishBalloonMessage>,
         IRecipient<ModalContentSessionFinishMessage>,
-        IRecipient<TimerManipulatedByHotkeyMessage>
+        IRecipient<TimerActionChangeInfoMessage>
     {
-        private readonly AlarmSoundService _alarmSoundService = new();
+        private readonly SoundService _soundService = new();
         private readonly TaskbarIcon _taskbarIcon = new();
 
         private ICloseableControl? _currentSessionFinishBalloon;
@@ -60,10 +61,10 @@ namespace ExtendedPomodoro.Views
                 ShowSessionFinishBalloonTips(timerSessionFinishInfo.FinishedSession, timerSessionFinishInfo.NextSession);
                 ShowSessionFinishModal(timerSessionFinishInfo.FinishedSession, timerSessionFinishInfo.NextSession);
 
-                _alarmSoundService.Volume = timerSessionFinishInfo.AlarmVolume;
-                _alarmSoundService.RepeatFor = 
+                _soundService.Volume = timerSessionFinishInfo.AlarmVolume;
+                _soundService.RepeatFor = 
                     timerSessionFinishInfo.IsAlarmSoundRepeatForever ? Timeout.InfiniteTimeSpan : TimeSpan.FromSeconds(15);
-                _alarmSoundService.Play(timerSessionFinishInfo.AlarmSound);
+                _soundService.Play(timerSessionFinishInfo.AlarmSound);
             }
             
         }
@@ -81,6 +82,7 @@ namespace ExtendedPomodoro.Views
 
         private void ShowSessionFinishBalloonTips(TimerSessionState finishedSession, TimerSessionState nextSession)
         {
+            _taskbarIcon.CloseBalloon();
             _currentSessionFinishBalloon?.Close();
 
             var sessionFinishBalloon = new SessionFinishBalloonTipsUserControl()
@@ -102,7 +104,7 @@ namespace ExtendedPomodoro.Views
             {
                 ModalSessionFinish.ClearValue(ContentProperty);
                 ModalSessionFinish.IsShown = false;
-                _alarmSoundService.Stop();
+                _soundService.Stop();
             }
         }
 
@@ -112,16 +114,24 @@ namespace ExtendedPomodoro.Views
             {
                 _currentSessionFinishBalloon?.Close();
                 ModalSessionFinish.IsShown = false;
-                _alarmSoundService.Stop();
+                _soundService.Stop();
             }
         }
 
-        public void Receive(TimerManipulatedByHotkeyMessage message)
+        public void Receive(TimerActionChangeInfoMessage message)
         {
             _currentTimerManiputedByHotkeyBalloon?.Close();
+            _taskbarIcon.CloseBalloon();
 
-           if(message.Manipulation == HotkeyManipulation.Start)
+            if(message.TimerAction == TimerAction.Start || message.TimerAction == TimerAction.Pause)
             {
+                _soundService.PlayMouseClickEffect();
+            }
+
+           if (message.TimerAction == TimerAction.Start)
+            {
+                if (!message.TriggeredByHotkey) return;
+
                 var timerStartedBalloon = new TimerStartedBalloonTipsUserControl()
                 {
                     CurrentSession = message.CurrentSession,
@@ -133,8 +143,11 @@ namespace ExtendedPomodoro.Views
                 _taskbarIcon.ShowCustomBalloon(timerStartedBalloon, System.Windows.Controls.Primitives.PopupAnimation.Slide, 5000);
             }
 
-            else if (message.Manipulation == HotkeyManipulation.Pause)
+            else if (message.TimerAction == TimerAction.Pause)
             {
+
+                if (!message.TriggeredByHotkey) return;
+
                 var timerPausedBalloon = new TimerPausedBalloonTipsUserControl()
                 {
                     CurrentSession = message.CurrentSession,
