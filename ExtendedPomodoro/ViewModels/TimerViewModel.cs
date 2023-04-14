@@ -50,9 +50,11 @@ namespace ExtendedPomodoro.ViewModels
             SelectedTask = null;
 
             await StoreSessionFinishInfo(CurrentTimerSession, _timeEllapsed);
-            await UpdateTaskStateToComplete(_selectedTaskTemp.Id);
             await StoreTaskTimeSpent(_selectedTaskTemp.Id, _timeEllapsed);
+            await StoreDailySessionTaskLinkCompleted(_selectedTaskTemp.Id);
+            await UpdateTaskStateToComplete(_selectedTaskTemp.Id);
             await ReadTasksViewModel.LoadTasks();
+
             _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
         }
 
@@ -255,6 +257,13 @@ namespace ExtendedPomodoro.ViewModels
         private async Task UpdateTaskStateToComplete(int taskId)
         {
             await _tasksRepository.UpdateTaskState(taskId, TaskState.COMPLETED);
+        }
+
+        private async Task StoreDailySessionTaskLinkCompleted(int taskId)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
+            await _sessionsRepository.UpsertDailySessionTaskLink(new(today.ToString(), taskId, true));
         }
 
         #endregion

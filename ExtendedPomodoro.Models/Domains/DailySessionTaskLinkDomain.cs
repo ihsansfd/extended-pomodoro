@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.Models.Domains { 
 
-    public record class DailySessionTaskLinkDomain(DateOnly SessionDate, int TaskId, bool IsTaskCompletedInThisSession);
+    public record class DailySessionTaskLinkDomain(string SessionDate, int TaskId, bool IsTaskCompletedInThisSession);
 }
