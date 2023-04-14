@@ -32,6 +32,17 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                 UpdatedAt = @UpdatedAt 
               WHERE SessionDate = @SessionDate;";
 
+        private const string UPSERT_DAILY_SESSION_TIME_SPENT_QUERY =
+            @"
+              INSERT INTO tblDailySessions 
+                (SessionDate, TimeSpentInSeconds, CreatedAt, UpdatedAt)
+              VALUES 
+                (@SessionDate, @TimeSpentInSeconds, @CreatedAt, @UpdatedAt)
+              ON CONFLICT(SessionDate) 
+              DO UPDATE SET
+                TimeSpentInSeconds = TimeSpentInSeconds + @TimeSpentInSeconds, 
+                UpdatedAt = @UpdatedAt 
+              WHERE SessionDate = @SessionDate;";
 
         private const string UPSERT_DAILY_SESSION_TASK_LINK_QUERY =
           @"
@@ -52,6 +63,23 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             {
                 var data = ConvertToUpsertSqliteDailySessionDTO(domain);
                 await db.ExecuteAsync(UPSERT_DAILY_SESSION_QUERY, data);
+            }
+        }
+
+        public async Task UpsertDailySessionTimeSpent(DateOnly sessionDate, TimeSpan timeSpent)
+        {
+            var now = DateTime.Now;
+
+            using (var db = _connectionFactory.Connect())
+            {
+                var data = new
+                {
+                    SessionDate = sessionDate,
+                    TimeSpentInSeconds = timeSpent.TotalSeconds,
+                    CreatedAt = now,
+                    UpdatedAt = now
+                };
+                await db.ExecuteAsync(UPSERT_DAILY_SESSION_TIME_SPENT_QUERY, data);
             }
         }
 

@@ -18,13 +18,16 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             @"INSERT INTO tblTasks (Name, Description, EstPomodoro, CreatedAt, UpdatedAt)
               VALUES (@Name, @Description, @EstPomodoro, @CreatedAt, @UpdatedAt)";
 
+        // TODO: UpdatedAt not updated
         private const string UPDATE_TASK_QUERY =
             @"UPDATE tblTasks SET Name = @Name, Description = @Description, EstPomodoro = @EstPomodoro, 
             IsTaskCompleted = @IsTaskCompleted WHERE Id = @Id";
 
+        // TODO: UpdatedAt not updated
         private const string UPDATE_TASK_STATE_QUERY =
             @"UPDATE tblTasks SET IsTaskCompleted = @IsTaskCompleted WHERE Id = @Id";
 
+        // TODO: UpdatedAt not updated
         private const string UPDATE_TASK_TIME_SPENT_QUERY =
             @"UPDATE tblTasks SET TimeSpentInSeconds = TimeSpentInSeconds + @TimeSpentInSecondsIncrementBy WHERE Id = @Id";
 

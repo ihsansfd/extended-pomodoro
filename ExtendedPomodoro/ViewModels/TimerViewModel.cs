@@ -41,6 +41,33 @@ namespace ExtendedPomodoro.ViewModels
         public void NotifTasksComboBoxAddNewButtonPressed() =>
             StrongReferenceMessenger.Default.Send(new TasksComboBoxAddNewButtonPressedMessage());
 
+        [RelayCommand]
+        public async Task CompleteTask()
+        {
+            if (SelectedTask == null) return;
+
+            var _selectedTaskTemp = SelectedTask;
+            SelectedTask = null;
+
+            await StoreSessionFinishInfo(CurrentTimerSession, _timeEllapsed);
+            await UpdateTaskStateToComplete(_selectedTaskTemp.Id);
+            await StoreTaskTimeSpent(_selectedTaskTemp.Id, _timeEllapsed);
+            await ReadTasksViewModel.LoadTasks();
+            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
+        }
+
+        [RelayCommand]
+        public async Task CancelTask()
+        {
+            if(SelectedTask == null) return;
+
+            var _selectedTaskTemp = SelectedTask;
+            SelectedTask = null;
+            await StoreSessionFinishInfo(CurrentTimerSession, _timeEllapsed);
+            await StoreTaskTimeSpent(_selectedTaskTemp.Id, _timeEllapsed);
+            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
+        }
+
         #endregion
 
         #region Timer variables, props, and commands
@@ -223,6 +250,11 @@ namespace ExtendedPomodoro.ViewModels
         private async Task StoreTaskTimeSpent(int taskId, int timeEllapsed)
         {
             await _tasksRepository.UpdateTaskTimeSpent(taskId, TimeSpan.FromSeconds(timeEllapsed));
+        }
+
+        private async Task UpdateTaskStateToComplete(int taskId)
+        {
+            await _tasksRepository.UpdateTaskState(taskId, TaskState.COMPLETED);
         }
 
         #endregion

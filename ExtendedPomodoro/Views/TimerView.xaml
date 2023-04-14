@@ -38,6 +38,8 @@
             LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"
             IsLoadMoreButtonShown="{Binding ReadTasksViewModel.AreThereMoreTasks}"
             AddNewTaskCommand="{Binding NotifTasksComboBoxAddNewButtonPressedCommand}"
+            CompleteTaskCommand="{Binding CompleteTaskCommand}"
+            CancelTaskCommand="{Binding CancelTaskCommand}"
             Grid.Row="0" 
             Width="200" 
             Height="30">
