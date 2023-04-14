@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using System.ComponentModel.DataAnnotations;
 using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Helpers;
+using System.Windows;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -83,6 +83,18 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private Hotkey? _pauseHotkey;
 
+        [RelayCommand]
+        public async Task ResetToDefaultSettings()
+        {
+            var confirmationRes = MessageBox.Show("Are you sure to reset the Settings?", "Confirmation",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (confirmationRes != MessageBoxResult.Yes) return;
+
+            await _repository.ResetToDefaultSettings();
+            await Initialize();
+        }
+
         public SettingsViewModel(ISettingsRepository repository)
         {
             _repository = repository;
@@ -130,13 +142,6 @@ namespace ExtendedPomodoro.ViewModels
                 ));
 
             StrongReferenceMessenger.Default.Send(new SettingsUpdateInfoMessage(this));
-        }
-
-        [RelayCommand]
-        public async Task ResetToDefaultSettings()
-        {
-            await _repository.ResetToDefaultSettings();
-            await Initialize();
         }
 
     }
