@@ -16,5 +16,5 @@ namespace ExtendedPomodoro.Entities
     }
 
     public record class TimerActionChangeInfoMessage(TimerSessionState CurrentSession,
-        TimerAction TimerAction, bool TriggeredByHotkey = false);
+        TimerAction TimerAction, bool TriggeredByHotkey = false, bool PushNotificationEnabled = true);
 }

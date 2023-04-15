@@ -28,12 +28,12 @@ namespace ExtendedPomodoro.Services
 
         public void RegisterOrUpdateStartTimerHotkey(Hotkey? hotkeyDomain)
         {
-            RegisterOrUpdate("StartTimerHotkey", hotkeyDomain, _timerViewModel.OnStartTimerByHotkey);
+            RegisterOrUpdate("StartTimerHotkey", hotkeyDomain, _timerViewModel.StartSessionFromHotkey);
         }
 
         public void RegisterOrUpdatePauseTimerHotkey(Hotkey? hotkeyDomain)
         {
-            RegisterOrUpdate("PauseTimerHotkey", hotkeyDomain, _timerViewModel.OnPauseTimerByHotkey);
+            RegisterOrUpdate("PauseTimerHotkey", hotkeyDomain, _timerViewModel.PauseSessionFromHotkey);
         }
 
         private void RegisterOrUpdate(string identifier, 

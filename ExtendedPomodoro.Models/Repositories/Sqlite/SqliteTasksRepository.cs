@@ -31,6 +31,15 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         private const string UPDATE_TASK_TIME_SPENT_QUERY =
             @"UPDATE tblTasks SET TimeSpentInSeconds = TimeSpentInSeconds + @TimeSpentInSecondsIncrementBy WHERE Id = @Id";
 
+        // TODO: UpdatedAt not updated
+        private const string UPDATE_TASK_ACT_POMODORO_QUERY =
+            @"UPDATE tblTasks
+                SET 
+                    ActPomodoro = ActPomodoro + @ActPomodoroIncrementBy,
+                    UpdatedAt = @UpdatedAt
+                WHERE 
+                    Id = @Id";
+
         private const string GET_TASKS_QUERY =
             @"SELECT * FROM tblTasks WHERE IsTaskCompleted = @IsTaskCompleted
              ORDER BY datetime(CreatedAt) DESC LIMIT @Limit OFFSET @Offset";
@@ -129,6 +138,21 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             }
         }
 
+        public async Task UpdateTaskActPomodoro(int taskId, int ActPomodoroIncrementBy)
+        {
+            using (var db = _connectionFactory.Connect())
+            {
+                var data = new
+                {
+                    Id = taskId,
+                    ActPomodoroIncrementBy = ActPomodoroIncrementBy,
+                    UpdatedAt = DateTime.Now
+                };
+
+                await db.ExecuteAsync(UPDATE_TASK_ACT_POMODORO_QUERY, data);
+            }
+        }
+
         public async Task DeleteTask(int taskId)
         {
             using(var db = _connectionFactory.Connect())
@@ -136,6 +160,8 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                 await db.ExecuteAsync(DELETE_TASK_QUERY, new { Id = taskId });
             }
         }
+
+        //public async Task 
 
         private static SqliteCreateTaskDTO ConvertToSqliteCreateTaskDTO(CreateTaskDomain domain)
         {

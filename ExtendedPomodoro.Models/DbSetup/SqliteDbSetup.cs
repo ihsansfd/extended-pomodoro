@@ -59,19 +59,10 @@ namespace ExtendedPomodoro.Models.DbSetup
                 TotalPomodoroCompleted INT DEFAULT 0 NOT NULL,
                 TotalShortBreaksCompleted INT DEFAULT 0 NOT NULL,
                 TotalLongBreaksCompleted INT DEFAULT 0 NOT NULL,
+                TotalTasksCompleted INT DEFAULT 0 NOT NULL,
                 CreatedAt TEXT,
                 UpdatedAt TEXT
             );";
-
-        private const string CREATE_DAILY_SESSION_TASK_LINKS_TABLE_QUERY =
-            @"CREATE TABLE IF NOT EXISTS tblDailySessionTaskLinks (
-                SessionDate TEXT NOT NULL,
-                TaskId INTEGER NOT NULL,
-                IsTaskCompletedInThisSession INT(1) DEFAULT 0 NOT NULL,
-                PRIMARY KEY (SessionDate, TaskId)
-                FOREIGN KEY(SessionDate) REFERENCES tblDailySessions (SessionDate),
-                FOREIGN KEY(TaskId) REFERENCES tblTasks (Id)
-                );";
 
         public SqliteDbSetup(SqliteDbConnectionFactory connectionFactory) {
             _connectionFactory = connectionFactory;
@@ -82,8 +73,7 @@ namespace ExtendedPomodoro.Models.DbSetup
             var query = CREATE_TASKS_TABLE_QUERY +
                         CREATE_SETTINGS_TABLE_QUERY +
                         INSERT_DEFAULT_SETTINGS_QUERY +
-                        CREATE_DAILY_SESSIONS_TABLE_QUERY +
-                        CREATE_DAILY_SESSION_TASK_LINKS_TABLE_QUERY;
+                        CREATE_DAILY_SESSIONS_TABLE_QUERY;
 
             using var connection = _connectionFactory.Connect();
             await connection.ExecuteAsync(query);

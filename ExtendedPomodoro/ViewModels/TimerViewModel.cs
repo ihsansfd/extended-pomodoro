@@ -48,10 +48,11 @@ namespace ExtendedPomodoro.ViewModels
         public async Task CompleteTask()
         {
             if (SelectedTask == null) return;
+            var today = DateOnly.FromDateTime(DateTime.Now);
 
-            await StoreDailySessionTaskLinkCompleted(SelectedTask.Id);
             await UpdateTaskStateToComplete(SelectedTask.Id);
-            await StoreAndResetTimeEllapsed();
+            await StoreAndResetTimeEllapsed(today, SelectedTask);
+            await StoreDailySessionTotalTasksCompleted(today, 1);
             await ReadTasksViewModel.LoadTasks();
 
             SelectedTask = null;
@@ -60,7 +61,8 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public async Task CancelTask()
         {
-            await StoreAndResetTimeEllapsed();
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            await StoreAndResetTimeEllapsed(today, SelectedTask);
             SelectedTask = null;
         }
 
@@ -87,14 +89,18 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public void StartSession() {
             CurrentTimerSession.Start();
-            StrongReferenceMessenger.Default.Send(new TimerActionChangeInfoMessage(CurrentTimerSession, TimerAction.Start, false));
+            StrongReferenceMessenger.Default.Send(
+                new TimerActionChangeInfoMessage(
+                    CurrentTimerSession, TimerAction.Start, false, SettingsViewModel.PushNotificationEnabled));
         }
 
         [RelayCommand]
         public void PauseSession()
         {
             CurrentTimerSession.Pause();
-            StrongReferenceMessenger.Default.Send(new TimerActionChangeInfoMessage(CurrentTimerSession, TimerAction.Pause, false));
+            StrongReferenceMessenger.Default.Send(
+                new TimerActionChangeInfoMessage(
+                    CurrentTimerSession, TimerAction.Pause, false, SettingsViewModel.PushNotificationEnabled));
         }
 
         [RelayCommand]
@@ -103,11 +109,21 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public void ResetSession() => CurrentTimerSession.Reset();
 
-        [RelayCommand]
-        public void StartSessionFromHotkey() => CurrentTimerSession.Start();
+        public void StartSessionFromHotkey(object? sender, HotkeyEventArgs e)
+        {
+            CurrentTimerSession.Start();
+            StrongReferenceMessenger.Default.Send(
+               new TimerActionChangeInfoMessage(
+                   CurrentTimerSession, TimerAction.Start, true, SettingsViewModel.PushNotificationEnabled));
+        }
 
-        [RelayCommand]
-        public void PauseSessionFromHotkey() => CurrentTimerSession.Pause();
+        public void PauseSessionFromHotkey(object? sender, HotkeyEventArgs e)
+        {
+            CurrentTimerSession.Pause();
+            StrongReferenceMessenger.Default.Send(
+              new TimerActionChangeInfoMessage(
+                  CurrentTimerSession, TimerAction.Pause, true, SettingsViewModel.PushNotificationEnabled));
+        }
 
         #endregion
 
@@ -144,18 +160,6 @@ namespace ExtendedPomodoro.ViewModels
 
         #region messages and events
 
-        public void OnStartTimerByHotkey(object? sender, HotkeyEventArgs e)
-        {
-            CurrentTimerSession.Start();
-            StrongReferenceMessenger.Default.Send(new TimerActionChangeInfoMessage(CurrentTimerSession, TimerAction.Start, true));
-        }
-
-        public void OnPauseTimerByHotkey(object? sender, HotkeyEventArgs e)
-        {
-            CurrentTimerSession.Pause();
-            StrongReferenceMessenger.Default.Send(new TimerActionChangeInfoMessage(CurrentTimerSession, TimerAction.Pause, true));
-        }
-
         public void Receive(TimerTimeChangeInfoMessage message)
         {
             _timeEllapsed++;
@@ -189,11 +193,18 @@ namespace ExtendedPomodoro.ViewModels
         {
             StrongReferenceMessenger.Default.Send(message);
 
-            await StoreSessionFinishInfo(message.FinishedSession);
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            await StoreSessionFinishInfo(today, message.FinishedSession);
 
-            PomodoroCompletedToday = await GetPomodoroCompletedToday(); 
+            PomodoroCompletedToday = await GetPomodoroCompletedToday();
 
-            await StoreAndResetTimeEllapsed();
+
+            if (message.FinishedSession is PomodoroSessionState && SelectedTask != null)
+            {
+                await UpdateTaskActPomodoro(SelectedTask.Id, 1);
+            }
+
+            await StoreAndResetTimeEllapsed(today, SelectedTask);
         }
 
         public void Receive(StartSessionInfoMessage message)
@@ -204,7 +215,9 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public async Task HandleWindowClosed()
         {
-            await StoreAndResetTimeEllapsed();
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
+            await StoreAndResetTimeEllapsed(today, SelectedTask);
         }
 
         #endregion
@@ -231,17 +244,13 @@ namespace ExtendedPomodoro.ViewModels
 
         #region Storing to Repository
 
-        private async Task StoreSessionFinishInfo(
-            TimerSessionState currentSessionState)
-        {
-            var today = DateOnly.FromDateTime(DateTime.Now);
-
+        private async Task StoreSessionFinishInfo(DateOnly sessionDate,TimerSessionState currentSessionState) {
             int pomodoroCompleted = (currentSessionState is PomodoroSessionState) ? 1 : 0;
             int shortBreakCompleted = (currentSessionState is ShortBreakSessionState) ? 1 : 0;
             int longBreakCompleted = (currentSessionState is LongBreakSessionState) ? 1 : 0;
 
             var domain = new UpsertDailySessionDomain(
-                today,
+                sessionDate,
                 TimeSpan.Zero,
                 pomodoroCompleted,
                 shortBreakCompleted,
@@ -251,13 +260,34 @@ namespace ExtendedPomodoro.ViewModels
             await _sessionsRepository.UpsertDailySession(domain);
         }
 
-        private async Task StoreDailySessionTimeSpentInfo(int timeSpent)
+        private async Task StoreDailySessionTimeSpentInfo(DateOnly sessionDate, int timeSpent)
         {
             await _sessionsRepository.UpsertDailySessionTimeSpent(
                 DateOnly.FromDateTime(DateTime.Now), TimeSpan.FromSeconds(timeSpent));
         }
 
-        private async Task StoreTaskTimeSpent(int taskId, int timeEllapsed)
+        private async Task StoreAndResetTimeEllapsed(DateOnly sessionDate, TaskDomainViewModel? task)
+        {
+            if(task != null)
+            {
+                await UpdateTaskTimeSpent(task.Id, _timeEllapsed);
+
+            }
+            await StoreDailySessionTimeSpentInfo(sessionDate, _timeEllapsed);
+            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
+        }
+
+        private async Task StoreDailySessionTotalTasksCompleted(DateOnly sessionDate, int totaltasksCompleted)
+        {
+            await _sessionsRepository.UpsertDailySessionTotalTasksCompleted(sessionDate, totaltasksCompleted);
+        }
+
+        private async Task<int> GetPomodoroCompletedToday()
+        {
+            return await _sessionsRepository.GetDailySessionTotalPomodoroCompleted(DateOnly.FromDateTime(DateTime.Now));
+        }
+
+        private async Task UpdateTaskTimeSpent(int taskId, int timeEllapsed)
         {
             await _tasksRepository.UpdateTaskTimeSpent(taskId, TimeSpan.FromSeconds(timeEllapsed));
         }
@@ -267,24 +297,9 @@ namespace ExtendedPomodoro.ViewModels
             await _tasksRepository.UpdateTaskState(taskId, TaskState.COMPLETED);
         }
 
-        private async Task StoreDailySessionTaskLinkCompleted(int taskId)
+        private async Task UpdateTaskActPomodoro(int taskId, int totalPomodoroCompleted)
         {
-            var today = DateOnly.FromDateTime(DateTime.Now);
-
-            await _sessionsRepository.UpsertDailySessionTaskLink(new(today.ToString(), taskId, true));
-        }
-
-        private async Task StoreAndResetTimeEllapsed()
-        {
-            if (SelectedTask != null) await StoreTaskTimeSpent(SelectedTask.Id, _timeEllapsed);
-
-            await StoreDailySessionTimeSpentInfo(_timeEllapsed);
-            _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
-        }
-
-        private async Task<int> GetPomodoroCompletedToday()
-        {
-            return await _sessionsRepository.GetDailySessionTotalPomodoroCompleted(DateOnly.FromDateTime(DateTime.Now));
+            await _tasksRepository.UpdateTaskActPomodoro(taskId, totalPomodoroCompleted);
         }
 
         #endregion

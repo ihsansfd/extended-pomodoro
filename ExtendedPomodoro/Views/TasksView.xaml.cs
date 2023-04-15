@@ -108,7 +108,8 @@ namespace ExtendedPomodoro.Views
             BindingOperations.GetBindingExpression(statusTextBlock, ComboBox.SelectedValueProperty).UpdateSource();
 
             var timeSpentTextBlock = (TextBlock)modal.FindName("TimeSpentTaskDetail");
-            timeSpentTextBlock.Text = taskData.TimeSpentInMinutes.ToString();
+            timeSpentTextBlock.Text = ((int)taskData.TimeSpentInMinutes).ToString() + " minutes";
+            BindingOperations.GetBindingExpression(timeSpentTextBlock, TextBlock.TextProperty).UpdateSource();
 
             modal.IsShown = true;
         }

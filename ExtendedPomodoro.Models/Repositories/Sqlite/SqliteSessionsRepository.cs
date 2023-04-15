@@ -44,12 +44,17 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                 UpdatedAt = @UpdatedAt 
               WHERE SessionDate = @SessionDate;";
 
-        private const string UPSERT_DAILY_SESSION_TASK_LINK_QUERY =
-          @"
-            INSERT INTO tblDailySessionTaskLinks (SessionDate, TaskId, IsTaskCompletedInThisSession)
-            VALUES (@SessionDate, @TaskId, @IsTaskCompletedInThisSession) 
-            ON CONFLICT(SessionDate, TaskId) 
-            DO UPDATE SET IsTaskCompletedInThisSession = @IsTaskCompletedInThisSession;";
+        private const string UPSERT_DAILY_SESSION_TOTAL_TASKS_COMPLETED_QUERY =
+           @"
+              INSERT INTO tblDailySessions 
+                (SessionDate, TotalTasksCompleted, CreatedAt, UpdatedAt)
+              VALUES 
+                (@SessionDate, @TotalTasksCompleted, @CreatedAt, @UpdatedAt)
+              ON CONFLICT(SessionDate) 
+              DO UPDATE SET
+                TotalTasksCompleted = TotalTasksCompleted + @TotalTasksCompleted, 
+                UpdatedAt = @UpdatedAt 
+              WHERE SessionDate = @SessionDate;";
 
         private const string SELECT_DAILY_SESSION_TOTAL_POMODORO_COMPLETED_QUERY =
           @"
@@ -87,11 +92,20 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             }
         }
 
-        public async Task UpsertDailySessionTaskLink(DailySessionTaskLinkDomain domain)
+        public async Task UpsertDailySessionTotalTasksCompleted(DateOnly sessionDate, int totalTasksCompleted)
         {
+            var now = DateTime.Now;
+
             using (var db = _connectionFactory.Connect())
             {
-                await db.ExecuteAsync(UPSERT_DAILY_SESSION_TASK_LINK_QUERY, domain);
+                var data = new
+                {
+                    SessionDate = sessionDate.ToString(),
+                    TotalTasksCompleted = totalTasksCompleted,
+                    CreatedAt = now,
+                    UpdatedAt = now
+                };
+                await db.ExecuteAsync(UPSERT_DAILY_SESSION_TOTAL_TASKS_COMPLETED_QUERY, data);
             }
         }
 

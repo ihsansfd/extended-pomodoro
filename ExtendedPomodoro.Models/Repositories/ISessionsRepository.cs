@@ -11,7 +11,7 @@ namespace ExtendedPomodoro.Models.Repositories
     {
         Task UpsertDailySession(UpsertDailySessionDomain domain);
         Task UpsertDailySessionTimeSpent(DateOnly sessionDate, TimeSpan timeSpent);
-        Task UpsertDailySessionTaskLink(DailySessionTaskLinkDomain domain);
         Task<int> GetDailySessionTotalPomodoroCompleted(DateOnly SessionDate);
+        Task UpsertDailySessionTotalTasksCompleted(DateOnly sessionDate, int totalPomodoroCompleted);
     }
 }

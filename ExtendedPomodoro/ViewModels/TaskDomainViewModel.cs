@@ -15,6 +15,6 @@ namespace ExtendedPomodoro.ViewModels
         int ActPomodoro,
         string CreatedAt,
         int TaskStatus,
-        int TimeSpentInMinutes
+        double TimeSpentInMinutes
         );
 }

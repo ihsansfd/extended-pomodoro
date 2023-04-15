@@ -116,7 +116,7 @@ namespace ExtendedPomodoro.ViewModels
                         record.ActPomodoro,
                         DateOnly.FromDateTime(record.CreatedAt).ToString("MMMM dd, yyyy"),
                         _helper.ConvertTaskStateToInteger(record.TaskState),
-                        (int) record.TimeSpent.TotalMinutes
+                        record.TimeSpent.TotalMinutes
                         )) ;
                 }
 
@@ -239,6 +239,9 @@ namespace ExtendedPomodoro.ViewModels
 
         [ObservableProperty]
         private int _taskState;
+
+        [ObservableProperty]
+        private string _timeSpentInMinutesDisplay;
 
         public UpdateTaskViewModel(ITasksRepository repository, TasksHelper helper) {
             _repository = repository;

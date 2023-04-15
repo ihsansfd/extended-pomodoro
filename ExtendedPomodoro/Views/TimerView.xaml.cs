@@ -59,14 +59,13 @@ namespace ExtendedPomodoro.Views
             if(timerSessionFinishInfo.PushNotificationEnabled)
             {
                 ShowSessionFinishBalloonTips(timerSessionFinishInfo.FinishedSession, timerSessionFinishInfo.NextSession);
-                ShowSessionFinishModal(timerSessionFinishInfo.FinishedSession, timerSessionFinishInfo.NextSession);
-
-                _soundService.Volume = timerSessionFinishInfo.AlarmVolume;
-                _soundService.RepeatFor = 
-                    timerSessionFinishInfo.IsAlarmSoundRepeatForever ? Timeout.InfiniteTimeSpan : TimeSpan.FromSeconds(15);
-                _soundService.Play(timerSessionFinishInfo.AlarmSound);
             }
-            
+
+            ShowSessionFinishModal(timerSessionFinishInfo.FinishedSession, timerSessionFinishInfo.NextSession);
+            _soundService.Volume = timerSessionFinishInfo.AlarmVolume;
+            _soundService.RepeatFor =
+                timerSessionFinishInfo.IsAlarmSoundRepeatForever ? Timeout.InfiniteTimeSpan : TimeSpan.FromSeconds(15);
+            _soundService.Play(timerSessionFinishInfo.AlarmSound);
         }
 
         private void ShowSessionFinishModal(TimerSessionState finishedSession, TimerSessionState nextSession)
@@ -128,10 +127,8 @@ namespace ExtendedPomodoro.Views
                 _soundService.PlayMouseClickEffect();
             }
 
-           if (message.TimerAction == TimerAction.Start)
+           if (message.TimerAction == TimerAction.Start && message.PushNotificationEnabled && message.TriggeredByHotkey)
             {
-                if (!message.TriggeredByHotkey) return;
-
                 var timerStartedBalloon = new TimerStartedBalloonTipsUserControl()
                 {
                     CurrentSession = message.CurrentSession,
@@ -143,11 +140,8 @@ namespace ExtendedPomodoro.Views
                 _taskbarIcon.ShowCustomBalloon(timerStartedBalloon, System.Windows.Controls.Primitives.PopupAnimation.Slide, 5000);
             }
 
-            else if (message.TimerAction == TimerAction.Pause)
+            else if (message.TimerAction == TimerAction.Pause && message.PushNotificationEnabled && message.TriggeredByHotkey)
             {
-
-                if (!message.TriggeredByHotkey) return;
-
                 var timerPausedBalloon = new TimerPausedBalloonTipsUserControl()
                 {
                     CurrentSession = message.CurrentSession,
