@@ -22,7 +22,7 @@ namespace ExtendedPomodoro.ViewModels
         IRecipient<SettingsUpdateInfoMessage>,
         IRecipient<StartSessionInfoMessage>
     {
-        private readonly SettingsViewModel _settingsViewModel;
+        public SettingsViewModel SettingsViewModel { get; }
         private readonly ISessionsRepository _sessionsRepository;
         private readonly ITasksRepository _tasksRepository;
         private bool _hasBeenSetup;
@@ -37,6 +37,9 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private TaskDomainViewModel? _selectedTask;
 
+        [ObservableProperty]
+        private int _pomodoroCompletedToday;
+
         [RelayCommand]
         public void NotifTasksComboBoxAddNewButtonPressed() =>
             StrongReferenceMessenger.Default.Send(new TasksComboBoxAddNewButtonPressedMessage());
@@ -48,8 +51,8 @@ namespace ExtendedPomodoro.ViewModels
 
             await StoreDailySessionTaskLinkCompleted(SelectedTask.Id);
             await UpdateTaskStateToComplete(SelectedTask.Id);
-            await ReadTasksViewModel.LoadTasks();
             await StoreAndResetTimeEllapsed();
+            await ReadTasksViewModel.LoadTasks();
 
             SelectedTask = null;
         }
@@ -122,7 +125,7 @@ namespace ExtendedPomodoro.ViewModels
             ReadTasksViewModel = readTasksViewModel;
             CreateTaskViewModel = createTaskViewModel;
             CurrentTimerSession = timerSessionState;
-            _settingsViewModel = settingsViewModel;
+            SettingsViewModel = settingsViewModel;
             _sessionsRepository = sessionsRepository;
             _tasksRepository = tasksRepository;
 
@@ -132,7 +135,8 @@ namespace ExtendedPomodoro.ViewModels
         public async Task Initialize()
         {
             await ReadTasksViewModel.DisplayInProgressTasks();
-            if(!_hasBeenSetup) await CurrentTimerSession.InitialSetup(this, _settingsViewModel);
+            PomodoroCompletedToday = await GetPomodoroCompletedToday();
+            if (!_hasBeenSetup) await CurrentTimerSession.InitialSetup(this, SettingsViewModel);
             _hasBeenSetup = true;
         }
 
@@ -186,6 +190,9 @@ namespace ExtendedPomodoro.ViewModels
             StrongReferenceMessenger.Default.Send(message);
 
             await StoreSessionFinishInfo(message.FinishedSession);
+
+            PomodoroCompletedToday = await GetPomodoroCompletedToday(); 
+
             await StoreAndResetTimeEllapsed();
         }
 
@@ -273,6 +280,11 @@ namespace ExtendedPomodoro.ViewModels
 
             await StoreDailySessionTimeSpentInfo(_timeEllapsed);
             _timeEllapsed = 0; // we need to reset as the current timeellapsed has been stored to the db
+        }
+
+        private async Task<int> GetPomodoroCompletedToday()
+        {
+            return await _sessionsRepository.GetDailySessionTotalPomodoroCompleted(DateOnly.FromDateTime(DateTime.Now));
         }
 
         #endregion

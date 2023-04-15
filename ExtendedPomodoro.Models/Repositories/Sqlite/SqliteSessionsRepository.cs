@@ -51,6 +51,10 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             ON CONFLICT(SessionDate, TaskId) 
             DO UPDATE SET IsTaskCompletedInThisSession = @IsTaskCompletedInThisSession;";
 
+        private const string SELECT_DAILY_SESSION_TOTAL_POMODORO_COMPLETED_QUERY =
+          @"
+            SELECT TotalPomodoroCompleted FROM tblDailySessions 
+              WHERE SessionDate = @SessionDate LIMIT 1;";
 
         public SqliteSessionsRepository(SqliteDbConnectionFactory connectionFactory)
         {
@@ -91,6 +95,19 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             }
         }
 
+        public async Task<int> GetDailySessionTotalPomodoroCompleted(DateOnly SessionDate)
+        {
+            using (var db = _connectionFactory.Connect())
+            {
+                var data = new
+                {
+                    SessionDate = SessionDate.ToString()
+                };
+
+                return await db.ExecuteScalarAsync<int>(SELECT_DAILY_SESSION_TOTAL_POMODORO_COMPLETED_QUERY, data);
+            }
+        }
+
         private static SqliteUpsertDailySessionDTO ConvertToUpsertSqliteDailySessionDTO(UpsertDailySessionDomain domain)
         {
             var now = DateTime.Now;
@@ -106,5 +123,6 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                 UpdatedAt = now
             };
         }
+
      }
 }

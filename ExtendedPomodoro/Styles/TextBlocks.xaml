@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Style x:Key="RegularFontStyle" TargetType="{x:Type TextBlock}">
+    <Style x:Key="RegularFontStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
         <Setter Property="FontSize" Value="{StaticResource FSRegular}"/>
         <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
@@ -18,7 +18,7 @@
         <Setter Property="FontFamily" Value="{StaticResource FWSemiBold}"/>
         <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
     </Style>
-    
+
     <Style TargetType="TextBlock" x:Key="TextBlockFormValueStyle">
         <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
         <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>

@@ -41,13 +41,15 @@
             CompleteTaskCommand="{Binding CompleteTaskCommand}"
             CancelTaskCommand="{Binding CancelTaskCommand}"
             Grid.Row="0" 
-            Width="200" 
+            Width="200"
+            Margin="0 0 0 20"
             Height="30">
             </controls:TasksComboBox>
 
             <Grid Grid.Row="1">
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
@@ -121,6 +123,10 @@
                         Height="20"
                         Foreground="{StaticResource MainColor}"/>
                     </WrapPanel>
+                    <TextBlock Style="{StaticResource RegularFontStyle}" Grid.Row="2" HorizontalAlignment="Center" Margin="0 20 0 0">
+                        <Run>Completed:</Run>
+                        <Run Foreground="{StaticResource Primary}" FontFamily="{StaticResource FWSemiBold}" Text="{Binding PomodoroCompletedToday}"/><Run Foreground="{StaticResource Primary}" FontFamily="{StaticResource FWSemiBold}" Text="/"/><Run Foreground="{StaticResource Primary}" FontFamily="{StaticResource FWSemiBold}" Text="{Binding SettingsViewModel.DailyPomodoroTarget}"/>
+                    </TextBlock>
                 </Grid>
             </Grid>
         </Grid>
