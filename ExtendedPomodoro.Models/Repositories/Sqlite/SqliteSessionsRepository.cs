@@ -25,7 +25,6 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                 @TotalShortBreaksCompleted, @TotalLongBreaksCompleted, @CreatedAt, @UpdatedAt)
               ON CONFLICT(SessionDate) 
               DO UPDATE SET
-                TimeSpentInSeconds = TimeSpentInSeconds + @TimeSpentInSeconds, 
                 TotalPomodoroCompleted = TotalPomodoroCompleted + @TotalPomodoroCompleted,
                 TotalShortBreaksCompleted = TotalShortBreaksCompleted + @TotalShortBreaksCompleted,
                 TotalLongBreaksCompleted = TotalLongBreaksCompleted + @TotalLongBreaksCompleted,
@@ -61,9 +60,65 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             SELECT TotalPomodoroCompleted FROM tblDailySessions 
               WHERE SessionDate = @SessionDate LIMIT 1;";
 
+        private const string SELECT_DAILY_SESSIONS_SUM_QUERY =
+            @"
+            SELECT 
+                SUM(TimeSpentInSeconds) AS TotalTimeSpentInSeconds, 
+                SUM(TotalPomodoroCompleted) AS TotalPomodoroCompleted, 
+                SUM(TotalShortBreaksCompleted) AS TotalShortBreaksCompleted, 
+                SUM(TotalLongBreaksCompleted) AS TotalLongBreaksCompleted,
+                SUM(TotalTasksCompleted) AS TotalTasksCompleted
+            FROM tblDailySessions
+            WHERE
+                CreatedAt >= @FromDate AND CreatedAt <= @ToDate
+            LIMIT 1
+            ";
+
+        private const string SELECT_DAILY_SESSIONS_QUERY =
+            @"
+            SELECT * FROM tblDailySessions WHERE CreatedAt >= @FromDate AND CreatedAt <= @ToDate ORDER BY datetime(CreatedAt) DESC
+            ";
+
         public SqliteSessionsRepository(SqliteDbConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
+        }
+
+        
+        public async IAsyncEnumerable<DailySessionDomain>
+            GetDailySessions(DateTime from, DateTime to)
+        {
+            using (var db = _connectionFactory.Connect())
+            {
+                var data = new
+                {
+                    FromDate = from,
+                    ToDate = to
+                };
+
+                var records = await db.QueryAsync<DailySessionDTO>
+                    (SELECT_DAILY_SESSIONS_QUERY, data);
+
+                foreach (var record in records) yield return ConvertToDailySessionDomain(record);
+            }
+        }
+
+        public async Task<SumDailySessionsDomain> GetSumDailySessions(DateTime from, DateTime to)
+        {
+
+            using (var db = _connectionFactory.Connect())
+            {
+                var data = new
+                {
+                    FromDate = from,
+                    ToDate = to
+                };
+
+                var res = await db.QueryFirstAsync<SumDailySessionsDTO>(
+                    SELECT_DAILY_SESSIONS_SUM_QUERY, data);
+
+                return ConvertToSumDailySessionsDomain(from, to, res);
+            }
         }
 
         public async Task UpsertDailySession(UpsertDailySessionDomain domain)
@@ -129,7 +184,6 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             return new SqliteUpsertDailySessionDTO()
             {
                 SessionDate = domain.SessionDate.ToString(),
-                TimeSpentInSeconds = (int)domain.TimeSpent.TotalSeconds,
                 TotalPomodoroCompleted = domain.TotalPomodoroCompleted,
                 TotalShortBreaksCompleted = domain.TotalShortBreaksCompleted,
                 TotalLongBreaksCompleted = domain.TotalLongBreaksCompleted,
@@ -138,5 +192,31 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             };
         }
 
-     }
+        private static SumDailySessionsDomain ConvertToSumDailySessionsDomain(DateTime from, DateTime to, SumDailySessionsDTO res)
+        {
+            return new(
+                from,
+                to,
+                TimeSpan.FromSeconds(res.TotalTimeSpentInSeconds),
+                res.TotalPomodoroCompleted,
+                res.TotalShortBreaksCompleted,
+                res.TotalLongBreaksCompleted,
+                res.TotalTasksCompleted
+                );
+        }
+       
+        private DailySessionDomain ConvertToDailySessionDomain(DailySessionDTO record)
+        {
+            return new(
+                DateOnly.FromDateTime(record.SessionDate),
+                TimeSpan.FromSeconds(record.TimeSpentInSeconds),
+                record.TotalPomodoroCompleted,
+                record.TotalShortBreaksCompleted,
+                record.TotalLongBreaksCompleted,
+                record.TotalTasksCompleted,
+                record.CreatedAt,
+                record.UpdatedAt
+                );
+        }
+    }
 }

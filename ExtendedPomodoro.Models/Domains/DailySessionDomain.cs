@@ -12,16 +12,26 @@ namespace ExtendedPomodoro.Models.Domains
         int TotalPomodoroCompleted,
         int TotalShortBreaksCompleted,
         int TotalLongBreaksCompleted,
+        int TotalTasksCompleted,
         DateTime CreatedAt,
         DateTime UpdatedAt
         );
 
     public record class UpsertDailySessionDomain(
         DateOnly SessionDate,
-        TimeSpan TimeSpent,
         int TotalPomodoroCompleted,
         int TotalShortBreaksCompleted,
         int TotalLongBreaksCompleted
+        );
+
+    public record class SumDailySessionsDomain(
+        DateTime fromDate,
+        DateTime toDate,
+        TimeSpan TotalTimeSpent,
+        int TotalPomodoroCompleted,
+        int TotalShortBreaksCompleted,
+        int TotalLongBreaksCompleted,
+        int TotalTasksCompleted
         );
 
 }

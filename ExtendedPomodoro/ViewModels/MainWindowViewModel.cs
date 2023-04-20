@@ -51,7 +51,11 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         [RelayCommand]
-        public void NavigateToStats() => _navigationViewModel.SetCurrentViewModel(_statsViewModel);
+        public void NavigateToStats()
+        {
+            _navigationViewModel.SetCurrentViewModel(_statsViewModel);
+            _statsViewModel.Initialize();
+        }
 
         [RelayCommand]
 

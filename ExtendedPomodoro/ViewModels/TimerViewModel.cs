@@ -251,7 +251,6 @@ namespace ExtendedPomodoro.ViewModels
 
             var domain = new UpsertDailySessionDomain(
                 sessionDate,
-                TimeSpan.Zero,
                 pomodoroCompleted,
                 shortBreakCompleted,
                 longBreakCompleted

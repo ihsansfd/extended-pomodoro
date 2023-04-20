@@ -5,79 +5,52 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ExtendedPomodoro.Views"
       xmlns:controls="clr-namespace:ExtendedPomodoro.Controls"
-      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:plot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
+      xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
+      d:DataContext="{d:DesignInstance Type=vms:StatsViewModel}"
       Title="StatsView">
-
-    <Grid Width="400">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <WrapPanel HorizontalAlignment="Center" Margin="0 0 0 20">
-            <Button Style="{StaticResource LeftCornerRadiusButtonStyle}">
-                <iconPacks:PackIconBootstrapIcons Width="12" Height="12" Kind="CaretLeftFill"/>
-            </Button>
-            <Label Background="{StaticResource Primary}"
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Width="400">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <WrapPanel HorizontalAlignment="Center" Margin="0 0 0 20">
+                <DatePicker 
+                x:Name="FromDate"
+                Style="{StaticResource LeftArrowDatePickerStyle}" 
+                SelectedDate="{Binding FromDate, Mode=TwoWay}">
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="SelectedDateChanged">
+                            <behaviors:InvokeCommandAction Command="{Binding LoadStatsOnDateChangedCommand}"/>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+                </DatePicker>
+                <Label Background="{StaticResource Primary}"
                    HorizontalContentAlignment="Center"  
                    VerticalContentAlignment="Center" Padding="20 0 20 0">
-                <TextBlock Foreground="{StaticResource White}">3 March 2020 — 10 March 2020</TextBlock>
-            </Label>
-            <Button Style="{StaticResource RightCornerRadiusButtonStyle}">
-                <iconPacks:PackIconBootstrapIcons Width="12" Height="12" Kind="CaretRightFill"/>
-            </Button>
-        </WrapPanel>
-        <WrapPanel Grid.Row="1" HorizontalAlignment="Center">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock 
-                    Text="Pomodoro"
-                    Grid.Column="0"
-                    Margin="0 0 20 10"
-                    Style="{StaticResource TextBlockFormLabelStyle}"/>
-                <TextBlock 
-                    Text="45"
-                    Grid.Column="1"
-                    Style="{StaticResource TextBlockFormValueStyle}" 
-                    HorizontalAlignment="Right"/>
-                
-                <TextBlock 
-                    Text="Short Breaks"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Margin="0 0 20 10"
-                    Style="{StaticResource TextBlockFormLabelStyle}"/>
-                <TextBlock 
-                    Text="45"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Style="{StaticResource TextBlockFormValueStyle}" 
-                    HorizontalAlignment="Right"/>
-
-                <TextBlock 
-                    Text="Long Breaks"
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    Margin="0 0 20 0"
-                    Style="{StaticResource TextBlockFormLabelStyle}"/>
-                <TextBlock 
-                    Text="45"
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Style="{StaticResource TextBlockFormValueStyle}" 
-                    HorizontalAlignment="Right"/>
-            </Grid>
-            <Grid Grid.Column="1" Margin="40 0 0 0">
+                    <TextBlock Foreground="{StaticResource White}">
+                    <Run Text="{Binding ElementName=FromDate, Path=SelectedDate, StringFormat='MMMM dd, yyyy'}"/>
+                    <Run Text="—"/>
+                    <Run Text="{Binding ElementName=ToDate, Path=SelectedDate, StringFormat='MMMM dd, yyyy'}"/>
+                    </TextBlock>
+                </Label>
+                <DatePicker 
+                x:Name="ToDate" 
+                Style="{StaticResource RightArrowDatePickerStyle}" 
+                SelectedDate="{Binding ToDate}">
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="SelectedDateChanged">
+                            <behaviors:InvokeCommandAction Command="{Binding LoadStatsOnDateChangedCommand}"/>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+                </DatePicker>
+            </WrapPanel>
+            <WrapPanel Grid.Row="1" HorizontalAlignment="Center">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
@@ -86,36 +59,110 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock 
-                    Text="Time Spent"
+                    Text="Pomodoro"
                     Grid.Column="0"
                     Margin="0 0 20 10"
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <TextBlock 
-                    Text="1600 minutes"
+                    Text="{Binding TotalPomodoroCompleted}"
                     Grid.Column="1"
                     Style="{StaticResource TextBlockFormValueStyle}" 
                     HorizontalAlignment="Right"/>
 
                     <TextBlock 
+                    Text="Short Breaks"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="0 0 20 10"
+                    Style="{StaticResource TextBlockFormLabelStyle}"/>
+                    <TextBlock 
+                    Text="{Binding TotalShortBreaksCompleted}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Style="{StaticResource TextBlockFormValueStyle}" 
+                    HorizontalAlignment="Right"/>
+
+                    <TextBlock 
+                    Text="Long Breaks"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="0 0 20 0"
+                    Style="{StaticResource TextBlockFormLabelStyle}"/>
+                    <TextBlock 
+                    Text="{Binding TotalLongBreaksCompleted}"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Style="{StaticResource TextBlockFormValueStyle}" 
+                    HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid Grid.Column="1" Margin="40 0 0 0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock 
+                    Text="Time Spent"
+                    Grid.Column="0"
+                    Margin="0 0 20 10"
+                    Style="{StaticResource TextBlockFormLabelStyle}"/>
+                        <TextBlock 
+                    Text="{Binding TotalTimeSpentInMinutes, StringFormat={}{0} minutes}"
+                    Grid.Column="1"
+                    Style="{StaticResource TextBlockFormValueStyle}" 
+                    HorizontalAlignment="Right"/>
+
+                        <TextBlock 
                     Text="Tasks Completed"
                     Grid.Row="1"
                     Grid.Column="0"
                     Margin="0 0 20 0"
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
-                    <TextBlock 
+                        <TextBlock 
                     Text="10"
                     Grid.Row="1"
                     Grid.Column="1"
                     Style="{StaticResource TextBlockFormValueStyle}" 
                     HorizontalAlignment="Right"/>
+                    </Grid>
+
                 </Grid>
+            </WrapPanel>
+            <Border CornerRadius="5" Grid.Row="2" Margin="0 20 0 0">
 
-            </Grid>
-        </WrapPanel>
-        <Border Background="LightGray" CornerRadius="5" Grid.Row="2" Margin="0 20 0 0">
-
-        </Border>
-    </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ComboBox
+                    Grid.Row="0"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Top"
+                    Width="180"
+                    Height="25"
+                    Style="{StaticResource ComboBoxStyle}"
+                    SelectedValuePath="Tag"
+                    SelectedValue="{Binding StatValueToDisplay, Mode=TwoWay}"
+                    >
+                        <ComboBox.Items>
+                            <ComboBoxItem Tag="0" Content="Pomodoro Completed"/>
+                            <ComboBoxItem Tag="1" Content="Short Breaks Completed"/>
+                            <ComboBoxItem Tag="2" Content="Long Breaks Completed"/>
+                            <ComboBoxItem Tag="3" Content="Tasks Completed"/>
+                            <ComboBoxItem Tag="4" Content="Time Spent"/>
+                        </ComboBox.Items>
+                    </ComboBox>
+                    <plot:WpfPlot x:Name="StatsPlotView" Grid.Row="1" Width="440" Height="300" HorizontalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </Page>
