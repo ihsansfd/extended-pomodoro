@@ -30,6 +30,22 @@ namespace ExtendedPomodoro.Views
             InitializeComponent();
 
             DataContextChanged += OnDataContextChanged;
+
+            FormatChart();
+        }
+
+        private void FormatChart()
+        {
+            var plotColorResource = ((SolidColorBrush)FindResource("Black")).Color;
+
+            StatsPlotView.Plot.XAxis.DateTimeFormat(true);
+            StatsPlotView.Plot.YAxis2.SetSizeLimit(min: 40);
+            StatsPlotView.Plot.YAxis.TickLabelFormat((val) => ((int)val).ToString());
+            StatsPlotView.Plot.Style(figureBackground: System.Drawing.Color.Transparent,
+                dataBackground: System.Drawing.Color.Transparent,
+                tick: System.Drawing.Color.FromArgb(plotColorResource.R,
+                plotColorResource.G, plotColorResource.B),
+                grid: System.Drawing.Color.Transparent);
         }
 
         private async void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -54,14 +70,8 @@ namespace ExtendedPomodoro.Views
             var primaryColorResource = ((SolidColorBrush)FindResource("Primary")).Color;
             var primaryColor = System.Drawing.Color.FromArgb(primaryColorResource.R, 
                 primaryColorResource.G, primaryColorResource.B);
-
             scatter.LineColor = primaryColor;
             scatter.MarkerColor = primaryColor;
-            StatsPlotView.Plot.XAxis.DateTimeFormat(true);
-            StatsPlotView.Plot.YAxis2.SetSizeLimit(min: 40);
-
-            StatsPlotView.Plot.Style(figureBackground: System.Drawing.Color.Transparent, 
-                grid : System.Drawing.Color.Transparent);
             StatsPlotView.Refresh();
         }
 

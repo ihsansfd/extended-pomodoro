@@ -135,24 +135,28 @@
 
                 </Grid>
             </WrapPanel>
-            <Border CornerRadius="5" Grid.Row="2" Margin="0 20 0 0">
+            <Border CornerRadius="5" Grid.Row="2" Margin="0 30 0 0">
 
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <ComboBox
-                    Grid.Row="0"
-                    HorizontalAlignment="Right" 
-                    VerticalAlignment="Top"
-                    Width="180"
-                    Height="25"
-                    Style="{StaticResource ComboBoxStyle}"
-                    SelectedValuePath="Tag"
-                    SelectedValue="{Binding StatValueToDisplay, Mode=TwoWay}"
+                    <WrapPanel 
+                        Grid.Row="0"
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Top"
+                        >
+                        <TextBlock VerticalAlignment="Center" Style="{StaticResource TextBlockFormLabelStyle}" Margin="0 0 10 0">Display: </TextBlock>
+                        <ComboBox
+                            VerticalAlignment="Center"
+                            Width="180"
+                            Height="25"
+                            Style="{StaticResource ComboBoxStyle}"
+                            SelectedValuePath="Tag"
+                            SelectedValue="{Binding StatValueToDisplay, Mode=TwoWay}"
                     >
-                        <ComboBox.Items>
+                    <ComboBox.Items>
                             <ComboBoxItem Tag="0" Content="Pomodoro Completed"/>
                             <ComboBoxItem Tag="1" Content="Short Breaks Completed"/>
                             <ComboBoxItem Tag="2" Content="Long Breaks Completed"/>
@@ -160,7 +164,16 @@
                             <ComboBoxItem Tag="4" Content="Time Spent"/>
                         </ComboBox.Items>
                     </ComboBox>
-                    <plot:WpfPlot x:Name="StatsPlotView" Grid.Row="1" Width="440" Height="300" HorizontalAlignment="Center"/>
+                    </WrapPanel>
+
+                    <plot:WpfPlot 
+                        x:Name="StatsPlotView"
+                        Grid.Row="1" 
+                        Width="450" 
+                        Height="300" 
+                        HorizontalAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        />
                 </Grid>
             </Border>
         </Grid>

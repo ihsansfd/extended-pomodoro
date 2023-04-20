@@ -72,11 +72,11 @@
                     <controls:TasksListView.ItemTemplate>
                         <DataTemplate>
                             <Border 
-                                CornerRadius="13"
+                                CornerRadius="15"
                                 BorderThickness="1" 
-                                Height="25"
-                                Margin="0 0 0 5"
-                                BorderBrush="{StaticResource Black}">
+                                Height="30"
+                                Margin="0 0 0 10"
+                                BorderBrush="{StaticResource Black-50}">
                                 <Border.Resources>
                                     <services:BindingProxy x:Key="CurrentDataContext" Data="{Binding}"/>
                                 </Border.Resources>
