@@ -1,0 +1,1 @@
+- don't use receivers messenger inside view. instead, use normal event listening to viewmodels. Make the view listen to its viewmodel in the datacontext. if there's something that the view needs from other viewmodel, make that other viewmodel send its data through messenger to the relevant viewmodel, and then the relevant viewmodel invoke the event that the view can subscibe to.
