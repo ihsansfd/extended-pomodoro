@@ -132,7 +132,7 @@
         </Grid>
         <components:ModalCreateTaskUserControl 
             x:Name="ModalCreateTask"
-            Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsShown, Converter={StaticResource BoolToVisibilityConv}}"
+            IsShown="{Binding CreateTaskViewModel.IsModalShown, Mode=TwoWay}"
             Style="{StaticResource RemoveErrorBorderUserControlStyle}"
             CreateTaskViewModel="{Binding CreateTaskViewModel}"/>
 

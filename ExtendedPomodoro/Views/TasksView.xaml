@@ -42,6 +42,7 @@
                     Tag="PlusCircle"
                     Content="Add new"
                     HorizontalAlignment="Left"
+                    Command="{Binding CreateTaskViewModel.OpenModalCommand}"
                     Click="ButtonCreateTask_Click"/>
 
                 <WrapPanel Grid.Row="0" HorizontalAlignment="Right">
@@ -102,13 +103,15 @@
                                     </Grid>
 
                                     <controls:IconOnlyButton 
+                                        Command="{Binding DataContext.UpdateTaskViewModel.LoadTaskDetailCommand, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
+                                        CommandParameter="{Binding Data, Source={StaticResource CurrentDataContext}}"
                                         Grid.Column="1"
                                         Cursor="Hand"
                                         Kind="ArrowUpRightCircle"
                                         Foreground="{StaticResource Info}"
                                         HoverColor="{StaticResource InfoDarker}"
                                         Width="16"
-                                        Click="ButtonTaskDetail_Click"
                                         Height="16"/>
 
                                     <controls:IconOnlyButton 
@@ -208,7 +211,7 @@
 
         <components:ModalCreateTaskUserControl 
             x:Name="ModalCreateTask"
-            Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsShown, Converter={StaticResource BoolToVisibilityConv}}"
+            IsShown="{Binding CreateTaskViewModel.IsModalShown, Mode=TwoWay}"
             Style="{StaticResource RemoveErrorBorderUserControlStyle}"
             CreateTaskViewModel="{Binding CreateTaskViewModel}"/>
 
@@ -217,7 +220,7 @@
             x:Name="ModalViewTaskDetail"
             Width="340" 
             Height="300"
-            IsShown="False"
+            IsShown="{Binding UpdateTaskViewModel.IsModalShown}"
             Style="{StaticResource DefaultModalStyle}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid Grid.IsSharedSizeScope="True">
@@ -244,7 +247,6 @@
                     <TextBox 
                         Grid.Column="1"
                         Width="175"
-                        x:Name="TitleTaskDetail"
                         Margin="0 0 0 15"
                         Text="{Binding UpdateTaskViewModel.Name, Mode=TwoWay}"
                         Style="{StaticResource TextBoxStyle}"/>
@@ -258,7 +260,6 @@
                         Grid.Row="1"
                         Height="65"
                         Width="175"
-                        x:Name="DescriptionTaskDetail"
                         Margin="0 0 0 15"
                         VerticalContentAlignment="Top"
                         Text="{Binding UpdateTaskViewModel.Description, Mode=TwoWay}"
@@ -273,7 +274,6 @@
                         <TextBox 
                         Width="60"
                         HorizontalAlignment="Left"
-                        x:Name="EstPomodoroTaskDetail"
                         Text="{Binding UpdateTaskViewModel.EstPomodoro, Mode=TwoWay}"
                         Style="{StaticResource TextBoxStyle}"
                         Margin="0 0 7 0"/>
@@ -283,7 +283,7 @@
                             VerticalAlignment="Center" 
                             Style="{StaticResource TextBlockFormValueStyle}"/>
                         <TextBlock 
-                            x:Name="ActPomodoroTaskDetail" 
+                            Text="{Binding UpdateTaskViewModel.ActPomodoro}"
                             VerticalAlignment="Center"
                             Style="{StaticResource TextBlockFormValueStyle}"/>
                     </WrapPanel>
@@ -303,7 +303,7 @@
                         x:Name="StatusTaskDetail"
                         Margin="0 0 0 15"
                         SelectedValuePath="Tag"
-                        SelectedValue="{Binding UpdateTaskViewModel.TaskState, Mode=TwoWay}">
+                        SelectedValue="{Binding UpdateTaskViewModel.TaskStatus, Mode=TwoWay}">
                         <ComboBox.Items>
                             <ComboBoxItem Tag="0">In Progress</ComboBoxItem>
                             <ComboBoxItem Tag="1">Completed</ComboBoxItem>
@@ -318,13 +318,13 @@
                         Grid.Column="1"
                         Grid.Row="4"
                         x:Name="TimeSpentTaskDetail"
-                        Text="{Binding UpdateTaskViewModel.TimeSpentInMinutesDisplay, Mode=TwoWay}"
+                        Text="{Binding UpdateTaskViewModel.TimeSpentInMinutes, StringFormat={}{0} minutes, Mode=TwoWay}"
                         Style="{StaticResource TextBlockFormValueStyle}"/>
                 </Grid>
                 <WrapPanel HorizontalAlignment="Right" Margin="0 20 0 0">
                     <Button Style="{StaticResource ButtonStyle}" 
                         Content="Close" 
-                        Click="ButtonCloseTaskDetail_Click"
+                        Command="{Binding UpdateTaskViewModel.CloseModalCommand}"
                         Margin="0 0 10 0"/>
                     <Button Style="{StaticResource ButtonInfoStyle}" 
                         Command="{Binding UpdateTaskViewModel.UpdateTaskCommand}"

@@ -67,7 +67,7 @@
             <WrapPanel HorizontalAlignment="Right" Margin="0 20 0 0">
                 <Button Style="{StaticResource ButtonStyle}" 
                         Content="Cancel" 
-                        Click="ButtonCancelCreateTaskModal_Click"
+                        Command="{Binding CreateTaskViewModel.CloseModalCommand}"
                         Margin="0 0 10 0"/>
                 <Button Style="{StaticResource ButtonInfoStyle}" 
                         Command="{Binding CreateTaskViewModel.CreateTaskCommand, ElementName=ThisModalCreateTaskUserControl}"

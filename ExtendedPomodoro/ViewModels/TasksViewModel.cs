@@ -16,6 +16,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using ExtendedPomodoro.FrameworkExtensions.Extensions;
+using ExtendedPomodoro.Controls;
+using ExtendedPomodoro.Services;
+using System.Windows.Controls;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -186,6 +189,15 @@ namespace ExtendedPomodoro.ViewModels
         [CustomValidation(typeof(TasksHelper), nameof(TasksHelper.ValidateEstPomodoro))]
         private string? _estPomodoro;
 
+        [ObservableProperty]
+        private bool _isModalShown = false;
+
+        [RelayCommand]
+        public void OpenModal() => IsModalShown = true;
+
+        [RelayCommand]
+        public void CloseModal() => IsModalShown = false;
+
         [RelayCommand]
         public async Task CreateTask()
         {
@@ -201,6 +213,7 @@ namespace ExtendedPomodoro.ViewModels
                 ClearAll();
                 
                 StrongReferenceMessenger.Default.Send(new TaskCreationInfoMessage(true, "Task successfully added."));
+                CloseModal();
             }
             catch (Exception ex)
             {
@@ -238,10 +251,16 @@ namespace ExtendedPomodoro.ViewModels
         private string? _estPomodoro;
 
         [ObservableProperty]
-        private int _taskState;
+        private int _actPomodoro;
 
         [ObservableProperty]
-        private string _timeSpentInMinutesDisplay;
+        private int _taskStatus;
+
+        [ObservableProperty]
+        private int _timeSpentInMinutes;
+
+        [ObservableProperty]
+        private bool _isModalShown = false;
 
         public UpdateTaskViewModel(ITasksRepository repository, TasksHelper helper) {
             _repository = repository;
@@ -259,14 +278,16 @@ namespace ExtendedPomodoro.ViewModels
 
             try
             {
-                await _repository.UpdateTask(new(Id, Name, Description, estPomodoro, _helper.ConvertIntegerToTaskState(TaskState)));
+                await _repository.UpdateTask(new(Id, Name, Description, estPomodoro, _helper.ConvertIntegerToTaskState(TaskStatus)));
 
                 StrongReferenceMessenger.Default.Send(new TaskUpdateInfoMessage(true, "The task is successfully updated."));
+                CloseModal();
 
             } catch(Exception ex)
             {
                 StrongReferenceMessenger.Default.Send(new TaskUpdateInfoMessage(false, ex.Message));
             }
+
         }
 
         [RelayCommand]
@@ -290,6 +311,23 @@ namespace ExtendedPomodoro.ViewModels
                 StrongReferenceMessenger.Default.Send(new TaskUpdateStateInfoMessage(false, ex.Message));
             }
         }
+
+        [RelayCommand]
+        public void LoadTaskDetail(TaskDomainViewModel args)
+        {
+            Id = args.Id;
+            Name = args.Name;
+            Description = args.Description;
+            EstPomodoro = args.EstPomodoro.ToString();
+            ActPomodoro = args.ActPomodoro;
+            TaskStatus = args.TaskStatus;
+            TimeSpentInMinutes = (int)args.TimeSpentInMinutes;
+
+            IsModalShown = true;
+        }
+
+        [RelayCommand]
+        public void CloseModal() => IsModalShown = false;
 
     }
 

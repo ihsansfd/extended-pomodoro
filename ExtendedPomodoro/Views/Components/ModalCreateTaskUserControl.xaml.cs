@@ -56,20 +56,9 @@ namespace ExtendedPomodoro.Views.Components
             StrongReferenceMessenger.Default.RegisterAll(this);
         }
 
-        private void ButtonCancelCreateTaskModal_Click(object sender, RoutedEventArgs e)
-        {
-            ModalCreateTask.IsShown = false;
-        }
-
         public void Receive(TaskCreationInfoMessage taskCreationInfo)
         {
-            if (taskCreationInfo.IsTaskCreationSuccess)
-            {
-                ModalCreateTask.IsShown = false;
-            }
-
-            else
-            {
+            if (!taskCreationInfo.IsTaskCreationSuccess) { 
                 MessageBox.Show(taskCreationInfo.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
