@@ -9,6 +9,7 @@
         xmlns:views="clr-namespace:ExtendedPomodoro.Views"
         xmlns:converters="clr-namespace:ExtendedPomodoro.Converters"
         xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         ResizeMode="CanMinimize"
         d:DataContext="{d:DesignInstance Type=vms:MainWindowViewModel}"
         mc:Ignorable="d"
@@ -36,12 +37,20 @@
         <converters:StatsViewModelToBooleanConverter x:Key="StatsVMToBoolConv"/>
         <converters:TasksViewModelToBooleanConverter x:Key="TasksVMToBoolConv"/>
         <converters:SettingsViewModelToBooleanConverter x:Key="SettingsVMToBoolConv"/>
+        
+        <sys:Double x:Key="DrawerSidebarMenuWidth">50</sys:Double>
+
+        <Thickness x:Key="FrameMargin" 
+                   Left="{StaticResource DrawerSidebarMenuWidth}"
+                   Right="0"
+                   Top="20"
+                   Bottom="20"/>
 
     </Window.Resources>
     <Grid>
         <controls:DrawerSidebarMenu 
             HorizontalAlignment="Left"
-            ClosedWidth="50" 
+            ClosedWidth="{StaticResource DrawerSidebarMenuWidth}" 
             OpenedWidth="145"
             Background="{StaticResource VeryLightGrey}" 
             Foreground="{StaticResource Primary}"
@@ -78,8 +87,8 @@
                     />
             </StackPanel>
         </controls:DrawerSidebarMenu>
-        <Frame 
-            Margin="0 20 0 20" 
+            <Frame 
+            Margin="{StaticResource FrameMargin}" 
             Content="{Binding CurrentViewModel}" 
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
