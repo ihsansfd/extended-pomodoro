@@ -24,47 +24,11 @@ namespace ExtendedPomodoro.Views
     /// <summary>
     /// Interaction logic for TasksView.xaml
     /// </summary>
-    public partial class TasksView : Page,
-        IRecipient<TaskDeletionInfoMessage>, 
-        IRecipient<TaskUpdateStateInfoMessage>,
-        IRecipient<TaskUpdateInfoMessage>
+    public partial class TasksView : Page
     {
         public TasksView()
         {
             InitializeComponent();
-
-            StrongReferenceMessenger.Default.RegisterAll(this);
-
         }
-
-        public void Receive(TaskDeletionInfoMessage taskDeletionInfo)
-        {
-            if (!taskDeletionInfo.IsTaskDeletionSuccess)
-            {
-                MessageBox.Show(taskDeletionInfo.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        public void Receive(TaskUpdateStateInfoMessage taskUpdateStateInfo)
-        {
-            if (!taskUpdateStateInfo.IsTaskUpdateSuccess)
-            {
-                MessageBox.Show(taskUpdateStateInfo.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        public void Receive(TaskUpdateInfoMessage taskUpdateInfo)
-        {
-            if(!taskUpdateInfo.IsTaskUpdateSuccess)
-            {
-                MessageBox.Show(taskUpdateInfo.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-        }
-
-        ~TasksView() {
-            StrongReferenceMessenger.Default.UnregisterAll(this);
-        }
-
     }
 }

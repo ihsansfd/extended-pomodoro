@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.Entities
 {
-    public record class TaskUpdateInfoMessage(bool IsTaskUpdateSuccess, string Message);
+    public record class TaskUpdateInfoMessage(bool IsTaskUpdateSuccess);
 }

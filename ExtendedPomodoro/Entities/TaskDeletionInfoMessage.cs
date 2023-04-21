@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.Entities
 {
-    public record class TaskDeletionInfoMessage(bool IsTaskDeletionSuccess, string Message);
+    public record class TaskDeletionInfoMessage(bool IsTaskDeletionSuccess);
 }

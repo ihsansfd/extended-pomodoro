@@ -21,7 +21,7 @@ namespace ExtendedPomodoro.Views.Components
     /// <summary>
     /// Interaction logic for ModalCreateTaskUserControl.xaml
     /// </summary>
-    public partial class ModalCreateTaskUserControl : UserControl, IRecipient<TaskCreationInfoMessage>
+    public partial class ModalCreateTaskUserControl : UserControl
     {
         public bool IsShown
         {
@@ -53,19 +53,6 @@ namespace ExtendedPomodoro.Views.Components
         {
             InitializeComponent();
 
-            StrongReferenceMessenger.Default.RegisterAll(this);
-        }
-
-        public void Receive(TaskCreationInfoMessage taskCreationInfo)
-        {
-            if (!taskCreationInfo.IsTaskCreationSuccess) { 
-                MessageBox.Show(taskCreationInfo.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        ~ModalCreateTaskUserControl()
-        {
-            StrongReferenceMessenger.Default.UnregisterAll(this);
         }
     }
 

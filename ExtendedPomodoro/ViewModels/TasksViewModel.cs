@@ -175,16 +175,18 @@ namespace ExtendedPomodoro.ViewModels
     public partial class CreateTaskViewModel : ObservableValidator
     {
         private readonly ITasksRepository _repository;
+        private readonly MessageBoxService _messageBox;
 
-        public CreateTaskViewModel(ITasksRepository repository)
+        public CreateTaskViewModel(ITasksRepository repository, MessageBoxService messageBoxService)
         {
             _repository = repository;
+            _messageBox = messageBoxService;
         }
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required(ErrorMessage = "Task name is required")]
-        private string _name;
+        private string? _name;
 
         [ObservableProperty]
         private string? _description;
@@ -215,13 +217,14 @@ namespace ExtendedPomodoro.ViewModels
             {
                 await _repository.CreateTask(new(Name, Description, estPomodoro));
                 ClearAll();
-                
-                StrongReferenceMessenger.Default.Send(new TaskCreationInfoMessage(true, "Task successfully added."));
                 CloseModal();
+
+                StrongReferenceMessenger.Default.Send(new TaskCreationInfoMessage(true));
             }
             catch (Exception ex)
             {
-                StrongReferenceMessenger.Default.Send(new TaskCreationInfoMessage(false, ex.Message));
+                StrongReferenceMessenger.Default.Send(new TaskCreationInfoMessage(false));
+                _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
         }
@@ -289,13 +292,14 @@ namespace ExtendedPomodoro.ViewModels
             try
             {
                 await _repository.UpdateTask(new(Id, Name, Description, estPomodoro, _helper.ConvertIntegerToTaskState(TaskStatus)));
-
-                StrongReferenceMessenger.Default.Send(new TaskUpdateInfoMessage(true, "The task is successfully updated."));
                 CloseModal();
+
+                StrongReferenceMessenger.Default.Send(new TaskUpdateInfoMessage(true));
 
             } catch(Exception ex)
             {
-                StrongReferenceMessenger.Default.Send(new TaskUpdateInfoMessage(false, ex.Message));
+                StrongReferenceMessenger.Default.Send(new TaskUpdateInfoMessage(false));
+                _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
         }
@@ -312,13 +316,13 @@ namespace ExtendedPomodoro.ViewModels
             try
             {
                 await _repository.UpdateTaskState(args.TaskId, _helper.ConvertIntegerToTaskState(args.IntendedTaskState));
-                StrongReferenceMessenger.Default.Send(new TaskUpdateStateInfoMessage(true,
-                    string.Format("Task succesfully marked as {0}", _helper.ConvertIntegerToTaskStateString(args.IntendedTaskState))));
+                StrongReferenceMessenger.Default.Send(new TaskUpdateStateInfoMessage(true));
             }
 
             catch(Exception ex)
             {
-                StrongReferenceMessenger.Default.Send(new TaskUpdateStateInfoMessage(false, ex.Message));
+                StrongReferenceMessenger.Default.Send(new TaskUpdateStateInfoMessage(false));
+                _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -343,8 +347,8 @@ namespace ExtendedPomodoro.ViewModels
 
     public partial class DeleteTaskViewModel : ObservableObject
     {
-        private ITasksRepository _repository;
-        private MessageBoxService _messageBox;
+        private readonly ITasksRepository _repository;
+        private readonly MessageBoxService _messageBox;
 
 
         public DeleteTaskViewModel(
@@ -369,12 +373,13 @@ namespace ExtendedPomodoro.ViewModels
 
                 await _repository.DeleteTask(taskId);
 
-                StrongReferenceMessenger.Default.Send(new TaskDeletionInfoMessage(true, "The task successfully deleted."));
+                StrongReferenceMessenger.Default.Send(new TaskDeletionInfoMessage(true));
             }
 
             catch (Exception ex)
             {
-                StrongReferenceMessenger.Default.Send(new TaskDeletionInfoMessage(false, ex.Message));
+                StrongReferenceMessenger.Default.Send(new TaskDeletionInfoMessage(false));
+                _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
@@ -397,7 +402,6 @@ namespace ExtendedPomodoro.ViewModels
         }
         public static readonly DependencyProperty IntendedTaskStateProperty =
             DependencyProperty.Register("IntendedTaskState", typeof(int), typeof(UpdateTaskStateDomainViewModel), new PropertyMetadata(0));
-
     }
 
 }
