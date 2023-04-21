@@ -1,4 +1,5 @@
-﻿using ExtendedPomodoro.Helpers;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using ExtendedPomodoro.Helpers;
 using ExtendedPomodoro.Models.DbConfigs;
 using ExtendedPomodoro.Models.DbConnections;
 using ExtendedPomodoro.Models.DbSetup;
@@ -118,6 +119,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<HotkeyManager>((_s) => HotkeyManager.Current);
             services.AddSingleton<HotkeyLoaderService>();
             services.AddSingleton<MessageBoxService>();
+            services.AddSingleton<IMessenger>((_s) => StrongReferenceMessenger.Default);
 
             return services.BuildServiceProvider();
         }

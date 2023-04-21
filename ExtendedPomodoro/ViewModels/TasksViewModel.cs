@@ -53,6 +53,7 @@ namespace ExtendedPomodoro.ViewModels
        private readonly ITasksRepository _repository;
        private readonly TasksHelper _helper;
        private readonly MessageBoxService _messageBox;
+       private readonly IMessenger _messenger;
 
        private int _currentPage = 1;
        private int _totalPages = 1;
@@ -65,17 +66,18 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private bool _areThereMoreTasks;
 
-       public ReadTasksViewModel(
-           ITasksRepository repository, 
-           TasksHelper helper,
-           MessageBoxService messageBoxService
-           )
+        public ReadTasksViewModel(
+            ITasksRepository repository,
+            TasksHelper helper,
+            MessageBoxService messageBoxService,
+            IMessenger messenger)
         {
             _repository = repository;
             _helper = helper;
             _messageBox = messageBoxService;
+            _messenger = messenger;
 
-            StrongReferenceMessenger.Default.RegisterAll(this);
+            messenger.RegisterAll(this);
         }
 
         [RelayCommand]
@@ -170,17 +172,27 @@ namespace ExtendedPomodoro.ViewModels
         {
             AreThereMoreTasks = _currentPage < _totalPages;
         }
+
+        ~ReadTasksViewModel()
+        {
+            _messenger.UnregisterAll(this);
+        }
     }
 
     public partial class CreateTaskViewModel : ObservableValidator
     {
         private readonly ITasksRepository _repository;
         private readonly MessageBoxService _messageBox;
+        private readonly IMessenger _messenger;
 
-        public CreateTaskViewModel(ITasksRepository repository, MessageBoxService messageBoxService)
+        public CreateTaskViewModel(
+            ITasksRepository repository, 
+            MessageBoxService messageBoxService,
+            IMessenger messenger)
         {
             _repository = repository;
             _messageBox = messageBoxService;
+            _messenger = messenger;
         }
 
         [ObservableProperty]
@@ -219,11 +231,11 @@ namespace ExtendedPomodoro.ViewModels
                 ClearAll();
                 CloseModal();
 
-                StrongReferenceMessenger.Default.Send(new TaskCreationInfoMessage(true));
+                _messenger.Send(new TaskCreationInfoMessage(true));
             }
             catch (Exception ex)
             {
-                StrongReferenceMessenger.Default.Send(new TaskCreationInfoMessage(false));
+                _messenger.Send(new TaskCreationInfoMessage(false));
                 _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
@@ -242,6 +254,7 @@ namespace ExtendedPomodoro.ViewModels
         private readonly ITasksRepository _repository;
         private readonly TasksHelper _helper;
         private readonly MessageBoxService _messageBox;
+        private readonly IMessenger _messenger;
 
         [Required]
         [ObservableProperty]
@@ -273,11 +286,13 @@ namespace ExtendedPomodoro.ViewModels
         public UpdateTaskViewModel(
             ITasksRepository repository, 
             TasksHelper helper,
-            MessageBoxService messageBoxService
-            ) {
+            MessageBoxService messageBoxService,
+            IMessenger messenger)
+        {
             _repository = repository;
             _helper = helper;
             _messageBox = messageBoxService;
+            _messenger = messenger;
         }
 
         [RelayCommand]
@@ -294,11 +309,11 @@ namespace ExtendedPomodoro.ViewModels
                 await _repository.UpdateTask(new(Id, Name, Description, estPomodoro, _helper.ConvertIntegerToTaskState(TaskStatus)));
                 CloseModal();
 
-                StrongReferenceMessenger.Default.Send(new TaskUpdateInfoMessage(true));
+                _messenger.Send(new TaskUpdateInfoMessage(true));
 
             } catch(Exception ex)
             {
-                StrongReferenceMessenger.Default.Send(new TaskUpdateInfoMessage(false));
+                _messenger.Send(new TaskUpdateInfoMessage(false));
                 _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
@@ -316,12 +331,12 @@ namespace ExtendedPomodoro.ViewModels
             try
             {
                 await _repository.UpdateTaskState(args.TaskId, _helper.ConvertIntegerToTaskState(args.IntendedTaskState));
-                StrongReferenceMessenger.Default.Send(new TaskUpdateStateInfoMessage(true));
+                _messenger.Send(new TaskUpdateStateInfoMessage(true));
             }
 
             catch(Exception ex)
             {
-                StrongReferenceMessenger.Default.Send(new TaskUpdateStateInfoMessage(false));
+                _messenger.Send(new TaskUpdateStateInfoMessage(false));
                 _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -349,15 +364,16 @@ namespace ExtendedPomodoro.ViewModels
     {
         private readonly ITasksRepository _repository;
         private readonly MessageBoxService _messageBox;
-
+        private readonly IMessenger _messenger;
 
         public DeleteTaskViewModel(
             ITasksRepository repository,
-            MessageBoxService messageBoxService
-            )
+            MessageBoxService messageBoxService,
+            IMessenger messenger)
         {
             _repository = repository;
             _messageBox = messageBoxService;
+            _messenger = messenger;
         }        
 
         [RelayCommand]
@@ -373,12 +389,12 @@ namespace ExtendedPomodoro.ViewModels
 
                 await _repository.DeleteTask(taskId);
 
-                StrongReferenceMessenger.Default.Send(new TaskDeletionInfoMessage(true));
+                _messenger.Send(new TaskDeletionInfoMessage(true));
             }
 
             catch (Exception ex)
             {
-                StrongReferenceMessenger.Default.Send(new TaskDeletionInfoMessage(false));
+                _messenger.Send(new TaskDeletionInfoMessage(false));
                 _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
