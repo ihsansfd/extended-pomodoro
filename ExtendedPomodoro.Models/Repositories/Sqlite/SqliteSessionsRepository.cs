@@ -79,6 +79,12 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             SELECT * FROM tblDailySessions WHERE CreatedAt >= @FromDate AND CreatedAt <= @ToDate ORDER BY datetime(CreatedAt) DESC
             ";
 
+        private const string SELECT_DATE_RANGE_DAILY_SESSIONS_QUERY =
+            @"
+            SELECT MIN(datetime(CreatedAt)) AS MinDate, 
+            MAX(datetime(CreatedAt)) AS MaxDate FROM tblDailySessions;
+            ";
+
         public SqliteSessionsRepository(SqliteDbConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
@@ -118,6 +124,16 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                     SELECT_DAILY_SESSIONS_SUM_QUERY, data);
 
                 return ConvertToSumDailySessionsDomain(from, to, res);
+            }
+        }
+
+        public async Task<DateRangeDailySessionsDomain> GetDateRangeDailySessions() {
+            using (var db = _connectionFactory.Connect())
+            {
+                var res = await db.QueryFirstAsync<DateRangeDailySessionsDTO>(
+                    SELECT_DATE_RANGE_DAILY_SESSIONS_QUERY);
+
+                return ConvertToSumDailySessionsDomain(res);
             }
         }
 
@@ -218,5 +234,11 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                 record.UpdatedAt
                 );
         }
+
+        private DateRangeDailySessionsDomain ConvertToSumDailySessionsDomain(DateRangeDailySessionsDTO dto)
+        {
+            return new(dto.MinDate, dto.MaxDate);
+        }
+
     }
 }

@@ -37,4 +37,10 @@ namespace ExtendedPomodoro.Models.DTOs
         public int TotalLongBreaksCompleted { get; set; }
         public int TotalTasksCompleted { get; set; }
     }
+
+    public class DateRangeDailySessionsDTO
+    {
+        public DateTime MinDate { get; set; }
+        public DateTime MaxDate { get; set; }
+    }
 }

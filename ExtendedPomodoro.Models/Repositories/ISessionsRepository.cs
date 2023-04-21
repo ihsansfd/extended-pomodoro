@@ -15,5 +15,6 @@ namespace ExtendedPomodoro.Models.Repositories
         Task UpsertDailySessionTotalTasksCompleted(DateOnly sessionDate, int totalPomodoroCompleted);
         Task<SumDailySessionsDomain> GetSumDailySessions(DateTime from, DateTime to);
         IAsyncEnumerable<DailySessionDomain> GetDailySessions(DateTime from, DateTime to);
+        Task<DateRangeDailySessionsDomain> GetDateRangeDailySessions();
     }
 }

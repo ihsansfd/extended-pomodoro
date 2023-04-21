@@ -37,10 +37,9 @@ namespace ExtendedPomodoro.Views
         private void FormatChart()
         {
             var plotColorResource = ((SolidColorBrush)FindResource("Black")).Color;
-
-            StatsPlotView.Plot.XAxis.DateTimeFormat(true);
-            StatsPlotView.Plot.YAxis2.SetSizeLimit(min: 40);
+            StatsPlotView.Plot.XAxis.TickLabelFormat("M/dd/yyyy", true);
             StatsPlotView.Plot.YAxis.TickLabelFormat((val) => ((int)val).ToString());
+            StatsPlotView.Plot.YAxis2.SetSizeLimit(min: 40);
             StatsPlotView.Plot.Style(figureBackground: System.Drawing.Color.Transparent,
                 dataBackground: System.Drawing.Color.Transparent,
                 tick: System.Drawing.Color.FromArgb(plotColorResource.R,
@@ -50,22 +49,23 @@ namespace ExtendedPomodoro.Views
 
         private async void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-
             if (this.DataContext is StatsViewModel)
             {
                 _viewModel = (StatsViewModel)this.DataContext;
                 _viewModel.NewStatsAxes += OnNewStatsAxes;
-                await _viewModel.LoadStats();
+                await _viewModel.GenerateStats();
             }
         }
 
         private void OnNewStatsAxes(object? sender, StatAxesDomainViewModel e)
         {
+            if (!e.Display) return;
             GenerateChartFrom(e);
         }
 
         private void GenerateChartFrom(StatAxesDomainViewModel axes)
         {
+            StatsPlotView.Plot.Clear();
             var scatter = StatsPlotView.Plot.AddScatter(axes.XAxis, axes.YAxis);
             var primaryColorResource = ((SolidColorBrush)FindResource("Primary")).Color;
             var primaryColor = System.Drawing.Color.FromArgb(primaryColorResource.R, 
@@ -77,8 +77,18 @@ namespace ExtendedPomodoro.Views
 
         ~StatsView()
         {
+            Unsubscribe();
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Unsubscribe();
+        }
+
+        private void Unsubscribe()
+        {
             DataContextChanged -= OnDataContextChanged;
-            if(_viewModel != null) _viewModel.NewStatsAxes -= OnNewStatsAxes;
+            if (_viewModel != null) _viewModel.NewStatsAxes -= OnNewStatsAxes;
         }
     }
 }

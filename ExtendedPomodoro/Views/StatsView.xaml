@@ -8,10 +8,16 @@
       xmlns:plot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
       xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
+      xmlns:conv="clr-namespace:ExtendedPomodoro.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       d:DataContext="{d:DesignInstance Type=vms:StatsViewModel}"
+      Unloaded="Page_Unloaded"
       Title="StatsView">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
+        <conv:InvertBooleanToVisibilityConverter x:Key="InvertBoolToVisibilityConv"/>
+    </Page.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Width="400">
             <Grid.RowDefinitions>
@@ -23,17 +29,19 @@
                 <DatePicker 
                 x:Name="FromDate"
                 Style="{StaticResource LeftArrowDatePickerStyle}" 
-                SelectedDate="{Binding FromDate, Mode=TwoWay}">
+                SelectedDate="{Binding FromDate, Mode=TwoWay}"
+                DisplayDateStart="{Binding MinDate}"
+                DisplayDateEnd="{Binding MaxDate}">
                     <behaviors:Interaction.Triggers>
                         <behaviors:EventTrigger EventName="SelectedDateChanged">
-                            <behaviors:InvokeCommandAction Command="{Binding LoadStatsOnDateChangedCommand}"/>
+                            <behaviors:InvokeCommandAction Command="{Binding GenerateStatsCommand}"/>
                         </behaviors:EventTrigger>
                     </behaviors:Interaction.Triggers>
                 </DatePicker>
                 <Label Background="{StaticResource Primary}"
                    HorizontalContentAlignment="Center"  
                    VerticalContentAlignment="Center" Padding="20 0 20 0">
-                    <TextBlock Foreground="{StaticResource White}">
+                    <TextBlock Foreground="{StaticResource White}" Style="{StaticResource TextBlockFormValueStyle}">
                     <Run Text="{Binding ElementName=FromDate, Path=SelectedDate, StringFormat='MMMM dd, yyyy'}"/>
                     <Run Text="—"/>
                     <Run Text="{Binding ElementName=ToDate, Path=SelectedDate, StringFormat='MMMM dd, yyyy'}"/>
@@ -42,10 +50,13 @@
                 <DatePicker 
                 x:Name="ToDate" 
                 Style="{StaticResource RightArrowDatePickerStyle}" 
-                SelectedDate="{Binding ToDate}">
+                SelectedDate="{Binding ToDate}"
+                DisplayDateStart="{Binding ElementName=FromDate, Path=SelectedDate, Mode=OneWay}"
+                DisplayDateEnd="{Binding MaxDate}"
+                    >
                     <behaviors:Interaction.Triggers>
                         <behaviors:EventTrigger EventName="SelectedDateChanged">
-                            <behaviors:InvokeCommandAction Command="{Binding LoadStatsOnDateChangedCommand}"/>
+                            <behaviors:InvokeCommandAction Command="{Binding GenerateStatsCommand}"/>
                         </behaviors:EventTrigger>
                     </behaviors:Interaction.Triggers>
                 </DatePicker>
@@ -126,7 +137,7 @@
                     Margin="0 0 20 0"
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
                         <TextBlock 
-                    Text="10"
+                    Text="{Binding TotalTasksCompleted}"
                     Grid.Row="1"
                     Grid.Column="1"
                     Style="{StaticResource TextBlockFormValueStyle}" 
@@ -154,9 +165,13 @@
                             Height="25"
                             Style="{StaticResource ComboBoxStyle}"
                             SelectedValuePath="Tag"
-                            SelectedValue="{Binding StatValueToDisplay, Mode=TwoWay}"
-                    >
-                    <ComboBox.Items>
+                            SelectedValue="{Binding StatsValueToDisplay, Mode=TwoWay}">
+                            <behaviors:Interaction.Triggers>
+                                <behaviors:EventTrigger EventName="SelectionChanged">
+                                    <behaviors:InvokeCommandAction Command="{Binding GenerateAxesCommand}"/>
+                                </behaviors:EventTrigger>
+                            </behaviors:Interaction.Triggers>
+                            <ComboBox.Items>
                             <ComboBoxItem Tag="0" Content="Pomodoro Completed"/>
                             <ComboBoxItem Tag="1" Content="Short Breaks Completed"/>
                             <ComboBoxItem Tag="2" Content="Long Breaks Completed"/>
@@ -171,9 +186,20 @@
                         Grid.Row="1" 
                         Width="450" 
                         Height="300" 
+                        Visibility="{Binding DisplayChart, 
+                        Converter={StaticResource BoolToVisibilityConv}}"
                         HorizontalAlignment="Center"
                         HorizontalContentAlignment="Center"
                         />
+
+                    <Label
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Visibility="{Binding DisplayChart,
+                            Converter={StaticResource InvertBoolToVisibilityConv}}"
+                           Grid.RowSpan="2">
+                        <TextBlock Style="{StaticResource TextBlockFormValueStyle}">No data to display.</TextBlock>
+                    </Label>
                 </Grid>
             </Border>
         </Grid>

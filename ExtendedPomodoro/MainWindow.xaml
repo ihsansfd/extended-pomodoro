@@ -19,7 +19,7 @@
         </behaviors:EventTrigger>
     </behaviors:Interaction.Triggers>
     <Window.Resources>
-        <DataTemplate DataType="{x:Type vms:TimerViewModel}">
+        <DataTemplate DataType="{x:Type vms:TimerViewModel}" x:Shared="True">
             <views:TimerView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type vms:StatsViewModel}">

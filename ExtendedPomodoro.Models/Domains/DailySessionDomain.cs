@@ -34,4 +34,9 @@ namespace ExtendedPomodoro.Models.Domains
         int TotalTasksCompleted
         );
 
+    public record class DateRangeDailySessionsDomain(
+        DateTime MinDate,
+        DateTime MaxDate
+        );
+
 }
