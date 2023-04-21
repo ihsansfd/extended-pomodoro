@@ -43,7 +43,7 @@
                     Content="Add new"
                     HorizontalAlignment="Left"
                     Command="{Binding CreateTaskViewModel.OpenModalCommand}"
-                    Click="ButtonCreateTask_Click"/>
+                    />
 
                 <WrapPanel Grid.Row="0" HorizontalAlignment="Right">
 

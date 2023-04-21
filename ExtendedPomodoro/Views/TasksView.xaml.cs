@@ -37,11 +37,6 @@ namespace ExtendedPomodoro.Views
 
         }
 
-        private void ButtonCreateTask_Click(object sender, RoutedEventArgs e)
-        {
-            ModalCreateTask.IsShown = true;
-        }
-
         public void Receive(TaskDeletionInfoMessage taskDeletionInfo)
         {
             if (!taskDeletionInfo.IsTaskDeletionSuccess)
