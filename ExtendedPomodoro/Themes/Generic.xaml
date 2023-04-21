@@ -259,24 +259,26 @@
                         Width="0"/>
                         </Grid.ColumnDefinitions>
                         <Popup x:Name="PART_Popup" 
-                       AllowsTransparency="true" 
-                       Grid.ColumnSpan="2" 
-                       IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
-                       Margin="1" 
-                       Placement="Bottom" 
-                       PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+                           Width="{TemplateBinding Width}"
+                           MaxWidth="{TemplateBinding MaxWidth}"
+                           AllowsTransparency="true" 
+                           Grid.ColumnSpan="2" 
+                           IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                           Margin="1" 
+                           Placement="Bottom" 
+                           PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
                             <theme:SystemDropShadowChrome 
-                        x:Name="shadow" 
-                        Color="Transparent" 
-                        MinWidth="{Binding ActualWidth, ElementName=templateRoot}" 
-                        MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                x:Name="shadow" 
+                                Color="Transparent" 
+                                MinWidth="{Binding ActualWidth, ElementName=templateRoot}" 
+                                MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                 <Border 
-                            CornerRadius="5" 
-                            Padding="5" 
-                            x:Name="dropDownBorder" 
-                            Background="{TemplateBinding Background}" 
-                            BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="1">
+                                    CornerRadius="5" 
+                                    Padding="5" 
+                                    x:Name="dropDownBorder" 
+                                    Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="1">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
@@ -289,21 +291,21 @@
                                                     <RowDefinition Height="auto"/>
                                                 </Grid.RowDefinitions>
                                                 <Canvas 
-                                            x:Name="canvas"
-                                            HorizontalAlignment="Left" 
-                                            Height="0" 
-                                            VerticalAlignment="Top" 
-                                            Width="0">
+                                                    x:Name="canvas"
+                                                    HorizontalAlignment="Left" 
+                                                    Height="0" 
+                                                    VerticalAlignment="Top" 
+                                                    Width="0">
                                                     <Rectangle 
-                                                x:Name="opaqueRect" 
-                                                Fill="{Binding Background, ElementName=dropDownBorder}" 
-                                                Height="{Binding ActualHeight, ElementName=dropDownBorder}" 
-                                                Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                                        x:Name="opaqueRect" 
+                                                        Fill="{Binding Background, ElementName=dropDownBorder}" 
+                                                        Height="{Binding ActualHeight, ElementName=dropDownBorder}" 
+                                                        Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
                                                 </Canvas>
                                                 <ItemsPresenter 
-                                            x:Name="ItemsPresenter"
-                                            KeyboardNavigation.DirectionalNavigation="Contained"
-                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                    x:Name="ItemsPresenter"
+                                                    KeyboardNavigation.DirectionalNavigation="Contained"
+                                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                                                 <Button
                                                     Margin="0 5 0 0"
                                                     Grid.Row="1"

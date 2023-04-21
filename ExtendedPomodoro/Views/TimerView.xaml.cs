@@ -40,7 +40,7 @@ namespace ExtendedPomodoro.Views
         private readonly TaskbarIcon _taskbarIcon = new();
 
         private ICloseableControl? _currentSessionFinishBalloon;
-        private ICloseableControl _currentTimerManiputedByHotkeyBalloon;
+        private ICloseableControl? _currentTimerManiputedByHotkeyBalloon;
 
         public TimerView()
         {
