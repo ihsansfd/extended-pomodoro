@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Collections;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
@@ -16,9 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using ExtendedPomodoro.FrameworkExtensions.Extensions;
-using ExtendedPomodoro.Controls;
 using ExtendedPomodoro.Services;
-using System.Windows.Controls;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -55,6 +52,8 @@ namespace ExtendedPomodoro.ViewModels
     {
        private readonly ITasksRepository _repository;
        private readonly TasksHelper _helper;
+       private readonly MessageBoxService _messageBox;
+
        private int _currentPage = 1;
        private int _totalPages = 1;
 
@@ -66,10 +65,15 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private bool _areThereMoreTasks;
 
-       public ReadTasksViewModel(ITasksRepository repository, TasksHelper helper)
+       public ReadTasksViewModel(
+           ITasksRepository repository, 
+           TasksHelper helper,
+           MessageBoxService messageBoxService
+           )
         {
             _repository = repository;
             _helper = helper;
+            _messageBox = messageBoxService;
 
             StrongReferenceMessenger.Default.RegisterAll(this);
         }
@@ -127,7 +131,7 @@ namespace ExtendedPomodoro.ViewModels
 
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -234,6 +238,7 @@ namespace ExtendedPomodoro.ViewModels
     {
         private readonly ITasksRepository _repository;
         private readonly TasksHelper _helper;
+        private readonly MessageBoxService _messageBox;
 
         [Required]
         [ObservableProperty]
@@ -262,9 +267,14 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private bool _isModalShown = false;
 
-        public UpdateTaskViewModel(ITasksRepository repository, TasksHelper helper) {
+        public UpdateTaskViewModel(
+            ITasksRepository repository, 
+            TasksHelper helper,
+            MessageBoxService messageBoxService
+            ) {
             _repository = repository;
             _helper = helper;
+            _messageBox = messageBoxService;
         }
 
         [RelayCommand]
@@ -293,11 +303,11 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public async Task UpdateTaskState(UpdateTaskStateDomainViewModel args)
         {
-            var confirmationRes = MessageBox.Show(string.Format("Are you sure you want to mark this task as {0}", 
+            var confirmationRes = _messageBox.Show(string.Format("Are you sure you want to mark this task as {0}", 
                 _helper.ConvertIntegerToTaskStateString(args.IntendedTaskState)),
                 "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            if (confirmationRes == MessageBoxResult.No) return;
+            if (confirmationRes != MessageBoxResult.Yes) return;
 
             try
             {
@@ -333,11 +343,17 @@ namespace ExtendedPomodoro.ViewModels
 
     public partial class DeleteTaskViewModel : ObservableObject
     {
-        public ITasksRepository _repository;
+        private ITasksRepository _repository;
+        private MessageBoxService _messageBox;
 
-        public DeleteTaskViewModel(ITasksRepository repository)
+
+        public DeleteTaskViewModel(
+            ITasksRepository repository,
+            MessageBoxService messageBoxService
+            )
         {
             _repository = repository;
+            _messageBox = messageBoxService;
         }        
 
         [RelayCommand]
@@ -345,11 +361,11 @@ namespace ExtendedPomodoro.ViewModels
         {
             try
             {
-                var confirmationRes = 
-                    MessageBox.Show("Are you sure want to delete the task?", 
+                var confirmationRes =
+                    _messageBox.Show("Are you sure want to delete the task?", 
                     "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                if (confirmationRes == MessageBoxResult.No) return;
+                if (confirmationRes != MessageBoxResult.Yes) return;
 
                 await _repository.DeleteTask(taskId);
 

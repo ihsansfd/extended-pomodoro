@@ -33,7 +33,7 @@ namespace ExtendedPomodoro.ViewModels
             _settingsViewModel = settingsViewModel;
             _tasksViewModel = tasksViewModel;
             _statsViewModel = statsViewModel;
-
+            
             StrongReferenceMessenger.Default.RegisterAll(this);
         }
 

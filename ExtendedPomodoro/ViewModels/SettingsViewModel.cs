@@ -19,8 +19,8 @@ namespace ExtendedPomodoro.ViewModels
 {
     public partial class SettingsViewModel : ObservableValidator
     {
-        private ISettingsRepository _repository;
-        private HotkeyLoaderService _hotkeyService;
+        private readonly ISettingsRepository _repository;
+        private readonly MessageBoxService _messageBox;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -86,7 +86,7 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public async Task ResetToDefaultSettings()
         {
-            var confirmationRes = MessageBox.Show("Are you sure to reset the Settings?", "Confirmation",
+            var confirmationRes = _messageBox.Show("Are you sure to reset the Settings?", "Confirmation",
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (confirmationRes != MessageBoxResult.Yes) return;
@@ -95,9 +95,13 @@ namespace ExtendedPomodoro.ViewModels
             await Initialize();
         }
 
-        public SettingsViewModel(ISettingsRepository repository)
+        public SettingsViewModel(
+            ISettingsRepository repository, 
+            MessageBoxService messageBoxService
+            )
         {
             _repository = repository;
+            _messageBox = messageBoxService;
         }
 
         public async Task Initialize()
