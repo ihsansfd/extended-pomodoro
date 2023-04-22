@@ -36,6 +36,7 @@ namespace ExtendedPomodoro.Views
 
         private void FormatChart()
         {
+            StatsPlotView.Configuration.ScrollWheelZoom = false;
             var plotColorResource = ((SolidColorBrush)FindResource("Black")).Color;
             StatsPlotView.Plot.XAxis.TickLabelFormat("M/dd/yyyy", true);
             StatsPlotView.Plot.YAxis.TickLabelFormat((val) => ((int)val).ToString());
