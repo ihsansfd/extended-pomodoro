@@ -123,27 +123,31 @@
                     <controls:DrawerSidebarMenuItem 
                     Kind="Stopwatch" 
                     Text="Timer"
+                    ToolTip="Timer"
                     Style="{StaticResource DrawerSidebarMenuItemDefault}"
                     Command="{Binding NavigateToTimerCommand}"
                     IsActive="{Binding CurrentViewModel, Converter={StaticResource TimerVMToBoolConv}}"
                     />
                     <controls:DrawerSidebarMenuItem 
                     Kind="ListTask" 
-                    Text="Tasks"  
+                    Text="Tasks"
+                    ToolTip="Tasks"
                     Style="{StaticResource DrawerSidebarMenuItemDefault}"
                     Command="{Binding NavigateToTasksCommand}"
                     IsActive="{Binding CurrentViewModel, Converter={StaticResource TasksVMToBoolConv}}"
                     />
                     <controls:DrawerSidebarMenuItem
                     Kind="BarChart" 
-                    Text="Stats" 
+                    Text="Stats"
+                    ToolTip="Stats"
                     Style="{StaticResource DrawerSidebarMenuItemDefault}"
                     Command="{Binding NavigateToStatsCommand}"
                     IsActive="{Binding CurrentViewModel, Converter={StaticResource StatsVMToBoolConv}}"
                     />
                     <controls:DrawerSidebarMenuItem
                     Kind="Gear"
-                    Text="Settings" 
+                    Text="Settings"
+                    ToolTip="Settings"
                     Style="{StaticResource DrawerSidebarMenuItemDefault}"
                     Command="{Binding NavigateToSettingsCommand}"
                     IsActive="{Binding CurrentViewModel, Converter={StaticResource SettingsVMToBoolConv}}"
