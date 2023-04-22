@@ -10,10 +10,9 @@
         xmlns:converters="clr-namespace:ExtendedPomodoro.Converters"
         xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        ResizeMode="CanMinimize"
         d:DataContext="{d:DesignInstance Type=vms:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="Extended Pomodoro" Height="440" Width="615" Icon="extended-pomodoro-icon.ico">
+        Title="Extended Pomodoro" Height="440" Width="570" Icon="extended-pomodoro-icon.ico">
     <behaviors:Interaction.Triggers>
         <behaviors:EventTrigger EventName="Closing">
             <behaviors:InvokeCommandAction Command="{Binding TimerViewModel.HandleWindowClosedCommand}"/>
