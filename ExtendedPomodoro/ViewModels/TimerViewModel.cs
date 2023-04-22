@@ -25,9 +25,31 @@ namespace ExtendedPomodoro.ViewModels
         public SettingsViewModel SettingsViewModel { get; }
         private readonly ISessionsRepository _sessionsRepository;
         private readonly ITasksRepository _tasksRepository;
+        private readonly IMessenger _messenger;
         private bool _hasBeenSetup;
 
         private int _timeEllapsed = 0;
+
+        public TimerViewModel(ReadTasksViewModel readTasksViewModel,
+            CreateTaskViewModel createTaskViewModel,
+            TimerSessionState timerSessionState,
+            SettingsViewModel settingsViewModel,
+            ISessionsRepository sessionsRepository,
+            ITasksRepository tasksRepository,
+            IMessenger messenger
+            )
+        {
+
+            ReadTasksViewModel = readTasksViewModel;
+            CreateTaskViewModel = createTaskViewModel;
+            CurrentTimerSession = timerSessionState;
+            SettingsViewModel = settingsViewModel;
+            _sessionsRepository = sessionsRepository;
+            _tasksRepository = tasksRepository;
+            _messenger = messenger;
+
+            _messenger.RegisterAll(this);
+        }
 
         #region Tasks
 
@@ -42,7 +64,7 @@ namespace ExtendedPomodoro.ViewModels
 
         [RelayCommand]
         public void NotifTasksComboBoxAddNewButtonPressed() =>
-            StrongReferenceMessenger.Default.Send(new TasksComboBoxAddNewButtonPressedMessage());
+            _messenger.Send(new TasksComboBoxAddNewButtonPressedMessage());
 
         [RelayCommand]
         public async Task CompleteTask()
@@ -89,7 +111,7 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public void StartSession() {
             CurrentTimerSession.Start();
-            StrongReferenceMessenger.Default.Send(
+            _messenger.Send(
                 new TimerActionChangeInfoMessage(
                     CurrentTimerSession, TimerAction.Start, false, SettingsViewModel.PushNotificationEnabled));
         }
@@ -98,7 +120,7 @@ namespace ExtendedPomodoro.ViewModels
         public void PauseSession()
         {
             CurrentTimerSession.Pause();
-            StrongReferenceMessenger.Default.Send(
+            _messenger.Send(
                 new TimerActionChangeInfoMessage(
                     CurrentTimerSession, TimerAction.Pause, false, SettingsViewModel.PushNotificationEnabled));
         }
@@ -112,7 +134,7 @@ namespace ExtendedPomodoro.ViewModels
         public void StartSessionFromHotkey(object? sender, HotkeyEventArgs e)
         {
             CurrentTimerSession.Start();
-            StrongReferenceMessenger.Default.Send(
+            _messenger.Send(
                new TimerActionChangeInfoMessage(
                    CurrentTimerSession, TimerAction.Start, true, SettingsViewModel.PushNotificationEnabled));
         }
@@ -120,7 +142,7 @@ namespace ExtendedPomodoro.ViewModels
         public void PauseSessionFromHotkey(object? sender, HotkeyEventArgs e)
         {
             CurrentTimerSession.Pause();
-            StrongReferenceMessenger.Default.Send(
+            _messenger.Send(
               new TimerActionChangeInfoMessage(
                   CurrentTimerSession, TimerAction.Pause, true, SettingsViewModel.PushNotificationEnabled));
         }
@@ -128,25 +150,6 @@ namespace ExtendedPomodoro.ViewModels
         #endregion
 
         #region bootstrap
-
-        public TimerViewModel(ReadTasksViewModel readTasksViewModel, 
-            CreateTaskViewModel createTaskViewModel, 
-            TimerSessionState timerSessionState,
-            SettingsViewModel settingsViewModel,
-            ISessionsRepository sessionsRepository,
-            ITasksRepository tasksRepository
-            )
-        {
-
-            ReadTasksViewModel = readTasksViewModel;
-            CreateTaskViewModel = createTaskViewModel;
-            CurrentTimerSession = timerSessionState;
-            SettingsViewModel = settingsViewModel;
-            _sessionsRepository = sessionsRepository;
-            _tasksRepository = tasksRepository;
-
-            StrongReferenceMessenger.Default.RegisterAll(this);
-        }
 
         public async Task Initialize()
         {
@@ -191,7 +194,7 @@ namespace ExtendedPomodoro.ViewModels
         /// <param name="message"></param>
         public async Task OnFinishSession(TimerSessionFinishInfoMessage message)
         {
-            StrongReferenceMessenger.Default.Send(message);
+            _messenger.Send(message);
 
             var today = DateOnly.FromDateTime(DateTime.Now);
             await StoreSessionFinishInfo(today, message.FinishedSession);
@@ -302,6 +305,11 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         #endregion
+
+        ~TimerViewModel()
+        {
+            _messenger.UnregisterAll(this);
+        }
     }
 
 
