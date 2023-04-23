@@ -1,5 +1,7 @@
 ﻿using ExtendedPomodoro.Models.Domains;
+using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
+using ExtendedPomodoro.Views.Components;
 using ScottPlot;
 using System;
 using System.Collections.Generic;
@@ -23,29 +25,21 @@ namespace ExtendedPomodoro.Views
     /// </summary>
     public partial class StatsView : Page
     {
-        private StatsViewModel? _viewModel;
+        private readonly ScatterPlotService _scatterPlotService = new();
+        private StatsViewModel _viewModel;
+        private StatAxesDomainViewModel _axes;
 
         public StatsView()
         {
             InitializeComponent();
 
             DataContextChanged += OnDataContextChanged;
-
             FormatChart();
         }
 
         private void FormatChart()
         {
-            StatsPlotView.Configuration.ScrollWheelZoom = false;
-            var plotColorResource = ((SolidColorBrush)FindResource("Black")).Color;
-            StatsPlotView.Plot.XAxis.TickLabelFormat("M/dd/yyyy", true);
-            StatsPlotView.Plot.YAxis.TickLabelFormat((val) => ((int)val).ToString());
-            StatsPlotView.Plot.YAxis2.SetSizeLimit(min: 40);
-            StatsPlotView.Plot.Style(figureBackground: System.Drawing.Color.Transparent,
-                dataBackground: System.Drawing.Color.Transparent,
-                tick: System.Drawing.Color.FromArgb(plotColorResource.R,
-                plotColorResource.G, plotColorResource.B),
-                grid: System.Drawing.Color.Transparent);
+            _scatterPlotService.FormatChart(StatsPlotView);
         }
 
         private async void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -58,22 +52,16 @@ namespace ExtendedPomodoro.Views
             }
         }
 
-        private void OnNewStatsAxes(object? sender, StatAxesDomainViewModel e)
+        private void OnNewStatsAxes(object? sender, StatAxesDomainViewModel axes)
         {
-            if (!e.Display) return;
-            GenerateChartFrom(e);
+            if (!axes.Display) return;
+            _axes = axes;
+            GenerateChartFrom(axes);
         }
 
         private void GenerateChartFrom(StatAxesDomainViewModel axes)
         {
-            StatsPlotView.Plot.Clear();
-            var scatter = StatsPlotView.Plot.AddScatter(axes.XAxis, axes.YAxis);
-            var primaryColorResource = ((SolidColorBrush)FindResource("Primary")).Color;
-            var primaryColor = System.Drawing.Color.FromArgb(primaryColorResource.R, 
-                primaryColorResource.G, primaryColorResource.B);
-            scatter.LineColor = primaryColor;
-            scatter.MarkerColor = primaryColor;
-            StatsPlotView.Refresh();
+            _scatterPlotService.GenerateChartFrom(StatsPlotView, axes);
         }
 
         ~StatsView()
@@ -90,6 +78,16 @@ namespace ExtendedPomodoro.Views
         {
             DataContextChanged -= OnDataContextChanged;
             if (_viewModel != null) _viewModel.NewStatsAxes -= OnNewStatsAxes;
+        }
+
+        private void StatsFullScreen_Click(object sender, RoutedEventArgs e)
+        {
+            if (_axes == null) return;
+
+            var dialog = new ScatterPlotStatsWindow();
+            dialog.Axes = _axes;
+            dialog.Initialize();
+            dialog.ShowDialog();
         }
     }
 }

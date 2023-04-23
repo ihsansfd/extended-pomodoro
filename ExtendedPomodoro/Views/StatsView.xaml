@@ -193,6 +193,21 @@
                         HorizontalContentAlignment="Center"
                         />
 
+                    <controls:IconOnlyButton 
+                        Grid.Row="1"
+                        Kind="ArrowsFullscreen" 
+                        ToolTip="View Fullscreen"
+                        Click="StatsFullScreen_Click"
+                        Width="12" 
+                        Height="12"
+                        Visibility="{Binding DisplayChart, 
+                        Converter={StaticResource BoolToVisibilityConv}}"
+                        Foreground="{StaticResource Black-50}"
+                        HoverColor="{StaticResource Black}"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        />
+
                     <Label
                            HorizontalAlignment="Center"
                            HorizontalContentAlignment="Center"
