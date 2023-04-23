@@ -29,6 +29,7 @@ namespace ExtendedPomodoro.Views
     {
         private readonly SoundService _soundService = new();
         private readonly TaskbarIcon _taskbarIcon = new();
+        private readonly IMessenger _messenger = MessengerService.Messenger;
 
         private ICloseableControl? _currentSessionFinishBalloon;
         private ICloseableControl? _currentTimerManiputedByHotkeyBalloon;
@@ -36,7 +37,7 @@ namespace ExtendedPomodoro.Views
         public TimerView()
         {
             InitializeComponent();
-            StrongReferenceMessenger.Default.RegisterAll(this);
+            _messenger.RegisterAll(this);
         }
 
         public void Receive(TasksComboBoxAddNewButtonPressedMessage message)
@@ -147,7 +148,17 @@ namespace ExtendedPomodoro.Views
 
         ~TimerView()
         {
-            StrongReferenceMessenger.Default.UnregisterAll(this);
+            Unsubscribe();
+        }
+
+        private void Unsubscribe()
+        {
+            _messenger.UnregisterAll(this);
+        }
+
+        private void Page_Unloaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Unsubscribe();
         }
     }
 }

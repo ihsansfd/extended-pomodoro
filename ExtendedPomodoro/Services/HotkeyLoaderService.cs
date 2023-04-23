@@ -15,15 +15,21 @@ namespace ExtendedPomodoro.Services
 {
     public class HotkeyLoaderService : IRecipient<SettingsUpdateInfoMessage>
     {
-        private HotkeyManager _hotkeyManager;
-        private TimerViewModel _timerViewModel;
+        private readonly IMessenger _messenger;
+        private readonly HotkeyManager _hotkeyManager;
+        private readonly TimerViewModel _timerViewModel;
 
-        public HotkeyLoaderService(HotkeyManager hotkeyManager, TimerViewModel timerViewModel)
+        public HotkeyLoaderService(
+            HotkeyManager hotkeyManager, 
+            TimerViewModel timerViewModel,
+            IMessenger messenger
+            )
         {
             _hotkeyManager = hotkeyManager;
             _timerViewModel = timerViewModel;
+            _messenger = messenger;
 
-            StrongReferenceMessenger.Default.RegisterAll(this);
+            _messenger.RegisterAll(this);
         }
 
         public void RegisterOrUpdateStartTimerHotkey(Hotkey? hotkeyDomain)
@@ -57,7 +63,7 @@ namespace ExtendedPomodoro.Services
 
         ~HotkeyLoaderService()
         {
-            StrongReferenceMessenger.Default.UnregisterAll(this);
+            _messenger.UnregisterAll(this);
         }
     }
 }

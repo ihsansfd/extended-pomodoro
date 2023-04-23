@@ -10,6 +10,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="615"
       d:DataContext="{d:DesignInstance Type=vms:TimerViewModel}"
+      Unloaded="Page_Unloaded"
       xmlns:xrpb="http://XamlRadialProgressBar/DotNet"
       Title="TimerView">
     <Page.Resources>

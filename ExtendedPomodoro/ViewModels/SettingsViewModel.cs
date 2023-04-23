@@ -21,6 +21,7 @@ namespace ExtendedPomodoro.ViewModels
     {
         private readonly ISettingsRepository _repository;
         private readonly MessageBoxService _messageBox;
+        private readonly IMessenger _messenger;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -97,11 +98,13 @@ namespace ExtendedPomodoro.ViewModels
 
         public SettingsViewModel(
             ISettingsRepository repository, 
-            MessageBoxService messageBoxService
+            MessageBoxService messageBoxService,
+            IMessenger messenger
             )
         {
             _repository = repository;
             _messageBox = messageBoxService;
+            _messenger = messenger;
         }
 
         public async Task Initialize()
@@ -145,7 +148,7 @@ namespace ExtendedPomodoro.ViewModels
                 PauseHotkey.ConvertToHotkeyDomain()
                 ));
 
-            StrongReferenceMessenger.Default.Send(new SettingsUpdateInfoMessage(this));
+            _messenger.Send(new SettingsUpdateInfoMessage(this));
         }
 
     }

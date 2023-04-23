@@ -115,11 +115,12 @@ namespace ExtendedPomodoro
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<StatsViewModel>();
             services.AddSingleton<TasksViewModel>();
-            services.AddSingleton<NavigationViewModel>((service) => new(service.GetRequiredService<TimerViewModel>()));
+            services.AddSingleton<NavigationViewModel>
+                ((s) => new(s.GetRequiredService<TimerViewModel>(), s.GetRequiredService<IMessenger>()));
             services.AddSingleton<HotkeyManager>((_s) => HotkeyManager.Current);
             services.AddSingleton<HotkeyLoaderService>();
             services.AddSingleton<MessageBoxService>();
-            services.AddSingleton<IMessenger>((_s) => StrongReferenceMessenger.Default);
+            services.AddSingleton<IMessenger>((_s) => MessengerService.Messenger);
 
             return services.BuildServiceProvider();
         }

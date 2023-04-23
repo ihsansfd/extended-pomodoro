@@ -25,7 +25,8 @@ namespace ExtendedPomodoro.Views.Components
     /// </summary>
     public partial class SessionFinishBalloonTipsUserControl : ICloseableControl
     {
-        private AutoCloseControlService _autoCloseService;
+        private readonly AutoCloseControlService _autoCloseService;
+        private readonly IMessenger _messenger = MessengerService.Messenger;
 
         public SessionFinishBalloonTipsUserControl()
         {
@@ -77,25 +78,14 @@ namespace ExtendedPomodoro.Views.Components
 
         public void Close()
         {
-            Unregister();
             Visibility = Visibility.Collapsed;
-            StrongReferenceMessenger.Default.Send(new SessionFinishBalloonMessage(true));
+            _messenger.Send(new SessionFinishBalloonMessage(true));
         }
 
         private void ButtonStartNextSession_Click(object sender, RoutedEventArgs e)
         {
-            StrongReferenceMessenger.Default.Send(new StartSessionInfoMessage());
+            _messenger.Send(new StartSessionInfoMessage());
             Close();
-        }
-
-        private void Unregister()
-        {
-            StrongReferenceMessenger.Default.UnregisterAll(this);
-        }
-
-        ~SessionFinishBalloonTipsUserControl()
-        {
-            Unregister();
         }
     }
 }

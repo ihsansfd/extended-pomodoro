@@ -17,6 +17,7 @@ namespace ExtendedPomodoro.Services
     public class ExtendedTimer
     {
         private static readonly TimeSpan _INTERVAL = TimeSpan.FromSeconds(1);
+        private readonly IMessenger _messenger = MessengerService.Messenger;
         private readonly DispatcherTimer _timer;
 
         private TimeSpan _timerSetFor  = TimeSpan.Zero;
@@ -33,7 +34,7 @@ namespace ExtendedPomodoro.Services
             _timerSetFor = timerSetFor;
             _remainingTime = timerSetFor;
             _timer.Interval = _INTERVAL;
-            StrongReferenceMessenger.Default.Send(new TimerTimeChangeInfoMessage(_timerSetFor, _remainingTime));
+            _messenger.Send(new TimerTimeChangeInfoMessage(_timerSetFor, _remainingTime));
         }
 
         public void Start()
@@ -55,7 +56,7 @@ namespace ExtendedPomodoro.Services
         {
             _remainingTime = _remainingTime.Subtract(_INTERVAL);
 
-            StrongReferenceMessenger.Default.Send(new TimerTimeChangeInfoMessage(_timerSetFor, _remainingTime));
+           _messenger.Send(new TimerTimeChangeInfoMessage(_timerSetFor, _remainingTime));
         }
 
         internal void Stop()

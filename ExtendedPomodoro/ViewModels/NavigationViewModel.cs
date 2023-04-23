@@ -10,19 +10,22 @@ namespace ExtendedPomodoro.ViewModels
 {
     public partial class NavigationViewModel : ObservableObject
     {
+        private readonly IMessenger _messenger;
+
         [ObservableProperty]
         private ObservableObject _currentViewModel;
 
-        public NavigationViewModel(ObservableObject currentViewModel)
+        public NavigationViewModel(ObservableObject currentViewModel, IMessenger messenger)
         {
             CurrentViewModel = currentViewModel;
+            _messenger = messenger;
 
         }
 
         public void SetCurrentViewModel(ObservableObject currentViewModel)
         {
             CurrentViewModel = currentViewModel;
-            StrongReferenceMessenger.Default.Send<CurrentViewModelMessage>(new(currentViewModel));
+            _messenger.Send<CurrentViewModelMessage>(new(currentViewModel));
         }
 
     }

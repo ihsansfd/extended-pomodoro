@@ -16,6 +16,7 @@ namespace ExtendedPomodoro.ViewModels
     public partial class MainWindowViewModel : ObservableObject, 
         IRecipient<CurrentViewModelMessage>
     {
+        private readonly IMessenger _messenger;
         private readonly NavigationViewModel _navigationViewModel;
         public TimerViewModel TimerViewModel { get; }
         private readonly StatsViewModel _statsViewModel;
@@ -25,16 +26,19 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private ObservableObject _currentViewModel;
 
-        public MainWindowViewModel(NavigationViewModel navigationViewModel,
+        public MainWindowViewModel(
+            IMessenger messenger,
+            NavigationViewModel navigationViewModel,
           TimerViewModel timerViewModel, SettingsViewModel settingsViewModel, StatsViewModel statsViewModel, TasksViewModel tasksViewModel)
         {
+            _messenger = messenger;
             _navigationViewModel = navigationViewModel;
             TimerViewModel = timerViewModel;
             _settingsViewModel = settingsViewModel;
             _tasksViewModel = tasksViewModel;
             _statsViewModel = statsViewModel;
-            
-            StrongReferenceMessenger.Default.RegisterAll(this);
+
+            _messenger.RegisterAll(this);
         }
 
         public async Task Initialize()
