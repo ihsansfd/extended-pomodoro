@@ -23,6 +23,7 @@ using System.Windows;
 
 namespace ExtendedPomodoro
 {
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
@@ -46,6 +47,17 @@ namespace ExtendedPomodoro
             await InitializeMainWindow();
 
             await RegisterHotkeys();
+
+            await SwitchThemeToCurrentSettings();
+        }
+
+        private async Task SwitchThemeToCurrentSettings()
+        {
+            var settingsRepo = Services.GetRequiredService<ISettingsRepository>();
+            var settings = await settingsRepo.GetSettings();
+
+            var appThemeService = Services.GetRequiredService<AppThemeService>();
+            appThemeService.SwitchThemeTo(settings.DarkModeEnabled ? AppTheme.Dark : AppTheme.Light);
         }
 
         private async Task InitializeMainWindow()
@@ -68,7 +80,13 @@ namespace ExtendedPomodoro
             hotkeyService.RegisterOrUpdatePauseTimerHotkey(settings.PauseHotkeyDomain.ConvertToHotkey());
         }
 
-        private void EnsureOnlyOneInstanceIsRunning()
+        private async Task InitializeDb()
+        {
+            IDatabaseSetup dbSetup = Services.GetRequiredService<IDatabaseSetup>();
+            await dbSetup.Setup();
+        }
+
+        private static void EnsureOnlyOneInstanceIsRunning()
         {
             Process proc = Process.GetCurrentProcess();
             int count = Process.GetProcesses().Where(p =>
@@ -79,12 +97,6 @@ namespace ExtendedPomodoro
                 MessageBox.Show("Application is already running...");
                 App.Current.Shutdown();
             }
-        }
-
-        private async Task InitializeDb()
-        {
-            IDatabaseSetup dbSetup = Services.GetRequiredService<IDatabaseSetup>();
-            await dbSetup.Setup();
         }
 
         private static ServiceProvider ConfigureServices()
@@ -117,10 +129,11 @@ namespace ExtendedPomodoro
             services.AddSingleton<TasksViewModel>();
             services.AddSingleton<NavigationViewModel>
                 ((s) => new(s.GetRequiredService<TimerViewModel>(), s.GetRequiredService<IMessenger>()));
-            services.AddSingleton<HotkeyManager>((_s) => HotkeyManager.Current);
+            services.AddSingleton<HotkeyManager>((_) => HotkeyManager.Current);
             services.AddSingleton<HotkeyLoaderService>();
             services.AddSingleton<MessageBoxService>();
-            services.AddSingleton<IMessenger>((_s) => MessengerService.Messenger);
+            services.AddSingleton<IMessenger>((_) => MessengerService.Messenger);
+            services.AddSingleton<AppThemeService>();
 
             return services.BuildServiceProvider();
         }

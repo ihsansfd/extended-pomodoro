@@ -20,7 +20,7 @@
             
             <ResourceDictionary.MergedDictionaries>
                 <!--Order matters-->
-                <ResourceDictionary Source="Themes/LightTheme.xaml"/>
+                <ResourceDictionary Source="Themes/LightTheme.xaml"/> <!-- don't delete, this will be changed in runtime-->
                 <ResourceDictionary Source="pack://application:,,,/Styles/Fonts.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/TextBlocks.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/Popups.xaml"/>

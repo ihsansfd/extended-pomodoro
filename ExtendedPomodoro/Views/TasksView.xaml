@@ -98,7 +98,7 @@
                                             MaxWidth="250"
                                             TextTrimming="CharacterEllipsis"
                                             Margin="10 0 0 0"
-                                            Foreground="{StaticResource Black}"
+                                            Foreground="{DynamicResource Black}"
                                             Text="{Binding Name}"/>
                                     </Grid>
 
