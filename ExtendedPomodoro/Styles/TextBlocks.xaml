@@ -4,37 +4,37 @@
     <Style x:Key="RegularFontStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
         <Setter Property="FontSize" Value="{StaticResource FSRegular}"/>
-        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
     </Style>
 
     <Style TargetType="TextBlock" x:Key="TextBlockFormLabelStyle">
         <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
         <Setter Property="FontFamily" Value="{StaticResource FWMedium}"/>
-        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
     </Style>
 
     <Style TargetType="TextBlock" x:Key="TextBlockFormLabelLargeStyle">
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="FontFamily" Value="{StaticResource FWSemiBold}"/>
-        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
     </Style>
 
     <Style TargetType="TextBlock" x:Key="TextBlockFormValueStyle">
         <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
         <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
-        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
     </Style>
 
     <Style TargetType="TextBlock" x:Key="TextBlockLargeStyle">
         <Setter Property="FontSize" Value="{StaticResource FSLarge}"/>
         <Setter Property="FontFamily" Value="{StaticResource FWSemiBold}"/>
-        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
     </Style>
 
     <Style TargetType="TextBlock" x:Key="TextBlockBalloonTipsTitle">
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="FontFamily" Value="{StaticResource FWMedium}"/>
-        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
     </Style>
 
 </ResourceDictionary>

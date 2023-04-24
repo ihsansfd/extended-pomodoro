@@ -77,7 +77,7 @@
                                 BorderThickness="1" 
                                 Height="30"
                                 Margin="0 0 0 10"
-                                BorderBrush="{StaticResource Black-50}">
+                                BorderBrush="{DynamicResource MainBrush}">
                                 <Border.Resources>
                                     <services:BindingProxy x:Key="CurrentDataContext" Data="{Binding}"/>
                                 </Border.Resources>
@@ -98,7 +98,7 @@
                                             MaxWidth="250"
                                             TextTrimming="CharacterEllipsis"
                                             Margin="10 0 0 0"
-                                            Foreground="{DynamicResource Black}"
+                                            Foreground="{DynamicResource TextForeground}"
                                             Text="{Binding Name}"/>
                                     </Grid>
 
@@ -198,7 +198,7 @@
                                         Text="{Binding Items[0].CreatedAt}" 
                                         FontSize="{StaticResource FSSmall}" 
                                         FontFamily="{StaticResource FWMedium}"
-                                        Foreground="{StaticResource Black}"/>
+                                        Foreground="{DynamicResource TextForeground}"/>
                                 </DataTemplate>
                             </GroupStyle.HeaderTemplate>
                         </GroupStyle>

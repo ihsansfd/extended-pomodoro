@@ -116,17 +116,26 @@ namespace ExtendedPomodoro.Controls
 
     public class DrawerSidebarMenuItem : Control
     {
-        public Brush ForegroundTemp { get; }
+        //public Brush ForegroundTemp { get; }
+
+        public Brush ForegroundTemp
+        {
+            get { return (Brush)GetValue(ForegroundTempProperty); }
+            set { SetValue(ForegroundTempProperty, value); }
+        }
+
+        public static readonly DependencyProperty ForegroundTempProperty =
+            DependencyProperty.Register("ForegroundTemp", typeof(Brush), typeof(DrawerSidebarMenuItem), new PropertyMetadata(OnForegroundTempChanged));
 
         static DrawerSidebarMenuItem()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DrawerSidebarMenuItem), new FrameworkPropertyMetadata(typeof(DrawerSidebarMenuItem)));
         }
 
-        public DrawerSidebarMenuItem()
-        {
-            ForegroundTemp = Foreground;
-        }
+        //public DrawerSidebarMenuItem()
+        //{
+        //    ForegroundTemp = Foreground;
+        //}
 
         public ICommand Command
         {
@@ -148,8 +157,6 @@ namespace ExtendedPomodoro.Controls
 
         public static readonly DependencyProperty CommandParameterProperty =
             DependencyProperty.Register("CommandParameter", typeof(object), typeof(DrawerSidebarMenuItem), new PropertyMetadata(null));
-
-
 
         public PackIconBootstrapIconsKind Kind
         {
@@ -228,6 +235,10 @@ namespace ExtendedPomodoro.Controls
             }
         }
 
+        private static void OnForegroundTempChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            OnIsActiveChanged(d, e);
+        }
 
         public override void OnApplyTemplate()
         {
@@ -248,6 +259,8 @@ namespace ExtendedPomodoro.Controls
             }
 
         }
+
+
 
     }
 }

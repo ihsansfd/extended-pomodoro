@@ -14,6 +14,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         WindowStyle="None"
+        Background="{DynamicResource MainBackground}"
         d:DataContext="{d:DesignInstance Type=vms:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="Extended Pomodoro" Height="440" Width="570">
@@ -64,7 +65,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <!--#region Chrome header -->
-        <Grid Background="{StaticResource VeryLightGrey}" DataContext="{Binding ElementName=MainWindowView}">
+        <Grid Background="{DynamicResource ChromeTitleBar}" DataContext="{Binding ElementName=MainWindowView}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
@@ -83,7 +84,7 @@
                 Text="{Binding Title}"
                 FontSize="12"
                 FontFamily="{StaticResource FWSemiBold}"
-                Foreground="{StaticResource Black}"
+                Foreground="{DynamicResource TextForeground}"
                 VerticalAlignment="Center"/>
 
             <Button Grid.Column="2"
@@ -92,7 +93,7 @@
                     >
                 <Line
 			        X2="12"
-                    Stroke="{StaticResource Black}"
+                    Stroke="{DynamicResource IconOnlyButtonFill}"
 			        StrokeThickness="1" />
             </Button>
 
@@ -104,7 +105,7 @@
                     Kind="XLg" 
                     Width="12"
                     Height="12"
-                    Foreground="{StaticResource Black}"/>
+                    Foreground="{DynamicResource IconOnlyButtonFill}"/>
             </Button>
 
         </Grid>
@@ -115,7 +116,7 @@
             HorizontalAlignment="Left"
             ClosedWidth="{StaticResource DrawerSidebarMenuWidth}" 
             OpenedWidth="145"
-            Background="{StaticResource VeryLightGrey}" 
+            Background="{DynamicResource MenuBackground}" 
             Foreground="{StaticResource Primary}"
             MenuTogglerStyle="{StaticResource DrawerSidebarMenuItemDefault}"
             Padding="12">

@@ -17,8 +17,8 @@
     <Style TargetType="Button" x:Key="BaseCustomButtonStyle" BasedOn="{StaticResource MainHoverColorButton}">
         <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
         <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
-        <Setter Property="Background" Value="{StaticResource LightGrey}"/>
-        <Setter Property="Foreground" Value="{StaticResource Black}"/>
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="10 7 10 7"/>
         <Setter Property="Cursor" Value="Hand"/>

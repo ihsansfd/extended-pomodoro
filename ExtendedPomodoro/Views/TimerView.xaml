@@ -73,7 +73,7 @@
 			        Foreground="{StaticResource SessionBackground}" 
                     ArcRotationDegree="90"
                     ArcDirection="Counterclockwise"
-			        OuterBackgroundBrush="{StaticResource VeryLightGrey}"/>
+			        OuterBackgroundBrush="{DynamicResource VeryDimmedBorderBackground}"/>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock 
                         Style="{StaticResource TextBlockLargeStyle}"
@@ -82,7 +82,7 @@
                         Text="{Binding RemainingTimeFormatted}"/>
                         <Separator 
                         Width="80"
-                        Background="{StaticResource Black-50}"
+                        Background="{DynamicResource DimmedMainBrush}"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         Margin="0 10 0 0"/>
@@ -100,7 +100,7 @@
                         Command="{Binding ResetSessionCommand}"
                         Width="20"
                         Height="20"
-                        Foreground="{StaticResource MainColor}"/>
+                        Foreground="{DynamicResource MainBrush}"/>
                         <controls:IconOnlyButton 
                         Kind="PlayCircle"
                         Visibility="{Binding CanPause, Converter={StaticResource InvertBoolToVisibilityConv}}"
@@ -108,7 +108,7 @@
                         Width="50"
                         Height="50"
                         Margin="15 0 15 0"
-                        Foreground="{StaticResource MainColor}"/>
+                        Foreground="{DynamicResource MainBrush}"/>
                         <controls:IconOnlyButton 
                         Kind="PauseCircle"
                         Visibility="{Binding CanPause, Converter={StaticResource BoolToVisibilityConv}}"
@@ -116,13 +116,13 @@
                         Width="50"
                         Height="50"
                         Margin="15 0 15 0"
-                        Foreground="{StaticResource MainColor}"/>
+                        Foreground="{DynamicResource MainBrush}"/>
                         <controls:IconOnlyButton 
                         Kind="SkipEndFill"
                         Command="{Binding SkipSessionCommand}"
                         Width="20"
                         Height="20"
-                        Foreground="{StaticResource MainColor}"/>
+                        Foreground="{DynamicResource MainBrush}"/>
                     </WrapPanel>
                     <TextBlock Style="{StaticResource RegularFontStyle}" Grid.Row="2" HorizontalAlignment="Center" Margin="0 20 0 0">
                         <Run>Completed:</Run>

@@ -202,8 +202,8 @@
                         Height="12"
                         Visibility="{Binding DisplayChart, 
                         Converter={StaticResource BoolToVisibilityConv}}"
-                        Foreground="{StaticResource Black-50}"
-                        HoverColor="{StaticResource Black}"
+                        Foreground="{DynamicResource DimmedIconOnlyButtonFill}"
+                        HoverColor="{DynamicResource DimmedIconOnlyButtonFillHover}"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Right"
                         />

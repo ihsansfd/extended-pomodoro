@@ -3,13 +3,13 @@
                     xmlns:controls="clr-namespace:ExtendedPomodoro.Controls">
 
     <Style TargetType="{x:Type controls:DrawerSidebarMenuItem}" x:Key="DrawerSidebarMenuItemDefault">
-        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
+        <Setter Property="ForegroundTemp" Value="{DynamicResource TextForeground}"/>
         <Setter Property="Space" Value="12"/>
         <Setter Property="IconSize" Value="25"/>
         <Setter Property="FontSize" Value="{StaticResource FSRegular}"/>
         <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
         <Setter Property="Margin" Value="0 0 0 30"/>
         <Setter Property="HoverColor" Value="{StaticResource Primary}"/>
-        
     </Style>
 </ResourceDictionary>

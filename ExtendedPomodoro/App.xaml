@@ -10,17 +10,18 @@
             <!--Get rid of annoying HasError color-->
             <Style TargetType="UserControl" x:Key="RemoveErrorBorderUserControlStyle">
                 <Setter Property="Validation.ErrorTemplate">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <AdornedElementPlaceholder x:Name="placeholder"/>
-                    </ControlTemplate>
-                </Setter.Value>
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <AdornedElementPlaceholder x:Name="placeholder"/>
+                        </ControlTemplate>
+                    </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <ResourceDictionary.MergedDictionaries>
                 <!--Order matters-->
-                <ResourceDictionary Source="Themes/LightTheme.xaml"/> <!-- don't delete, this will be changed in runtime-->
+                <ResourceDictionary Source="Themes/LightTheme.xaml"/>
+                <!-- don't delete, this will be changed in runtime-->
                 <ResourceDictionary Source="pack://application:,,,/Styles/Fonts.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/TextBlocks.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/Popups.xaml"/>
@@ -32,6 +33,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/Others.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
+
         
     </Application.Resources>
 </Application>
