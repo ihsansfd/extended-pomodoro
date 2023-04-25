@@ -34,7 +34,8 @@
     <SolidColorBrush x:Key="GripFill" Color="{StaticResource VeryLightGreyColor}"/>
     <SolidColorBrush x:Key="GripBorder" Color="{StaticResource VeryDarkGreyColor}"/>
     <SolidColorBrush x:Key="TrackBackground" Color="{StaticResource GreyColor}"/>
-
+    <SolidColorBrush x:Key="TrackSrollBackground" Color="#F0F0F0"/>
+    <SolidColorBrush x:Key="ScrollbarThumbFill" Color="#CDCDCD"/>
     <!--Unmodified-->
     <SolidColorBrush x:Key="Info">#6EA8FE</SolidColorBrush>
     <SolidColorBrush x:Key="InfoDarker">#1272FF</SolidColorBrush>
