@@ -6,8 +6,9 @@
     <Style TargetType="TextBox" x:Key="TextBoxStyle">
         <Setter Property="Height" Value="25"/>
         <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource Black-50}"/>
-        <Setter Property="Foreground" Value="{StaticResource Black}"/>
+        <Setter Property="Background" Value="{DynamicResource FormBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource FormBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Padding" Value="5 0 0 5"/>
         <Setter Property="TextWrapping" Value="Wrap"/>

@@ -15,14 +15,14 @@ namespace ExtendedPomodoro.Services
         public void FormatChart(WpfPlot wpfPlot)
         {
             wpfPlot.Configuration.ScrollWheelZoom = false;
-            var plotColorResource = ((SolidColorBrush)Application.Current.FindResource("Black")).Color;
+            var mainBrushResource = ((SolidColorBrush)Application.Current.FindResource("MainBrush")).Color;
             wpfPlot.Plot.XAxis.TickLabelFormat("M/dd/yyyy", true);
             wpfPlot.Plot.YAxis.TickLabelFormat((val) => ((int)val).ToString());
             wpfPlot.Plot.YAxis2.SetSizeLimit(min: 40);
             wpfPlot.Plot.Style(figureBackground: System.Drawing.Color.Transparent,
                 dataBackground: System.Drawing.Color.Transparent,
-                tick: System.Drawing.Color.FromArgb(plotColorResource.R,
-                plotColorResource.G, plotColorResource.B),
+                tick: System.Drawing.Color.FromArgb(mainBrushResource.R,
+                mainBrushResource.G, mainBrushResource.B),
                 grid: System.Drawing.Color.Transparent);
         }
 

@@ -14,7 +14,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         WindowStyle="None"
-        Background="{DynamicResource MainBackground}"
+        Style="{StaticResource WindowBaseStyle}" 
         d:DataContext="{d:DesignInstance Type=vms:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="Extended Pomodoro" Height="440" Width="570">

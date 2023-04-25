@@ -8,6 +8,7 @@
     <Color x:Key="VeryLightGreyColor">#F0F0F0</Color>
     <Color x:Key="LightGreyColor">#D9D9D9</Color>
     <Color x:Key="GreyColor">#B1B1B1</Color>
+    <Color x:Key="VeryDarkGreyColor">#FFACACAC</Color>
     <Color x:Key="PrimaryColor">#FF6363</Color>
 
     <SolidColorBrush x:Key="TextForeground" Color="{StaticResource BlackColor}"/>
@@ -15,11 +16,10 @@
     <SolidColorBrush x:Key="MainBrush" Color="{StaticResource BlackColor}"/>
     <SolidColorBrush x:Key="DimmedMainBrush" Color="{StaticResource Black-50Color}"/>
     <SolidColorBrush x:Key="MainBackground" Color="{StaticResource WhiteColor}"/>
+    <SolidColorBrush x:Key="MainBackgroundDarker" Color="{StaticResource VeryLightGreyColor}"/>
     <SolidColorBrush x:Key="Primary" Color="{StaticResource PrimaryColor}"/>
-    <SolidColorBrush x:Key="BorderBackground" Color="{StaticResource GreyColor}"/>
-    <SolidColorBrush x:Key="DimmedBorderBackground" Color="{StaticResource LightGreyColor}"/>
-    <SolidColorBrush x:Key="VeryDimmedBorderBackground" Color="{StaticResource VeryLightGreyColor}"/>
-
+    <SolidColorBrush x:Key="HoverBrush" Color="{StaticResource PrimaryColor}"/>
+    
     <!--Controls spesific-->
     <SolidColorBrush x:Key="IconOnlyButtonFill" Color="{StaticResource BlackColor}"/>
     <SolidColorBrush x:Key="DimmedIconOnlyButtonFill" Color="{StaticResource Black-50Color}"/>
@@ -27,12 +27,15 @@
     <SolidColorBrush x:Key="FormBackground" Color="Transparent"/>
     <SolidColorBrush x:Key="FormBorderBrush" Color="{StaticResource Black-50Color}"/>
     <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource LightGreyColor}"/>
+    <SolidColorBrush x:Key="ButtonBackgroundHover" Color="{StaticResource GreyColor}"/>
+    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource VeryDarkGreyColor}"/>
     <SolidColorBrush x:Key="MenuBackground" Color="{StaticResource VeryLightGreyColor}"/>
     <SolidColorBrush x:Key="ChromeTitleBar" Color="{StaticResource VeryLightGreyColor}"/>
+    <SolidColorBrush x:Key="GripFill" Color="{StaticResource VeryLightGreyColor}"/>
+    <SolidColorBrush x:Key="GripBorder" Color="{StaticResource VeryDarkGreyColor}"/>
+    <SolidColorBrush x:Key="TrackBackground" Color="{StaticResource GreyColor}"/>
 
-    <!--unmodified-->
-    <SolidColorBrush x:Key="Black">#311717</SolidColorBrush>
-    <SolidColorBrush x:Key="Black-50">#988b8b</SolidColorBrush>
+    <!--Unmodified-->
     <SolidColorBrush x:Key="Info">#6EA8FE</SolidColorBrush>
     <SolidColorBrush x:Key="InfoDarker">#1272FF</SolidColorBrush>
     <SolidColorBrush x:Key="Warning">#FFDA6A</SolidColorBrush>
@@ -41,19 +44,10 @@
     <SolidColorBrush x:Key="SuccessDarker">#24AD6D</SolidColorBrush>
     <SolidColorBrush x:Key="Danger">#EA868F</SolidColorBrush>
     <SolidColorBrush x:Key="DangerDarker">#E64C5A</SolidColorBrush>
-    <SolidColorBrush x:Key="VeryLightGrey">#F0F0F0</SolidColorBrush>
-    <SolidColorBrush x:Key="LightGrey">#D9D9D9</SolidColorBrush>
-    <SolidColorBrush x:Key="Grey">#B1B1B1</SolidColorBrush>
     <SolidColorBrush x:Key="Orange">#FFA06A</SolidColorBrush>
     <SolidColorBrush x:Key="OrangeDarker">#FA7428</SolidColorBrush>
-    <SolidColorBrush x:Key="White">#FFFFFF</SolidColorBrush>
     <SolidColorBrush x:Key="MainHoverColor">#FF6363</SolidColorBrush>
     <SolidColorBrush x:Key="MainActiveColor">#FF6363</SolidColorBrush>
-    <SolidColorBrush x:Key="MainColor">#311717</SolidColorBrush>
-    <SolidColorBrush x:Key="TextColor">#311717</SolidColorBrush>
-    <SolidColorBrush x:Key="BorderColor">#988b8b</SolidColorBrush>
-    <SolidColorBrush x:Key="ContainerBackground">#988b8b</SolidColorBrush>
-    <SolidColorBrush x:Key="TogglerBackground">#B1B1B1</SolidColorBrush>
-
+    <SolidColorBrush x:Key="White">#FFFFFF</SolidColorBrush>
 
 </ResourceDictionary>

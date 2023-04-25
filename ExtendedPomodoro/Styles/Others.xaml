@@ -2,18 +2,18 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     >
-        <Style x:Key="BaseVerticalSeparatorStyle" TargetType="Separator">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Separator">
-                        <Border Background="{TemplateBinding Panel.Background}" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+    <Style x:Key="BaseVerticalSeparatorStyle" TargetType="Separator">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Separator">
+                    <Border Background="{TemplateBinding Panel.Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style x:Key="VerticalSeparatorStyle" TargetType="Separator" BasedOn="{StaticResource BaseVerticalSeparatorStyle}">
-        <Setter Property="Background" Value="{StaticResource Black-50}"/>
+        <Setter Property="Background" Value="{DynamicResource DimmedMainBrush}"/>
     </Style>
 
     <!--#region Date picker -->
@@ -292,4 +292,19 @@
     </Style>
 
     <!--#endregion Date picker -->
+    
+    <!--#region Window -->
+    <Style x:Key="WindowBaseStyle" TargetType="Window">
+        <Setter Property="Background" Value="{DynamicResource MainBackground}"/>
+    </Style>
+    
+    <!--#endregion-->
+    
+    <!--#region Balloon -->
+    <Style x:Key="BalloonBorderBaseStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource MainBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MainBackgroundDarker}"/>
+    </Style>
+    
+    <!--#endregion-->
 </ResourceDictionary>

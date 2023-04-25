@@ -209,7 +209,7 @@
                     <controls:IconOnlyButton 
                         Kind="VolumeDownFill"
                         Click="VolumeIconOnlyButton_Click"
-                        Foreground="{StaticResource TextColor}"
+                        Foreground="{DynamicResource IconOnlyButtonFill}"
                         Width="12"
                         Height="12"/>
                 </WrapPanel>

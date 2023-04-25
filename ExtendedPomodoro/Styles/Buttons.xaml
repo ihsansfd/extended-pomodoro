@@ -216,19 +216,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <ControlTemplate.Resources>
-                        <SolidColorBrush x:Key="HoverBrush" Color="{Binding Source={StaticResource MainHoverColor}, Path=Color}"/>
-                        <SolidColorBrush x:Key="BorderBackground" Color="{Binding Source={StaticResource TogglerBackground}, Path=Color}"/>
-                    </ControlTemplate.Resources>
                     <Border 
                         x:Name="PART_Border"
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}"
                         Tag="{TemplateBinding Tag}"
+                        Background="{DynamicResource TrackBackground}"
                         CornerRadius="10">
-                        <Border.Background>
-                            <SolidColorBrush Color="{Binding Source={StaticResource BorderBackground}, Path=Color}"/>
-                        </Border.Background>
                         <Button 
                             x:Name="PART_Toggler" 
                             HorizontalAlignment="Left"
@@ -284,7 +278,7 @@
                                         Duration="0:0:0.200" 
                                         Storyboard.TargetName="PART_Border" 
                                         Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                        ToBrush="{StaticResource BorderBackground}"
+                                        ToBrush="{StaticResource TrackBackground}"
                                         />
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -311,8 +305,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <SolidColorBrush x:Key="SliderThumb.Static.Background" Color="#FFF0F0F0"/>
-    <SolidColorBrush x:Key="SliderThumb.Static.Border" Color="#FFACACAC"/>
+    <!--<SolidColorBrush x:Key="SliderThumb.Static.Background" Color="#FFF0F0F0"/>-->
+    <!--<SolidColorBrush x:Key="SliderThumb.Static.Border" Color="#FFACACAC"/>-->
     <SolidColorBrush x:Key="SliderThumb.Static.Foreground" Color="#FFE5E5E5"/>
     <SolidColorBrush x:Key="SliderThumb.MouseOver.Background" Color="#FFDCECFC"/>
     <SolidColorBrush x:Key="SliderThumb.MouseOver.Border" Color="#FF7Eb4EA"/>
@@ -320,13 +314,13 @@
     <SolidColorBrush x:Key="SliderThumb.Pressed.Border" Color="#FF569DE5"/>
     <SolidColorBrush x:Key="SliderThumb.Disabled.Background" Color="#FFF0F0F0"/>
     <SolidColorBrush x:Key="SliderThumb.Disabled.Border" Color="#FFD9D9D9"/>
-    <SolidColorBrush x:Key="SliderThumb.Track.Background" Color="{Binding Source={StaticResource TogglerBackground}, Path=Color}"/>
+    <!--<SolidColorBrush x:Key="SliderThumb.Track.Background" Color="{Binding Source={DynamicResource TogglerBackground}, Path=Color}"/>-->
     <ControlTemplate x:Key="SliderThumbHorizontalDefault" TargetType="{x:Type Thumb}">
         <Grid HorizontalAlignment="Center" UseLayoutRounding="True" VerticalAlignment="Center">
             <Ellipse 
                     x:Name="grip"
-                    Fill="{StaticResource SliderThumb.Static.Background}"
-                    Stroke="{StaticResource SliderThumb.Static.Border}"
+                    Fill="{DynamicResource GripFill}"
+                    Stroke="{DynamicResource GripBorder}"
                     StrokeThickness="1"
                     Width="15"
                     Height="15"
@@ -360,7 +354,7 @@
                 <TickBar x:Name="TopTick" Fill="{TemplateBinding Foreground}" Height="4" Margin="0,0,0,2" Placement="Top" Grid.Row="0" Visibility="Collapsed"/>
                 <TickBar x:Name="BottomTick" Fill="{TemplateBinding Foreground}" Height="4" Margin="0,2,0,0" Placement="Bottom" Grid.Row="2" Visibility="Collapsed"/>
                 <Border x:Name="TrackBackground" 
-                            Background="{StaticResource SliderThumb.Track.Background}" 
+                            Background="{DynamicResource TrackBackground}" 
                             Height="10" 
                             Margin="5,0" 
                             Grid.Row="1"
@@ -454,10 +448,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource LightGrey}" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource ButtonBackgroundHover}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource Grey}" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -224,9 +224,9 @@
     <ControlTemplate x:Key="CustomToggleButton" TargetType="{x:Type ToggleButton}">
         <Grid>
             <Border Background="{Binding Path=Background, RelativeSource={RelativeSource AncestorType={x:Type controls:TasksComboBox}}}"
-                        BorderBrush="{Binding Path=BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type controls:TasksComboBox}}}"
-                        CornerRadius="5"
-                       BorderThickness="1" />
+                    BorderBrush="{Binding Path=BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type controls:TasksComboBox}}}"
+                    CornerRadius="5"
+                    BorderThickness="1" />
             <iconPacks:PackIconBootstrapIcons 
                     Kind="CaretDownFill" 
                     Width="10" 

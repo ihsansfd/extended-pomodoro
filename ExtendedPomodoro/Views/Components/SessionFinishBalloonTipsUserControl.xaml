@@ -17,8 +17,7 @@
             Converter={StaticResource TimerSessionStateToColorConv}}"/>
     </UserControl.Resources>
     <Border 
-        Background="{StaticResource White}" 
-        BorderBrush="{StaticResource Black-50}" 
+        Style="{StaticResource BalloonBorderBaseStyle}"
         BorderThickness="1"
         CornerRadius="10"
         Height="225"

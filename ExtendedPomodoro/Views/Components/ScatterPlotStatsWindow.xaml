@@ -7,7 +7,8 @@
         xmlns:plot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
         mc:Ignorable="d"
         Title="Full Screen Stats"
-        Height="450" Width="800">
+        Height="450" Width="800"
+        Style="{StaticResource WindowBaseStyle}">
         <plot:WpfPlot 
             x:Name="StatsPlotView"
             HorizontalAlignment="Stretch"

@@ -6,8 +6,8 @@
     <Style TargetType="{x:Type controls:Modal}" x:Key="DefaultModalStyle">
         <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
         <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
-        <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
-        <Setter Property="Background" Value="{StaticResource White}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
+        <Setter Property="Background" Value="{DynamicResource MainBackground}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
