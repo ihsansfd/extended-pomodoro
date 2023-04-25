@@ -1,1 +1,3 @@
-- don't use receivers messenger inside view. instead, use normal event listening to viewmodels. Make the view listen to its viewmodel in the datacontext. if there's something that the view needs from other viewmodel, make that other viewmodel send its data through messenger to the relevant viewmodel, and then the relevant viewmodel invoke the event that the view can subscibe to.
+KNOWN ISSUES:
+
+- as the timer view will automatically unsubsribe when it's unloaded, now when we switch to different page the popup, balloon, alarm, and other thing when the session finished will not work appropriately. Current known solution: make the listening event be in the MainWindow.
