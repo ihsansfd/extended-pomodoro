@@ -8,7 +8,7 @@
         <ResourceDictionary>
 
             <!--Get rid of annoying HasError color-->
-            <Style TargetType="UserControl" x:Key="RemoveErrorBorderUserControlStyle">
+            <Style x:Key="RemoveErrorBorderStyle" TargetType="FrameworkElement">
                 <Setter Property="Validation.ErrorTemplate">
                     <Setter.Value>
                         <ControlTemplate>

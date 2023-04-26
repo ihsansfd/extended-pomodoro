@@ -22,27 +22,32 @@ namespace ExtendedPomodoro.Services
     {
         public Window GenerateMaximizibleDialogWindow(MaximizableDialogServiceDomain domain)
         {
-            var window = new MaximizableWindow() { IsLogoShown = domain.IsLogoShown };
-            window.Width = domain.Width;
-            window.Height = domain.Height;
-            window.Title = domain.Title;
-            window.Content = domain.Content;
-            window.Owner = MainWindowService.MainWindow;
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            var window = new MaximizableWindow
+            {
+                IsLogoShown = domain.IsLogoShown,
+                Width = domain.Width,
+                Height = domain.Height,
+                Title = domain.Title,
+                Content = domain.Content,
+                Owner = MainWindowService.MainWindow,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
             return window;
         }
 
         public Window GenerateClosableDialogWindow(ClosableDialogServiceDomain domain)
         {
-            var window = new ClosableWindow() { 
-                IsLogoShown = domain.IsLogoShown, 
-                IsOKButtonShown = domain.IsOKButtonShown };
-            window.Width = domain.Width;
-            window.Height = domain.Height;
-            window.Title = domain.Title;
-            window.Content = domain.Content;
-            window.Owner = MainWindowService.MainWindow;
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            var window = new ClosableWindow
+            {
+                IsLogoShown = domain.IsLogoShown,
+                IsOKButtonShown = domain.IsOKButtonShown,
+                Width = domain.Width,
+                Height = domain.Height,
+                Title = domain.Title,
+                Content = domain.Content,
+                Owner = MainWindowService.MainWindow,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
             return window;
         }
     }

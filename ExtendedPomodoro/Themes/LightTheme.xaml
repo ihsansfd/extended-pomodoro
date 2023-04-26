@@ -24,7 +24,7 @@
     <SolidColorBrush x:Key="IconOnlyButtonFill" Color="{StaticResource BlackColor}"/>
     <SolidColorBrush x:Key="DimmedIconOnlyButtonFill" Color="{StaticResource Black-50Color}"/>
     <SolidColorBrush x:Key="DimmedIconOnlyButtonFillHover" Color="{StaticResource BlackColor}"/>
-    <SolidColorBrush x:Key="FormBackground" Color="Transparent"/>
+    <SolidColorBrush x:Key="FormBackground" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="FormBorderBrush" Color="{StaticResource Black-50Color}"/>
     <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource LightGreyColor}"/>
     <SolidColorBrush x:Key="ButtonBackgroundHover" Color="{StaticResource GreyColor}"/>

@@ -159,6 +159,7 @@
             <Frame 
             Margin="{StaticResource FrameMargin}" 
             Content="{Binding CurrentViewModel}" 
+            Style="{StaticResource RemoveErrorBorderStyle}"
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
             NavigationUIVisibility="Hidden"

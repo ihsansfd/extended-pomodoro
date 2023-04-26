@@ -134,7 +134,7 @@
         <components:ModalCreateTaskUserControl 
             x:Name="ModalCreateTask"
             IsShown="{Binding CreateTaskViewModel.IsModalShown, Mode=TwoWay}"
-            Style="{StaticResource RemoveErrorBorderUserControlStyle}"
+            Style="{StaticResource RemoveErrorBorderStyle}"
             CreateTaskViewModel="{Binding CreateTaskViewModel}"/>
     </Grid>
 </Page>

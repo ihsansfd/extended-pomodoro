@@ -2,7 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:ExtendedPomodoro.Controls">
 
-    <Style TargetType="{x:Type controls:DrawerSidebarMenuItem}" x:Key="DrawerSidebarMenuItemDefault">
+    <Style 
+        x:Key="DrawerSidebarMenuItemDefault"
+        TargetType="{x:Type controls:DrawerSidebarMenuItem}">
         <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
         <Setter Property="ForegroundTemp" Value="{DynamicResource TextForeground}"/>
         <Setter Property="Space" Value="12"/>

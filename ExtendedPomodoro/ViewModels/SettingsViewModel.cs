@@ -26,16 +26,19 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required(ErrorMessage = "Pomodoro duration is required")]
+        [Range(0.1, int.MaxValue, ErrorMessage = "Please specify value > 0")]
         private double _pomodoroDurationInMinutes;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required(ErrorMessage = "Short break duration is required")]
+        [Range(0.1, int.MaxValue, ErrorMessage = "Please specify value > 0")]
         private double _shortBreakDurationInMinutes;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required(ErrorMessage = "Long break duration is required")]
+        [Range(0.1, int.MaxValue, ErrorMessage = "Please specify value > 0")]
         private double _longBreakDurationInMinutes;
 
         [ObservableProperty]
