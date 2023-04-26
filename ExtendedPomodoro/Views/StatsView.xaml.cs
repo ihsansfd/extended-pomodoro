@@ -27,7 +27,6 @@ namespace ExtendedPomodoro.Views
     {
         private readonly ScatterPlotService _scatterPlotService = new();
         private StatsViewModel _viewModel;
-        private StatAxesDomainViewModel _axes;
 
         public StatsView()
         {
@@ -52,11 +51,10 @@ namespace ExtendedPomodoro.Views
             }
         }
 
-        private void OnNewStatsAxes(object? sender, StatAxesDomainViewModel axes)
+        private void OnNewStatsAxes(object? sender, StatAxesDisplayDomainViewModel domain)
         {
-            if (!axes.Display) return;
-            _axes = axes;
-            GenerateChartFrom(axes);
+            if (!domain.Display) return;
+            GenerateChartFrom(domain.Axes);
         }
 
         private void GenerateChartFrom(StatAxesDomainViewModel axes)
@@ -80,14 +78,5 @@ namespace ExtendedPomodoro.Views
             if (_viewModel != null) _viewModel.NewStatsAxes -= OnNewStatsAxes;
         }
 
-        private void StatsFullScreen_Click(object sender, RoutedEventArgs e)
-        {
-            if (_axes == null) return;
-
-            var dialog = new ScatterPlotStatsWindow();
-            dialog.Axes = _axes;
-            dialog.Initialize();
-            dialog.ShowDialog();
-        }
     }
 }

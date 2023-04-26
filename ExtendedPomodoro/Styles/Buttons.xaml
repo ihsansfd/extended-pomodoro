@@ -221,8 +221,10 @@
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}"
                         Tag="{TemplateBinding Tag}"
-                        Background="{DynamicResource TrackBackground}"
                         CornerRadius="10">
+                        <Border.Background>
+                            <SolidColorBrush Color="{Binding Source={StaticResource TrackBackground}, Path=Color}" />
+                        </Border.Background>
                         <Button 
                             x:Name="PART_Toggler" 
                             HorizontalAlignment="Left"
@@ -409,7 +411,6 @@
                 <ToolTip 
                     Content="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.Value, UpdateSourceTrigger=PropertyChanged}"
                     ContentStringFormat="0"
-                    Style="{StaticResource TooltipStyle}"
                     />
             </Setter.Value>
         </Setter>

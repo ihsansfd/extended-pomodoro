@@ -293,13 +293,6 @@
 
     <!--#endregion Date picker -->
     
-    <!--#region Window -->
-    <Style x:Key="WindowBaseStyle" TargetType="Window">
-        <Setter Property="Background" Value="{DynamicResource MainBackground}"/>
-    </Style>
-    
-    <!--#endregion-->
-    
     <!--#region Balloon -->
     <Style x:Key="BalloonBorderBaseStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource MainBackground}"/>
@@ -338,8 +331,7 @@
                         BorderThickness="1"
                         SnapsToDevicePixels="true"
                         Background="{DynamicResource TrackSrollBackground}"
-                        BorderBrush="{DynamicResource TrackSrollBackground}"
-                            >
+                        BorderBrush="{DynamicResource TrackSrollBackground}">
                         <ContentPresenter x:Name="contentPresenter"
                             Margin="{TemplateBinding Padding}"
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
@@ -355,11 +347,6 @@
                         <Trigger Property="IsPressed" Value="true">
                             <Setter TargetName="border" Property="Background" Value="{StaticResource ScrollBar.Pressed.Background}" />
                             <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ScrollBar.Pressed.Border}" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="contentPresenter" Property="Opacity" Value="0.56" />
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource ScrollBar.Disabled.Background}" />
-                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ScrollBar.Disabled.Border}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -418,8 +405,6 @@
     <Style TargetType="{x:Type ScrollBar}">
         <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
-        <!--<Setter Property="Background" Value="{StaticResource ScrollBar.Static.Background}" />
-        <Setter Property="BorderBrush" Value="{StaticResource ScrollBar.Static.Border}" />-->
         <Setter Property="Background" Value="{DynamicResource TrackSrollBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TrackSrollBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
@@ -513,7 +498,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
+        <!--<Style.Triggers>
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="Width" Value="Auto"/>
                 <Setter Property="MinWidth" Value="0"/>
@@ -607,7 +592,7 @@
                     </Setter.Value>
                 </Setter>
             </Trigger>
-        </Style.Triggers>
+        </Style.Triggers>-->
     </Style>
     <!--#endregion-->
 </ResourceDictionary>

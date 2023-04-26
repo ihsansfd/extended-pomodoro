@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.Repositories;
+using ExtendedPomodoro.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,12 +22,15 @@ namespace ExtendedPomodoro.ViewModels
         TIME_SPENT = 4
     }
 
-    public record class StatAxesDomainViewModel(double[] XAxis, double[] YAxis, bool Display = true); 
+    public record class StatAxesDomainViewModel(double[] XAxis, double[] YAxis); 
+    public record class StatAxesDisplayDomainViewModel(StatAxesDomainViewModel Axes, bool Display = true); 
 
     public partial class StatsViewModel : ObservableObject
     {
 
-        private ISessionsRepository _repository;
+        private readonly ISessionsRepository _repository;
+        private readonly DialogWindowService _dialogWindowService;
+
         private IEnumerable<DailySessionDomain> _dailySessions;
 
         public double[] XAxis { get; set; }
@@ -77,11 +81,18 @@ namespace ExtendedPomodoro.ViewModels
             await LoadStats();
         }
 
-        public event EventHandler<StatAxesDomainViewModel> NewStatsAxes;
+        [RelayCommand]
+        public void ViewStatsInFullScreen()
+        {
+            _dialogWindowService.OpenScatterPlotStats(new(XAxis, YAxis));
+        }
 
-        public StatsViewModel(ISessionsRepository sessionsRepository)
+        public event EventHandler<StatAxesDisplayDomainViewModel> NewStatsAxes;
+
+        public StatsViewModel(ISessionsRepository sessionsRepository, DialogWindowService dialogWindowService)
         {
             _repository = sessionsRepository;
+            _dialogWindowService = dialogWindowService;
         }
 
         public async Task Initialize()
@@ -111,8 +122,8 @@ namespace ExtendedPomodoro.ViewModels
 
         private void LoadAxes()
         {
-            double[] XAxis = _dailySessions.Select(prop => prop.SessionDate.ToDateTime(TimeOnly.MinValue).ToOADate()).ToArray();
-            double[] YAxis = Array.Empty<double>();
+             XAxis = _dailySessions.Select(prop => prop.SessionDate.ToDateTime(TimeOnly.MinValue).ToOADate()).ToArray();
+             YAxis = Array.Empty<double>();
 
             switch((StatsValue)StatsValueToDisplay)
             {
@@ -152,7 +163,7 @@ namespace ExtendedPomodoro.ViewModels
 
             DisplayChart = XAxis.Length > 0 && YAxis.Length > 0;
 
-            NewStatsAxes?.Invoke(this, new(XAxis, YAxis, DisplayChart));
+            NewStatsAxes?.Invoke(this, new(new(XAxis, YAxis), DisplayChart));
         }
 
         public void LoadPropertiesFrom(SumDailySessionsDomain properties)

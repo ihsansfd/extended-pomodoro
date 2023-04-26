@@ -134,6 +134,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<MessageBoxService>();
             services.AddSingleton<IMessenger>((_) => MessengerService.Messenger);
             services.AddSingleton<AppThemeService>();
+            services.AddSingleton<DialogWindowService>();
 
             return services.BuildServiceProvider();
         }

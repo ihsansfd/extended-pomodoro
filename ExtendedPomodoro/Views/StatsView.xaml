@@ -197,7 +197,7 @@
                         Grid.Row="1"
                         Kind="ArrowsFullscreen" 
                         ToolTip="View Fullscreen"
-                        Click="StatsFullScreen_Click"
+                        Command="{Binding ViewStatsInFullScreenCommand}"
                         Width="12" 
                         Height="12"
                         Visibility="{Binding DisplayChart, 

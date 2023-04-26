@@ -24,12 +24,12 @@
                 <!-- don't delete, this will be changed in runtime-->
                 <ResourceDictionary Source="pack://application:,,,/Styles/Fonts.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/TextBlocks.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Styles/Popups.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/TextBoxes.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/Buttons.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/Menu.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/ComboBoxes.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/Modals.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/Windows.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/Others.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
