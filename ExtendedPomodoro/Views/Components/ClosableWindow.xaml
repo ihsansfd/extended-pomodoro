@@ -4,9 +4,63 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExtendedPomodoro.Views.Components"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
+        Style="{StaticResource WindowChromeStyle}"
         Title="ClosableWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
+    </Window.Resources>
+    <Window.Template>
+        <ControlTemplate TargetType="{x:Type local:ClosableWindow}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Background="{DynamicResource ChromeTitleBar}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Image 
+                        Grid.Column="0"
+                        Width="15" 
+                        Source="/Assets/Images/extended-pomodoro-logo-100px-width.png"
+                        Margin="12 0 0 0"
+                        UseLayoutRounding="True"
+                        Visibility="{TemplateBinding IsLogoShown, Converter={StaticResource BoolToVisibilityConv}}"
+                        VerticalAlignment="Center"/>
+                    <TextBlock 
+                        Margin="12 0 0 0"
+                        Grid.Column="1"
+                        Text="{TemplateBinding Title}"
+                        FontSize="12"
+                        FontFamily="{StaticResource FWSemiBold}"
+                        Foreground="{DynamicResource TextForeground}"
+                        VerticalAlignment="Center"/>
+                    <Button Grid.Column="2"
+                        Style="{StaticResource TitleBarButtonStyle}"
+                        Click="CloseButton_Click">
+                        <iconPacks:PackIconBootstrapIcons 
+                            Kind="XLg" 
+                            Width="12"
+                            Height="12"
+                            Foreground="{DynamicResource IconOnlyButtonFill}"/>
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <ContentPresenter/>
+                    <WrapPanel
+                        Visibility="{TemplateBinding IsOKButtonShown, Converter={StaticResource BoolToVisibilityConv}}"
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Bottom" 
+                        Margin="0 0 0 20">
+                        <Button Style="{StaticResource ButtonStyle}" Click="CloseButton_Click">OK</Button>
+                    </WrapPanel>
+                </Grid>
+            </Grid>
+        </ControlTemplate>
+    </Window.Template>
 </Window>

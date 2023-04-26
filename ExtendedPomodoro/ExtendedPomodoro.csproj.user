@@ -22,9 +22,6 @@
     <Compile Update="Views\Components\ScatterPlotStatsUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Components\ScatterPlotStatsWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\Components\SessionFinishBalloonTipsUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -103,9 +100,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Components\ScatterPlotStatsUserControl.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Components\ScatterPlotStatsWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Components\SessionFinishBalloonTipsUserControl.xaml">

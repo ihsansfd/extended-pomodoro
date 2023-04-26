@@ -79,7 +79,4 @@
             </Grid>
         </ControlTemplate>
     </Window.Template>
-    <Grid>
-        
-    </Grid>
 </Window>

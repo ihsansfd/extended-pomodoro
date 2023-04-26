@@ -10,22 +10,18 @@ using System.Windows.Media.Media3D;
 
 namespace ExtendedPomodoro.Services
 {
-    //public enum DialogContent
-    //{
-    //    ModalSessionFinish = 0,
-    //    ModalCreateTask = 1,
-    //    ModalEditTask  = 2,
-    //    ScatterPlotStats = 3,
-    //}
 
-    public record class DialogServiceDomain(double Width, double Height, string Title,
-        FrameworkElement Content);
+    public record class MaximizableDialogServiceDomain(double Width, double Height, string Title,
+        FrameworkElement Content, bool IsLogoShown = false);
+
+    public record class ClosableDialogServiceDomain(double Width, double Height, string Title,
+        FrameworkElement Content, bool IsLogoShown = false, bool IsOKButtonShown = true);
 
     public class DialogWindowService
     {
-        private Window GenerateMaximizibleDialogWindow(DialogServiceDomain domain)
+        public Window GenerateMaximizibleDialogWindow(MaximizableDialogServiceDomain domain)
         {
-            var window = new MaximizableWindow();
+            var window = new MaximizableWindow() { IsLogoShown = domain.IsLogoShown };
             window.Width = domain.Width;
             window.Height = domain.Height;
             window.Title = domain.Title;
@@ -33,9 +29,11 @@ namespace ExtendedPomodoro.Services
             return window;
         }
 
-        private Window GenerateMinimizibleDialogWindow(DialogServiceDomain domain)
+        public Window GenerateClosableDialogWindow(ClosableDialogServiceDomain domain)
         {
-            var window = new Window();
+            var window = new ClosableWindow() { 
+                IsLogoShown = domain.IsLogoShown, 
+                IsOKButtonShown = domain.IsOKButtonShown };
             window.Width = domain.Width;
             window.Height = domain.Height;
             window.Title = domain.Title;
@@ -43,28 +41,11 @@ namespace ExtendedPomodoro.Services
             return window;
         }
 
-        public void OpenScatterPlotStats(StatAxesDomainViewModel axes)
+        public bool? OpenSessionFinishDialog()
         {
-            var userControl = new ScatterPlotStatsUserControl
-            {
-                Axes = axes
-            };
-            userControl.Initialize();
-
-            var dialog = GenerateMaximizibleDialogWindow(new(800, 450, "Fullscreen Stats", 
-                userControl));
-            dialog.ShowDialog();
+            var userControl = new ModalContentSessionFinishUserControl();
+            var dialog = GenerateClosableDialogWindow(new(320, 225, "Session Has Finished", userControl));
+            return dialog.ShowDialog();
         }
-
-
-        //public GenerateDialog(DialogServiceDomain domain)
-        //{
-        //    var window = new Window();
-        //    window.Width = domain.Width;
-        //    window.Height = domain.Height;
-        //    window.Title = domain.Title;
-        //    window.Content = domain.Content;
-        //    window.ShowDialog();
-        //}
     }
 }

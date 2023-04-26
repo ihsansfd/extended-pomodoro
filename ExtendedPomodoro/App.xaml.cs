@@ -9,6 +9,7 @@ using ExtendedPomodoro.Models.Repositories.Sqlite;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using ExtendedPomodoro.Views;
+using ExtendedPomodoro.ViewServices;
 using Microsoft.Extensions.DependencyInjection;
 using NHotkey.Wpf;
 using System;
@@ -105,7 +106,6 @@ namespace ExtendedPomodoro
             services.AddSingleton<DbConfig>(
                 (_) => new(ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString)
                 );
-
             services.AddSingleton<TasksHelper>();
             services.AddTransient<ReadTasksViewModel>();
             services.AddTransient<CreateTaskViewModel>();
@@ -135,7 +135,8 @@ namespace ExtendedPomodoro
             services.AddSingleton<IMessenger>((_) => MessengerService.Messenger);
             services.AddSingleton<AppThemeService>();
             services.AddSingleton<DialogWindowService>();
-
+            services.AddSingleton<StatsViewService>();
+            services.AddSingleton<TimerService>();
             return services.BuildServiceProvider();
         }
     }
