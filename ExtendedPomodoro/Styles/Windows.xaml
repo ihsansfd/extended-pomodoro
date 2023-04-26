@@ -6,7 +6,6 @@
     </Style>
 
     <Style x:Key="WindowChromeStyle" TargetType="Window" BasedOn="{StaticResource WindowBaseStyle}">
-        <Setter Property="Background" Value="Red"/>
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
                 <WindowChrome 

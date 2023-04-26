@@ -32,7 +32,6 @@ namespace ExtendedPomodoro.ViewModels
 
         private readonly ISessionsRepository _repository;
         private readonly StatsViewService _statsViewService;
-        private readonly IMessenger _messenger;
 
         private IEnumerable<DailySessionDomain> _dailySessions;
 
@@ -87,19 +86,17 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public void ViewStatsInFullScreen()
         {
-            _messenger.Send(new FullScreenStatsDialogMessage(new(XAxis, YAxis), true));
+            _statsViewService.OpenScatterPlotStats(new(XAxis, YAxis));
         }
 
         public event EventHandler<StatAxesDisplayDomainViewModel> NewStatsAxes;
 
         public StatsViewModel(ISessionsRepository sessionsRepository, 
-            StatsViewService statsService,
-            IMessenger messenger
+            StatsViewService statsService
             )
         {
             _repository = sessionsRepository;
             _statsViewService = statsService;
-            _messenger = messenger;
         }
 
         public async Task Initialize()

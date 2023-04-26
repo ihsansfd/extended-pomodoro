@@ -63,7 +63,8 @@ namespace ExtendedPomodoro
 
         private async Task InitializeMainWindow()
         {
-            var mainWindow = Services.GetRequiredService<MainWindow>();
+            var mainWindow = MainWindowService.MainWindow;
+            mainWindow.ShowInTaskbar = true;
             var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
             await mainWindowViewModel.Initialize();
             mainWindow.DataContext = mainWindowViewModel;
@@ -136,7 +137,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<AppThemeService>();
             services.AddSingleton<DialogWindowService>();
             services.AddSingleton<StatsViewService>();
-            services.AddSingleton<TimerService>();
+            services.AddSingleton<TimerViewService>();
             return services.BuildServiceProvider();
         }
     }

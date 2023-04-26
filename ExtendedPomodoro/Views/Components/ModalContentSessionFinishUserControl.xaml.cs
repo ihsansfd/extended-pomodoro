@@ -50,15 +50,5 @@ namespace ExtendedPomodoro.Views.Components
         public static readonly DependencyProperty NextSessionProperty =
             DependencyProperty.Register("NextSession", typeof(TimerSessionState), typeof(ModalContentSessionFinishUserControl));
 
-        private void OK_Button_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        public void Close()
-        {
-            Visibility = Visibility.Collapsed;
-            _messenger.Send(new ModalContentSessionFinishMessage(true));
-        }
     }
 }

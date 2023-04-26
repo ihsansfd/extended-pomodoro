@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Media3D;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace ExtendedPomodoro.Services
 {
@@ -26,6 +27,8 @@ namespace ExtendedPomodoro.Services
             window.Height = domain.Height;
             window.Title = domain.Title;
             window.Content = domain.Content;
+            window.Owner = MainWindowService.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             return window;
         }
 
@@ -38,14 +41,9 @@ namespace ExtendedPomodoro.Services
             window.Height = domain.Height;
             window.Title = domain.Title;
             window.Content = domain.Content;
+            window.Owner = MainWindowService.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             return window;
-        }
-
-        public bool? OpenSessionFinishDialog()
-        {
-            var userControl = new ModalContentSessionFinishUserControl();
-            var dialog = GenerateClosableDialogWindow(new(320, 225, "Session Has Finished", userControl));
-            return dialog.ShowDialog();
         }
     }
 }

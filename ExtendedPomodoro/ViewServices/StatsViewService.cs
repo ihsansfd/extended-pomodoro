@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.ViewServices
 {
-    public class StatsViewService : IRecipient<FullScreenStatsDialogMessage>
+    public class StatsViewService
     {
         private readonly DialogWindowService _dialogWindowService;
         private readonly IMessenger _messenger;
@@ -24,10 +24,9 @@ namespace ExtendedPomodoro.ViewServices
             _dialogWindowService = dialogWindowService;
             _messenger = messenger;
 
-            _messenger.RegisterAll(this);
         }
 
-        public bool? OpenScatterPlotStats(StatAxesDomainViewModel axes)
+        public void OpenScatterPlotStats(StatAxesDomainViewModel axes)
         {
             var userControl = new ScatterPlotStatsUserControl
             {
@@ -37,13 +36,10 @@ namespace ExtendedPomodoro.ViewServices
 
             var dialog = _dialogWindowService.GenerateMaximizibleDialogWindow(
                 new(800, 450, "Fullscreen Stats", userControl));
-            return dialog.ShowDialog();
+            dialog.Show();
+            dialog.Focus();
+            dialog.Activate();
         }
 
-        public void Receive(FullScreenStatsDialogMessage message)
-        {
-            if (message.OpenRequested)
-                OpenScatterPlotStats(message.Axes);
-        }
     }
 }

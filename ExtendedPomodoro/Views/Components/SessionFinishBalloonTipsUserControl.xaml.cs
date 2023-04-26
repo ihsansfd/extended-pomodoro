@@ -19,14 +19,15 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace ExtendedPomodoro.Views.Components
-{
+{ 
     /// <summary>
     /// Interaction logic for SessionFinishBalloonTipsUserControl.xaml
     /// </summary>
-    public partial class SessionFinishBalloonTipsUserControl : ICloseableControl
+    public partial class SessionFinishBalloonTipsUserControl : UserControl, ICloseableControl
     {
         private readonly AutoCloseControlService _autoCloseService;
         private readonly IMessenger _messenger = MessengerService.Messenger;
+        public event EventHandler<EventArgs>? Closed;
 
         public SessionFinishBalloonTipsUserControl()
         {
@@ -79,7 +80,7 @@ namespace ExtendedPomodoro.Views.Components
         public void Close()
         {
             Visibility = Visibility.Collapsed;
-            _messenger.Send(new SessionFinishBalloonMessage(true));
+            Closed?.Invoke(this, new());
         }
 
         private void ButtonStartNextSession_Click(object sender, RoutedEventArgs e)

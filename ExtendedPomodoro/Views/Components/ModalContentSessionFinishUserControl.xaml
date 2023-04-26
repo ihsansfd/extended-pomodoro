@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:ExtendedPomodoro.Views.Components"
              xmlns:conv="clr-namespace:ExtendedPomodoro.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             Background="{DynamicResource MainBackground}"
+             d:DesignHeight="225" d:DesignWidth="320">
     <UserControl.Resources>
         <conv:TimerSessionStateToColorConverter x:Key="TimerSessionStateToColorConv"/>
         <SolidColorBrush x:Key="FinishedSessionBackground" Color="{Binding FinishedSession, 
@@ -15,7 +16,7 @@
         <SolidColorBrush x:Key="NextSessionBackground" Color="{Binding NextSession, 
             Converter={StaticResource TimerSessionStateToColorConv}}"/>
     </UserControl.Resources>
-    <Grid Height="225" Width="320">
+    <Grid>
             <TextBlock 
                 VerticalAlignment="Top" 
                 HorizontalAlignment="Center"
@@ -81,9 +82,5 @@
                 </Canvas>
             </Viewbox>
             <!--#endregion the icon path-->
-
-            <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 20">
-                <Button Style="{StaticResource ButtonStyle}" Click="OK_Button_Click">OK</Button>
-            </WrapPanel>
         </Grid>
 </UserControl>

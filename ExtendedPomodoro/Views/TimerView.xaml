@@ -10,7 +10,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="615"
       d:DataContext="{d:DesignInstance Type=vms:TimerViewModel}"
-      Unloaded="Page_Unloaded"
       xmlns:xrpb="http://XamlRadialProgressBar/DotNet"
       Title="TimerView">
     <Page.Resources>
@@ -38,9 +37,10 @@
             Style="{StaticResource TasksComboBoxStyle}"
             LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"
             IsLoadMoreButtonShown="{Binding ReadTasksViewModel.AreThereMoreTasks}"
-            AddNewTaskCommand="{Binding NotifTasksComboBoxAddNewButtonPressedCommand}"
+            AddNewTaskCommand="{Binding AddNewTaskModalCommand}"
             CompleteTaskCommand="{Binding CompleteTaskCommand}"
             CancelTaskCommand="{Binding CancelTaskCommand}"
+            IsDropDownOpen="{Binding IsTasksDropdownOpen}"
             Grid.Row="0" 
             Width="200"
             Margin="0 0 0 20"
@@ -136,13 +136,5 @@
             IsShown="{Binding CreateTaskViewModel.IsModalShown, Mode=TwoWay}"
             Style="{StaticResource RemoveErrorBorderUserControlStyle}"
             CreateTaskViewModel="{Binding CreateTaskViewModel}"/>
-
-        <controls:Modal 
-            x:Name="ModalSessionFinish"
-            IsShown="False"
-            Height="225"
-            Width="320"
-            Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsShown, Converter={StaticResource BoolToVisibilityConv}}"
-            Style="{StaticResource DefaultModalStyle}"/>
     </Grid>
 </Page>

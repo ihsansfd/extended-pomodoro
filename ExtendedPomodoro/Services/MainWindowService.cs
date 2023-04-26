@@ -9,22 +9,6 @@ namespace ExtendedPomodoro.Services
 {
     public static class MainWindowService
     {
-        public static MainWindow ItsMainWindow { get;} = new MainWindow();
-        public static Border BorderBlocker = (Border) FindName("BorderBlocker");
-
-        private static object FindName(string Name)
-        {
-            return ItsMainWindow.FindName(Name);
-        }
-
-        public static void ActivateBorderBlocker()
-        {
-            BorderBlocker.Visibility = System.Windows.Visibility.Visible;
-        }
-
-        public static void DeactivateBorderBlocker()
-        {
-            BorderBlocker.Visibility = System.Windows.Visibility.Collapsed;
-        }
+        public static MainWindow MainWindow { get; } = new();
     }
 }

@@ -5,6 +5,7 @@ using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.Repositories;
 using ExtendedPomodoro.Services;
+using ExtendedPomodoro.ViewServices;
 using NHotkey;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace ExtendedPomodoro.ViewModels
         private readonly ISessionsRepository _sessionsRepository;
         private readonly ITasksRepository _tasksRepository;
         private readonly IMessenger _messenger;
+        private readonly TimerViewService _timerViewService;
         private bool _hasBeenSetup;
 
         private int _timeEllapsed = 0;
@@ -33,6 +35,7 @@ namespace ExtendedPomodoro.ViewModels
             CreateTaskViewModel createTaskViewModel,
             TimerSessionState timerSessionState,
             SettingsViewModel settingsViewModel,
+            TimerViewService timerViewService,
             ISessionsRepository sessionsRepository,
             ITasksRepository tasksRepository,
             IMessenger messenger
@@ -43,6 +46,7 @@ namespace ExtendedPomodoro.ViewModels
             CreateTaskViewModel = createTaskViewModel;
             CurrentTimerSession = timerSessionState;
             SettingsViewModel = settingsViewModel;
+            _timerViewService = timerViewService;
             _sessionsRepository = sessionsRepository;
             _tasksRepository = tasksRepository;
             _messenger = messenger;
@@ -61,9 +65,15 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private int _pomodoroCompletedToday;
 
+        [ObservableProperty]
+        private bool _isTasksDropdownOpen;
+
         [RelayCommand]
-        public void NotifTasksComboBoxAddNewButtonPressed() =>
-            _messenger.Send(new TasksComboBoxAddNewButtonPressedMessage());
+        public void AddNewTaskModal()
+        {
+            CreateTaskViewModel.IsModalShown = true;
+            IsTasksDropdownOpen = false;
+        }
 
         [RelayCommand]
         public async Task CompleteTask()
@@ -110,18 +120,14 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         public void StartSession() {
             CurrentTimerSession.Start();
-            _messenger.Send(
-                new TimerActionChangeInfoMessage(
-                    CurrentTimerSession, TimerAction.Start, false, SettingsViewModel.PushNotificationEnabled));
+            _timerViewService.PlayMouseClickEffectSound(SettingsViewModel.Volume);
         }
 
         [RelayCommand]
         public void PauseSession()
         {
             CurrentTimerSession.Pause();
-            _messenger.Send(
-                new TimerActionChangeInfoMessage(
-                    CurrentTimerSession, TimerAction.Pause, false, SettingsViewModel.PushNotificationEnabled));
+            _timerViewService.PlayMouseClickEffectSound(SettingsViewModel.Volume);
         }
 
         [RelayCommand]
@@ -133,17 +139,22 @@ namespace ExtendedPomodoro.ViewModels
         public void StartSessionFromHotkey(object? sender, HotkeyEventArgs e)
         {
             CurrentTimerSession.Start();
-            _messenger.Send(
-               new TimerActionChangeInfoMessage(
-                   CurrentTimerSession, TimerAction.Start, true, SettingsViewModel.PushNotificationEnabled));
+            _timerViewService.PlayMouseClickEffectSound(SettingsViewModel.Volume);
+            if(SettingsViewModel.PushNotificationEnabled)
+            {
+                _timerViewService.ShowTimerStartedBalloonTips(CurrentTimerSession);
+            }
         }
 
         public void PauseSessionFromHotkey(object? sender, HotkeyEventArgs e)
         {
             CurrentTimerSession.Pause();
-            _messenger.Send(
-              new TimerActionChangeInfoMessage(
-                  CurrentTimerSession, TimerAction.Pause, true, SettingsViewModel.PushNotificationEnabled));
+            _timerViewService.PlayMouseClickEffectSound(SettingsViewModel.Volume);
+
+            if(SettingsViewModel.PushNotificationEnabled)
+            {
+                _timerViewService.ShowTimerPausedBalloonTips(CurrentTimerSession);
+            }
         }
 
         #endregion
@@ -191,17 +202,31 @@ namespace ExtendedPomodoro.ViewModels
         /// View will handle its logic (display notification, alarm, etc).
         /// </summary>
         /// <param name="message"></param>
-        public async Task OnFinishSession(TimerSessionFinishInfoMessage message)
+        public async Task OnFinishSession(TimerSessionState finishedSession, TimerSessionState nextSession)
         {
-            _messenger.Send(message);
+            if (!SettingsViewModel.IsAutostart)
+            {
+                _timerViewService.OpenSessionFinishDialog(finishedSession, nextSession);
 
+                if (SettingsViewModel.PushNotificationEnabled)
+                {
+                    _timerViewService.ShowSessionFinishBalloonTips(finishedSession, nextSession);
+                }
+                _timerViewService.PlaySound((AlarmSound)SettingsViewModel.AlarmSound, SettingsViewModel.Volume,
+                    SettingsViewModel.IsRepeatForever ? Timeout.InfiniteTimeSpan : TimeSpan.FromSeconds(15));
+                _timerViewService.AutoCloseDialogAndSound = SettingsViewModel.IsRepeatForever ? false : true;
+            }
+            else
+            {
+                StartSession();
+            }
+          
             var today = DateOnly.FromDateTime(DateTime.Now);
-            await StoreSessionFinishInfo(today, message.FinishedSession);
+            await StoreSessionFinishInfo(today, finishedSession);
 
             PomodoroCompletedToday = await GetPomodoroCompletedToday();
 
-
-            if (message.FinishedSession is PomodoroSessionState && SelectedTask != null)
+            if (finishedSession is PomodoroSessionState && SelectedTask != null)
             {
                 await UpdateTaskActPomodoro(SelectedTask.Id, 1);
             }
@@ -317,8 +342,8 @@ namespace ExtendedPomodoro.ViewModels
         public virtual string Name { get; } = string.Empty;
         public virtual string SessionMessage { get; } = string.Empty;
 
-        protected bool _isRunning { get; set; }
-        protected bool _isPaused { get; set; }
+        protected static bool _isRunning { get; set; }
+        protected static bool _isPaused { get; set; }
         protected static TimerViewModel _context;
         protected static SettingsViewModel _configuration;
 
@@ -406,15 +431,7 @@ namespace ExtendedPomodoro.ViewModels
 
         protected async void FinishTo(TimerSessionState nextSession)
         {
-            await _context.OnFinishSession(new
-                (_context.CurrentTimerSession, 
-                nextSession, 
-                (AlarmSound)_configuration.AlarmSound,
-                _configuration.PushNotificationEnabled, 
-                _configuration.IsRepeatForever,
-                _configuration.Volume
-                ));
-
+            await _context.OnFinishSession(_context.CurrentTimerSession, nextSession);
             SwitchTo(nextSession);
         }
 
