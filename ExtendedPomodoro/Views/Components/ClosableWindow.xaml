@@ -6,8 +6,10 @@
         xmlns:local="clr-namespace:ExtendedPomodoro.Views.Components"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
+        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+        x:Name="TheWindow"
         Style="{StaticResource WindowChromeStyle}"
-        Title="ClosableWindow" d:DesignHeight="450" d:DesignWidth="800">
+        d:DesignHeight="450" d:DesignWidth="800">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
     </Window.Resources>
@@ -41,13 +43,21 @@
                         Foreground="{DynamicResource TextForeground}"
                         VerticalAlignment="Center"/>
                     <Button Grid.Column="2"
-                        Style="{StaticResource TitleBarButtonStyle}"
-                        Click="CloseButton_Click">
-                        <iconPacks:PackIconBootstrapIcons 
+                        Style="{StaticResource TitleBarButtonStyle}">
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="Click">
+                                <behaviors:CallMethodAction 
+                                    TargetObject="{Binding ElementName=TheWindow}" 
+                                    MethodName="Close"/>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                        <Button.Content>
+                            <iconPacks:PackIconBootstrapIcons 
                             Kind="XLg" 
                             Width="12"
                             Height="12"
                             Foreground="{DynamicResource IconOnlyButtonFill}"/>
+                        </Button.Content>
                     </Button>
                 </Grid>
                 <Grid Grid.Row="1">
@@ -57,8 +67,16 @@
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Bottom" 
                         Margin="0 20 0 20"
-                        Style="{StaticResource ButtonStyle}" 
-                        Click="CloseButton_Click">OK</Button>
+                        Style="{StaticResource ButtonStyle}"
+                        Content="OK">
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="Click">
+                                <behaviors:CallMethodAction 
+                                    TargetObject="{Binding ElementName=TheWindow}" 
+                                    MethodName="Close"/>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                    </Button>
                 </Grid>
             </Grid>
         </ControlTemplate>

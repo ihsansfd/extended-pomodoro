@@ -41,11 +41,5 @@ namespace ExtendedPomodoro.Views.Components
         }
         public static readonly DependencyProperty IsLogoShownProperty =
             DependencyProperty.Register("IsLogoShown", typeof(bool), typeof(ClosableWindow), new PropertyMetadata(false));
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
     }
 }

@@ -62,10 +62,5 @@ namespace ExtendedPomodoro.Views.Components
 
         public static readonly DependencyProperty CurrentSessionProperty =
             DependencyProperty.Register("CurrentSession", typeof(TimerSessionState), typeof(TimerPausedBalloonTipsUserControl));
-
-        private void OK_Button_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
     }
 }

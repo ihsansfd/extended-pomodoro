@@ -34,11 +34,8 @@ namespace ExtendedPomodoro.Views.Components
             InitializeComponent();
         }
 
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
-        }
-
+        // didn't find a way to make it to xaml. eventrigger doesn't have conditional support,
+        // xamlbehaviors doesn't support multiple conditionals.
         private void MaximizeButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.WindowState == WindowState.Maximized)
@@ -49,12 +46,6 @@ namespace ExtendedPomodoro.Views.Components
             {
                 this.WindowState = WindowState.Maximized;
             }
-        }
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-
         }
 
         protected override void OnSourceInitialized(EventArgs e)

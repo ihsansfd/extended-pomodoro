@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ExtendedPomodoro.Views.Components"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             x:Name="TheUserControl"
             xmlns:conv="clr-namespace:ExtendedPomodoro.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="225" d:DesignWidth="320">
@@ -39,10 +41,19 @@
             <!--#endregion the icon path-->
 
             <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 20">
-                <Button Style="{StaticResource ButtonStyle}" Click="OK_Button_Click">
-                    <TextBlock>
+                <Button Style="{StaticResource ButtonStyle}">
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="Click">
+                            <behaviors:CallMethodAction 
+                                TargetObject="{Binding ElementName=TheUserControl}"
+                                MethodName="Close"/>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+                    <Button.Content>
+                            <TextBlock>
                         <Run>OK (</Run><Run x:Name="PART_RemainingTimeInSecondsRun"/><Run>s)</Run>
-                    </TextBlock>
+                            </TextBlock>
+                        </Button.Content>
                 </Button>
             </WrapPanel>
         </Grid>

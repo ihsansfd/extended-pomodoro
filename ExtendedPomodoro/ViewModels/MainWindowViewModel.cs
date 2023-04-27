@@ -68,6 +68,7 @@ namespace ExtendedPomodoro.ViewModels
             await _tasksViewModel.ReadTasksViewModel.LoadTasks();
         }
 
-        public void Receive(CurrentViewModelMessage currentViewModelMessage) => CurrentViewModel = currentViewModelMessage.Message;
+        public void Receive(CurrentViewModelMessage currentViewModelMessage) =>
+            CurrentViewModel = currentViewModelMessage.Message;
     }
 }

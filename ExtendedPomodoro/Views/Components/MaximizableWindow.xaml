@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExtendedPomodoro.Views.Components"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+        x:Name="TheWindow"
         mc:Ignorable="d"
         Style="{StaticResource WindowChromeStyle}"
         d:DesignHeight="450" d:DesignWidth="800">
@@ -44,33 +46,53 @@
                         VerticalAlignment="Center"/>
 
                     <Button Grid.Column="2"
-                        Style="{StaticResource TitleBarButtonStyle}"
-                        Click="MinimizeButton_Click">
-                        <Line
+                        Style="{StaticResource TitleBarButtonStyle}">
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="Click">
+                                <behaviors:ChangePropertyAction 
+                                    TargetObject="{Binding ElementName=TheWindow}" 
+                                    PropertyName="WindowState"
+                                    Value="Minimized"/>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                        <Button.Content>
+                            <Line
 			                X2="12"
                             Stroke="{DynamicResource IconOnlyButtonFill}"
 			                StrokeThickness="1" />
+                        </Button.Content>
                     </Button>
 
-                    <Button Grid.Column="3"
-                        Style="{StaticResource TitleBarButtonStyle}"
-                        Click="MaximizeButton_Click">
-                        <Border
+                    <Button 
+                        Grid.Column="3"
+                        Click="MaximizeButton_Click"
+                        Style="{StaticResource TitleBarButtonStyle}">
+                        <Button.Content>
+                            <Border
                             Width="12"
                             Height="12"
 			                CornerRadius="3"
                             BorderBrush="{DynamicResource IconOnlyButtonFill}"
 			                BorderThickness="1" />
+                        </Button.Content>
                     </Button>
 
                     <Button Grid.Column="4"
-                        Style="{StaticResource TitleBarButtonStyle}"
-                        Click="CloseButton_Click">
-                        <iconPacks:PackIconBootstrapIcons 
+                        Style="{StaticResource TitleBarButtonStyle}">
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="Click">
+                                <behaviors:CallMethodAction 
+                                    TargetObject="{Binding ElementName=TheWindow}" 
+                                    MethodName="Close"/>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                        <Button.Content>
+                            <iconPacks:PackIconBootstrapIcons 
                             Kind="XLg" 
                             Width="12"
                             Height="12"
                             Foreground="{DynamicResource IconOnlyButtonFill}"/>
+                        </Button.Content>
                     </Button>
                 </Grid>
                 <Grid Grid.Row="1">
