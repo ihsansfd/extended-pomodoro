@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Helpers;
 using System.Windows;
+using ExtendedPomodoro.ViewServices;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -19,6 +20,7 @@ namespace ExtendedPomodoro.ViewModels
         private readonly ISettingsRepository _repository;
         private readonly MessageBoxService _messageBox;
         private readonly IMessenger _messenger;
+        private readonly SettingsViewService _settingsViewService;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -96,15 +98,23 @@ namespace ExtendedPomodoro.ViewModels
             await Initialize();
         }
 
+        [RelayCommand]
+        public void PlayAlarmSoundTester()
+        {
+            _settingsViewService.PlaySound((AlarmSound)AlarmSound, Volume, TimeSpan.FromSeconds(3));
+        }
+
         public SettingsViewModel(
             ISettingsRepository repository, 
             MessageBoxService messageBoxService,
-            IMessenger messenger
+            IMessenger messenger,
+            SettingsViewService settingsViewService
             )
         {
             _repository = repository;
             _messageBox = messageBoxService;
             _messenger = messenger;
+            _settingsViewService = settingsViewService;
         }
 
         public async Task Initialize()

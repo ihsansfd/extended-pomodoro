@@ -134,6 +134,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<DialogWindowService>();
             services.AddSingleton<StatsViewService>();
             services.AddSingleton<TimerViewService>();
+            services.AddSingleton<SettingsViewService>();
             return services.BuildServiceProvider();
         }
     }

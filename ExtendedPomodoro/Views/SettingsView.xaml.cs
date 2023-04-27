@@ -17,11 +17,5 @@ namespace ExtendedPomodoro.Views
             InitializeComponent();
 
         }
-        private void VolumeIconOnlyButton_Click(object sender, RoutedEventArgs e)
-        {
-            _soundService.Volume = (int)VolumeSlider.Value;
-            _soundService.RepeatFor = TimeSpan.FromSeconds(3);
-            _soundService.Play((AlarmSound)AlarmSoundComboBox.SelectedValue);
-        }
     }
 }

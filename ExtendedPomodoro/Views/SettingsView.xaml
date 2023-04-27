@@ -208,7 +208,7 @@
                         Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <controls:IconOnlyButton 
                         Kind="VolumeDownFill"
-                        Click="VolumeIconOnlyButton_Click"
+                        Command="{Binding PlayAlarmSoundTesterCommand}"
                         Foreground="{DynamicResource IconOnlyButtonFill}"
                         Width="12"
                         Height="12"/>
