@@ -1,11 +1,4 @@
-﻿using ExtendedPomodoro.Models.Domains;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExtendedPomodoro.ViewModels
+﻿namespace ExtendedPomodoro.ViewModels
 {
     public record class TaskDomainViewModel(
         int Id,

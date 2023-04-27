@@ -1,13 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using ExtendedPomodoro.Views.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.ViewServices
 {

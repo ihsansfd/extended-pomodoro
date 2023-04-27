@@ -1,13 +1,5 @@
-﻿using ExtendedPomodoro.ViewModels;
-using ExtendedPomodoro.Views.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ExtendedPomodoro.Views.Components;
 using System.Windows;
-using System.Windows.Media.Media3D;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace ExtendedPomodoro.Services
 {

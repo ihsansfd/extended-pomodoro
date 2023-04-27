@@ -1,16 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.Repositories;
 using ExtendedPomodoro.ViewServices;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.ViewModels

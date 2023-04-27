@@ -2,12 +2,6 @@
 using ExtendedPomodoro.Models.DbConnections;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.Models.Repositories.Sqlite
 {

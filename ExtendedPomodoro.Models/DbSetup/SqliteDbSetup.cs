@@ -1,10 +1,5 @@
 ﻿using Dapper;
 using ExtendedPomodoro.Models.DbConnections;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.Models.DbSetup
 {

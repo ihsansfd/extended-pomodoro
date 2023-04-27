@@ -1,11 +1,4 @@
-﻿using ExtendedPomodoro.Models.Domains;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExtendedPomodoro.Models.DTOs
+﻿namespace ExtendedPomodoro.Models.DTOs
 {
     public class SqliteSettingsDTO {
         public string SettingsType { get; set;} = "MAIN";
