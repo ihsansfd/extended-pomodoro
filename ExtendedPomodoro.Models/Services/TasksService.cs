@@ -11,7 +11,7 @@ namespace ExtendedPomodoro.Models.Services
     {
         private readonly ITasksRepository _repository;
 
-        public TasksService(IDbConnectionFactory connectionFactory, ITasksRepository repository)
+        public TasksService(ITasksRepository repository)
         {
             _repository = repository;
         }
@@ -41,12 +41,20 @@ namespace ExtendedPomodoro.Models.Services
 
         public async Task UpdateTaskState(int taskId, TaskState taskState)
         {
-            await _repository.UpdateTaskState(taskId, ConvertTaskStateToInt(taskState));
+            var now = DateTime.Now;
+
+            var data = ConvertToUpdateTaskStateDTO(taskId, taskState, now);
+
+            await _repository.UpdateTaskState(data);
         }
 
         public async Task UpdateTimeSpent(int taskId, TimeSpan timeSpent)
         {
-            await _repository.UpdateTimeSpent(taskId, (int)timeSpent.TotalSeconds);
+            var now = DateTime.Now;
+
+            var data = ConvertToUpdateTimeSpentDTO(taskId, timeSpent, now);
+
+            await _repository.UpdateTimeSpent(data);
         }
 
         public async Task UpdateTask(UpdateTaskDomain domain)
@@ -71,6 +79,26 @@ namespace ExtendedPomodoro.Models.Services
         public async Task DeleteTask(int taskId)
         {
            await _repository.DeleteTask(taskId);
+        }
+
+        private UpdateTimeSpentDTO ConvertToUpdateTimeSpentDTO(int taskId, TimeSpan timeSpent, DateTime now)
+        {
+            return new()
+            {
+                Id = taskId,
+                TimeSpentInSecondsIncrementBy = (int)timeSpent.TotalSeconds,
+                UpdatedAt = now
+            };
+        }
+
+        private UpdateTaskStateDTO ConvertToUpdateTaskStateDTO(int taskId, TaskState taskState, DateTime now)
+        {
+            return new()
+            {
+                Id = taskId,
+                IsTaskCompleted = ConvertTaskStateToInt(taskState),
+                UpdatedAt = now
+            };
         }
 
         private static GetTaskDTO ConvertToGetTaskDTO(TaskState taskState, int page, int limit)

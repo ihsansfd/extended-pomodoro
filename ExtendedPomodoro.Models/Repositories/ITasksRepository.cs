@@ -12,8 +12,8 @@ namespace ExtendedPomodoro.Models.Repositories
     {
         Task CreateTask(CreateTaskDTO dto);
         Task UpdateTask(UpdateTaskDTO dto);
-        Task UpdateTaskState(int taskId, int IsTaskCompleted);
-        Task UpdateTimeSpent(int taskId, int timeSpentInSeconds);
+        Task UpdateTaskState(UpdateTaskStateDTO dto);
+        Task UpdateTimeSpent(UpdateTimeSpentDTO dto);
         Task UpdateActPomodoro(UpdateActPomodoroDTO dto);
         Task<IEnumerable<TaskDTO>> GetTasks(GetTaskDTO data);
         Task DeleteTask(int taskId);

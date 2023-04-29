@@ -15,25 +15,41 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
     {
 
         private const string CREATE_TASK_QUERY =
-            @"INSERT INTO tblTasks (Name, Description, EstPomodoro, CreatedAt, UpdatedAt)
-              VALUES (@Name, @Description, @EstPomodoro, @CreatedAt, @UpdatedAt)";
+            @"INSERT INTO 
+                tblTasks (Name, Description, EstPomodoro, CreatedAt, UpdatedAt)
+              VALUES 
+                (@Name, @Description, @EstPomodoro, @CreatedAt, @UpdatedAt)";
 
-        // TODO: UpdatedAt not updated
         private const string UPDATE_TASK_QUERY =
-            @"UPDATE tblTasks SET Name = @Name, Description = @Description, EstPomodoro = @EstPomodoro, 
-            IsTaskCompleted = @IsTaskCompleted WHERE Id = @Id";
+            @"UPDATE 
+                tblTasks 
+              SET 
+                Name = @Name, Description = @Description, EstPomodoro = @EstPomodoro, 
+                IsTaskCompleted = @IsTaskCompleted, UpdatedAt = @UpdatedAt
+              WHERE 
+                Id = @Id";
 
-        // TODO: UpdatedAt not updated
         private const string UPDATE_TASK_STATE_QUERY =
-            @"UPDATE tblTasks SET IsTaskCompleted = @IsTaskCompleted WHERE Id = @Id";
+            @"UPDATE 
+                    tblTasks 
+                SET 
+                    IsTaskCompleted = @IsTaskCompleted, 
+                    UpdatedAt = @UpdatedAt
+                WHERE 
+                    Id = @Id";
 
-        // TODO: UpdatedAt not updated
         private const string UPDATE_TASK_TIME_SPENT_QUERY =
-            @"UPDATE tblTasks SET TimeSpentInSeconds = TimeSpentInSeconds + @TimeSpentInSecondsIncrementBy WHERE Id = @Id";
+            @"UPDATE 
+                tblTasks 
+            SET 
+                TimeSpentInSeconds = TimeSpentInSeconds + @TimeSpentInSecondsIncrementBy,
+                UpdatedAt = @UpdatedAt
+            WHERE 
+                Id = @Id";
 
-        // TODO: UpdatedAt not updated
         private const string UPDATE_TASK_ACT_POMODORO_QUERY =
-            @"UPDATE tblTasks
+            @"UPDATE 
+                    tblTasks
                 SET 
                     ActPomodoro = ActPomodoro + @ActPomodoroIncrementBy,
                     UpdatedAt = @UpdatedAt
@@ -87,31 +103,19 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             }
         }
 
-        public async Task UpdateTaskState(int taskId, int IsTaskCompleted)
+        public async Task UpdateTaskState(UpdateTaskStateDTO dto)
         {
             using (var db = _connectionFactory.Connect())
             {
-                object data = new
-                {
-                    Id = taskId,
-                    IsTaskCompleted = IsTaskCompleted
-                };
-
-                await db.ExecuteAsync(UPDATE_TASK_STATE_QUERY, data);
+                await db.ExecuteAsync(UPDATE_TASK_STATE_QUERY, dto);
             }
         }
 
-        public async Task UpdateTimeSpent(int taskId, int timeSpentInSeconds)
+        public async Task UpdateTimeSpent(UpdateTimeSpentDTO dto)
         {
             using (var db = _connectionFactory.Connect())
             {
-                object data = new
-                {
-                    Id = taskId,
-                    TimeSpentInSecondsIncrementBy = timeSpentInSeconds
-                };
-
-                await db.ExecuteAsync(UPDATE_TASK_TIME_SPENT_QUERY, data);
+                await db.ExecuteAsync(UPDATE_TASK_TIME_SPENT_QUERY, dto);
             }
         }
 

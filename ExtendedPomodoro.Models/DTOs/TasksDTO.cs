@@ -48,4 +48,18 @@ namespace ExtendedPomodoro.Models.DTOs
         public int ActPomodoroIncrementBy { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
+
+    public class UpdateTaskStateDTO
+    {
+        public int Id { get; set; }
+        public int IsTaskCompleted { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+
+    public class UpdateTimeSpentDTO
+    {
+        public int Id { get; set; }
+        public int TimeSpentInSecondsIncrementBy { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
 }
