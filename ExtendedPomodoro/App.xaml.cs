@@ -111,6 +111,7 @@ namespace ExtendedPomodoro
             services.AddTransient<UpdateTaskViewModel>();
             services.AddSingleton<DeleteTaskViewModel>();
             services.AddSingleton<ITasksService, TasksService>();
+            services.AddSingleton<ITasksRepository, SqliteTasksRepository>();
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IDailySessionsService, DailySessionsService>();
             services.AddSingleton<IDailySessionsRepository, SqliteDailySessionsRepository>();

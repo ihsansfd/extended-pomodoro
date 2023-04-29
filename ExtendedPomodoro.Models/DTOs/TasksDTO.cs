@@ -1,4 +1,5 @@
 ﻿using ExtendedPomodoro.Models.Domains;
+using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.Models.DTOs
 {
@@ -38,6 +39,13 @@ namespace ExtendedPomodoro.Models.DTOs
         public string? Description { get; set; }
         public int? EstPomodoro { get; set; }
         public int IsTaskCompleted { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+
+    public class UpdateActPomodoroDTO
+    {
+        public int Id { get; set; }
+        public int ActPomodoroIncrementBy { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
 }
