@@ -113,6 +113,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<ITasksService, TasksService>();
             services.AddSingleton<ITasksRepository, SqliteTasksRepository>();
             services.AddSingleton<ISettingsService, SettingsService>();
+            services.AddSingleton<ISettingsRepository, SqliteSettingsRepository>();
             services.AddSingleton<IDailySessionsService, DailySessionsService>();
             services.AddSingleton<IDailySessionsRepository, SqliteDailySessionsRepository>();
             services.AddSingleton<SqliteDbConnectionFactory>();

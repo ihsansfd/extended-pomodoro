@@ -2,77 +2,56 @@
 using ExtendedPomodoro.Models.DbConnections;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.DTOs;
+using ExtendedPomodoro.Models.Repositories;
 using ExtendedPomodoro.Models.Services.Interfaces;
 using System.Text.Json;
 
 namespace ExtendedPomodoro.Models.Services
 {
     public class SettingsService : ISettingsService
-    {
-        private readonly IDbConnectionFactory _connectionFactory;
+    {        private readonly ISettingsRepository _repository;
 
-        private const string SELECT_DEFAULT_SETTINGS_QUERY =
-            @"SELECT * FROM tblSettings WHERE SettingsType = 'DEFAULT' LIMIT 1";
-
-        private const string SELECT_MAIN_SETTINGS_QUERY =
-            @"SELECT * FROM tblSettings WHERE SettingsType = 'MAIN' LIMIT 1";
-
-        private const string UPDATE_MAIN_SETTINGS_QUERY =
-            @"UPDATE tblSettings SET PomodoroDuration = @PomodoroDuration, ShortBreakDuration = @ShortBreakDuration,
-            LongBreakDuration = @LongBreakDuration, LongBreakInterval = @LongBreakInterval, 
-            DailyPomodoroTarget = @DailyPomodoroTarget, IsAutostart = @IsAutostart, AlarmSound = @AlarmSound,
-            Volume = @Volume, IsRepeatForever = @IsRepeatForever, PushNotificationEnabled = @PushNotificationEnabled,
-            DarkModeEnabled = @DarkModeEnabled, StartHotkey = @StartHotkey, PauseHotkey = @PauseHotkey
-            WHERE SettingsType = 'MAIN'";
-
-        public SettingsService(IDbConnectionFactory connectionFactory)
+        public SettingsService(ISettingsRepository repository)
         {
-            _connectionFactory = connectionFactory;
+            _repository = repository;
         }
 
         public async Task<SettingsDomain> GetSettings()
         {
-            using (var db = _connectionFactory.Connect())
-            {
-                var record = await db.QuerySingleAsync<SettingsDTO>(SELECT_MAIN_SETTINGS_QUERY);
-
-                return ConvertToSettingsDomain(record);
-            }
+            var res = await _repository.GetMainSettings();
+            return ConvertToSettingsDomain(res);
         }
 
         public async Task UpdateSettings(SettingsDomain domain)
         {
-            using (var db = _connectionFactory.Connect())
-            {
-                SettingsDTO data = new()
-                {
-                    PomodoroDuration = (int)domain.PomodoroDuration.TotalSeconds,
-                    ShortBreakDuration = (int)domain.ShortBreakDuration.TotalSeconds,
-                    LongBreakDuration = (int)domain.LongBreakDuration.TotalSeconds,
-                    LongBreakInterval = domain.LongBreakInterval,
-                    DailyPomodoroTarget = domain.DailyPomodoroTarget,
-                    IsAutostart = domain.IsAutostart,
-                    AlarmSound = (int)domain.AlarmSound,
-                    Volume = domain.Volume,
-                    IsRepeatForever = domain.IsRepeatForever,
-                    PushNotificationEnabled = domain.PushNotificationEnabled,
-                    DarkModeEnabled = domain.DarkModeEnabled,
-                    StartHotkey = domain.StartHotkeyDomain != null ? JsonSerializer.Serialize(domain.StartHotkeyDomain) : null,
-                    PauseHotkey = domain.PauseHotkeyDomain != null ? JsonSerializer.Serialize(domain.PauseHotkeyDomain) : null,
-                };
+                SettingsDTO data = ConvertToSettingsDTO(domain);
+                await _repository.UpdateSettings(data);
+        }
 
-                await db.ExecuteAsync(UPDATE_MAIN_SETTINGS_QUERY, data);
-            }
+        private static SettingsDTO ConvertToSettingsDTO(SettingsDomain domain)
+        {
+            return new()
+            {
+                PomodoroDuration = (int)domain.PomodoroDuration.TotalSeconds,
+                ShortBreakDuration = (int)domain.ShortBreakDuration.TotalSeconds,
+                LongBreakDuration = (int)domain.LongBreakDuration.TotalSeconds,
+                LongBreakInterval = domain.LongBreakInterval,
+                DailyPomodoroTarget = domain.DailyPomodoroTarget,
+                IsAutostart = domain.IsAutostart,
+                AlarmSound = (int)domain.AlarmSound,
+                Volume = domain.Volume,
+                IsRepeatForever = domain.IsRepeatForever,
+                PushNotificationEnabled = domain.PushNotificationEnabled,
+                DarkModeEnabled = domain.DarkModeEnabled,
+                StartHotkey = domain.StartHotkeyDomain != null ? JsonSerializer.Serialize(domain.StartHotkeyDomain) : null,
+                PauseHotkey = domain.PauseHotkeyDomain != null ? JsonSerializer.Serialize(domain.PauseHotkeyDomain) : null,
+            };
         }
 
         public async Task ResetToDefaultSettings()
         {
-            using (var db = _connectionFactory.Connect())
-            {
-                var data = await db.QuerySingleAsync<SettingsDTO>(SELECT_DEFAULT_SETTINGS_QUERY);
-
-                await db.ExecuteAsync(UPDATE_MAIN_SETTINGS_QUERY, data);
-            }
+            var data = await _repository.GetDefaultSettings();
+            await _repository.UpdateSettings(data);
         }
 
         private static SettingsDomain ConvertToSettingsDomain(SettingsDTO dto)
