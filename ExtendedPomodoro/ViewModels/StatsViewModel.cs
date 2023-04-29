@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExtendedPomodoro.Models.Domains;
-using ExtendedPomodoro.Models.Repositories;
+using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.ViewServices;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace ExtendedPomodoro.ViewModels
     public partial class StatsViewModel : ObservableObject
     {
 
-        private readonly ISessionsRepository _repository;
+        private readonly IDailySessionsService _repository;
         private readonly StatsViewService _statsViewService;
 
         private IEnumerable<DailySessionDomain> _dailySessions;
@@ -86,7 +86,7 @@ namespace ExtendedPomodoro.ViewModels
 
         public event EventHandler<StatAxesDisplayDomainViewModel> NewStatsAxes;
 
-        public StatsViewModel(ISessionsRepository sessionsRepository, 
+        public StatsViewModel(IDailySessionsService sessionsRepository, 
             StatsViewService statsService
             )
         {

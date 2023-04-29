@@ -5,6 +5,8 @@ using ExtendedPomodoro.Models.DbConnections;
 using ExtendedPomodoro.Models.DbSetup;
 using ExtendedPomodoro.Models.Repositories;
 using ExtendedPomodoro.Models.Repositories.Sqlite;
+using ExtendedPomodoro.Models.Services;
+using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using ExtendedPomodoro.ViewServices;
@@ -50,7 +52,7 @@ namespace ExtendedPomodoro
 
         private async Task SwitchThemeToCurrentSettings()
         {
-            var settingsRepo = Services.GetRequiredService<ISettingsRepository>();
+            var settingsRepo = Services.GetRequiredService<ISettingsService>();
             var settings = await settingsRepo.GetSettings();
 
             var appThemeService = Services.GetRequiredService<AppThemeService>();
@@ -70,7 +72,7 @@ namespace ExtendedPomodoro
 
         private async Task RegisterHotkeys()
         {
-            var settingsRepo = Services.GetRequiredService<ISettingsRepository>();
+            var settingsRepo = Services.GetRequiredService<ISettingsService>();
             var settings = await settingsRepo.GetSettings();
 
             var hotkeyService = Services.GetRequiredService<HotkeyLoaderService>();
@@ -108,10 +110,10 @@ namespace ExtendedPomodoro
             services.AddTransient<CreateTaskViewModel>();
             services.AddTransient<UpdateTaskViewModel>();
             services.AddSingleton<DeleteTaskViewModel>();
-            services.AddSingleton<SqliteTasksRepository>();
-            services.AddSingleton<ITasksRepository, SqliteTasksRepository>();
-            services.AddSingleton<ISettingsRepository, SqliteSettingsRepository>();
-            services.AddSingleton<ISessionsRepository, SqliteSessionsRepository>();
+            services.AddSingleton<ITasksService, TasksService>();
+            services.AddSingleton<ISettingsService, SettingsService>();
+            services.AddSingleton<IDailySessionsService, DailySessionsService>();
+            services.AddSingleton<IDailySessionsRepository, SqliteDailySessionsRepository>();
             services.AddSingleton<SqliteDbConnectionFactory>();
             services.AddSingleton<SqliteDbSetup>();
             services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();

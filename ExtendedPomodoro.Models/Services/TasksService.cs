@@ -2,12 +2,13 @@
 using ExtendedPomodoro.Models.DbConnections;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.DTOs;
+using ExtendedPomodoro.Models.Services.Interfaces;
 
-namespace ExtendedPomodoro.Models.Repositories.Sqlite
+namespace ExtendedPomodoro.Models.Services
 {
-    public class SqliteTasksRepository : ITasksRepository
+    public class TasksService : ITasksService
     {
-        private readonly SqliteDbConnectionFactory _connectionFactory;
+        private readonly IDbConnectionFactory _connectionFactory;
 
         private const string CREATE_TASK_QUERY =
             @"INSERT INTO tblTasks (Name, Description, EstPomodoro, CreatedAt, UpdatedAt)
@@ -45,26 +46,26 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         private const string DELETE_TASK_QUERY =
             @"DELETE FROM tblTasks WHERE Id = @Id";
 
-        public SqliteTasksRepository(SqliteDbConnectionFactory connectionFactory)
+        public TasksService(IDbConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }
 
-        public async IAsyncEnumerable<TaskDomain> GetTasks(TaskState taskState = TaskState.IN_PROGRESS, int page = 1, int limit = 20)
+        public async IAsyncEnumerable<TaskDomain> GetTasks(TaskState taskState = TaskState.IN_PROGRESS,
+            int page = 1, int limit = 20)
         {
-
             using (var db = _connectionFactory.Connect())
             {
-                object data = new
+                GetTaskDTO data = new()
                 {
                     IsTaskCompleted = ConvertTaskStateToInt(taskState),
                     Limit = limit,
                     Offset = limit * (page - 1)
                 };
 
-                IEnumerable<SqliteTaskDTO> records = await db.QueryAsync<SqliteTaskDTO>(GET_TASKS_QUERY, data);
+                IEnumerable<TaskDTO> records = await db.QueryAsync<TaskDTO>(GET_TASKS_QUERY, data);
 
-                foreach(var record in records) yield return ConvertToTaskDomain(record);
+                foreach (var record in records) yield return ConvertToTaskDomain(record);
             }
         }
 
@@ -87,7 +88,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
 
         public async Task CreateTask(CreateTaskDomain domain)
         {
-            using(var db = _connectionFactory.Connect())
+            using (var db = _connectionFactory.Connect())
             {
                 var data = ConvertToSqliteCreateTaskDTO(domain);
 
@@ -107,9 +108,9 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
 
                 await db.ExecuteAsync(UPDATE_TASK_STATE_QUERY, data);
             }
-        } 
+        }
 
-        public async Task UpdateTaskTimeSpent(int taskId, TimeSpan timeSpent)
+        public async Task UpdateTimeSpent(int taskId, TimeSpan timeSpent)
         {
             using (var db = _connectionFactory.Connect())
             {
@@ -133,14 +134,14 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             }
         }
 
-        public async Task UpdateTaskActPomodoro(int taskId, int ActPomodoroIncrementBy)
+        public async Task UpdateActPomodoro(int taskId, int ActPomodoroIncrementBy)
         {
             using (var db = _connectionFactory.Connect())
             {
                 var data = new
                 {
                     Id = taskId,
-                    ActPomodoroIncrementBy = ActPomodoroIncrementBy,
+                    ActPomodoroIncrementBy,
                     UpdatedAt = DateTime.Now
                 };
 
@@ -150,7 +151,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
 
         public async Task DeleteTask(int taskId)
         {
-            using(var db = _connectionFactory.Connect())
+            using (var db = _connectionFactory.Connect())
             {
                 await db.ExecuteAsync(DELETE_TASK_QUERY, new { Id = taskId });
             }
@@ -158,11 +159,11 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
 
         //public async Task 
 
-        private static SqliteCreateTaskDTO ConvertToSqliteCreateTaskDTO(CreateTaskDomain domain)
+        private static CreateTaskDTO ConvertToSqliteCreateTaskDTO(CreateTaskDomain domain)
         {
             var now = DateTime.Now;
 
-            return new SqliteCreateTaskDTO()
+            return new CreateTaskDTO()
             {
                 Name = domain.Name,
                 Description = domain.Description,
@@ -172,9 +173,9 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             };
         }
 
-        private static SqliteUpdateTaskDTO ConvertToSqliteUpdateTaskDTO(UpdateTaskDomain domain)
+        private static UpdateTaskDTO ConvertToSqliteUpdateTaskDTO(UpdateTaskDomain domain)
         {
-            return new SqliteUpdateTaskDTO()
+            return new UpdateTaskDTO()
             {
                 Id = domain.Id,
                 Name = domain.Name,
@@ -185,7 +186,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             };
         }
 
-        private static TaskDomain ConvertToTaskDomain(SqliteTaskDTO dto)
+        private static TaskDomain ConvertToTaskDomain(TaskDTO dto)
         {
             return new(
                     dto.Id,

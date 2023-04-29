@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using ExtendedPomodoro.FrameworkExtensions.Extensions;
 using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Models.Domains;
-using ExtendedPomodoro.Models.Repositories;
 using System;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
@@ -12,12 +11,13 @@ using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Helpers;
 using System.Windows;
 using ExtendedPomodoro.ViewServices;
+using ExtendedPomodoro.Models.Services.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
     public partial class SettingsViewModel : ObservableValidator
     {
-        private readonly ISettingsRepository _repository;
+        private readonly ISettingsService _repository;
         private readonly MessageBoxService _messageBox;
         private readonly IMessenger _messenger;
         private readonly SettingsViewService _settingsViewService;
@@ -105,7 +105,7 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         public SettingsViewModel(
-            ISettingsRepository repository, 
+            ISettingsService repository, 
             MessageBoxService messageBoxService,
             IMessenger messenger,
             SettingsViewService settingsViewService

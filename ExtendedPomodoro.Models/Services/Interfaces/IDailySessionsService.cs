@@ -1,13 +1,13 @@
 ﻿using ExtendedPomodoro.Models.Domains;
 
-namespace ExtendedPomodoro.Models.Repositories
+namespace ExtendedPomodoro.Models.Services.Interfaces
 {
-    public interface ISessionsRepository
+    public interface IDailySessionsService
     {
         Task UpsertDailySession(UpsertDailySessionDomain domain);
-        Task UpsertDailySessionTimeSpent(DateOnly sessionDate, TimeSpan timeSpent);
-        Task<int> GetDailySessionTotalPomodoroCompleted(DateOnly SessionDate);
-        Task UpsertDailySessionTotalTasksCompleted(DateOnly sessionDate, int totalPomodoroCompleted);
+        Task UpsertTimeSpent(DateOnly sessionDate, TimeSpan timeSpent);
+        Task<int> GetTotalPomodoroCompleted(DateOnly SessionDate);
+        Task UpsertTotalTasksCompleted(DateOnly sessionDate, int totalPomodoroCompleted);
         Task<SumDailySessionsDomain> GetSumDailySessions(DateTime from, DateTime to);
         IAsyncEnumerable<DailySessionDomain> GetDailySessions(DateTime from, DateTime to);
         Task<DateRangeDailySessionsDomain> GetDateRangeDailySessions();

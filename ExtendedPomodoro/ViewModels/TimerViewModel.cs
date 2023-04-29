@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Models.Domains;
-using ExtendedPomodoro.Models.Repositories;
+using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewServices;
 using NHotkey;
@@ -19,8 +19,8 @@ namespace ExtendedPomodoro.ViewModels
         IRecipient<StartSessionInfoMessage>
     {
         public SettingsViewModel SettingsViewModel { get; }
-        private readonly ISessionsRepository _sessionsRepository;
-        private readonly ITasksRepository _tasksRepository;
+        private readonly IDailySessionsService _sessionsRepository;
+        private readonly ITasksService _tasksRepository;
         private readonly IMessenger _messenger;
         private readonly TimerViewService _timerViewService;
         private bool _hasBeenSetup;
@@ -32,8 +32,8 @@ namespace ExtendedPomodoro.ViewModels
             TimerSessionState timerSessionState,
             SettingsViewModel settingsViewModel,
             TimerViewService timerViewService,
-            ISessionsRepository sessionsRepository,
-            ITasksRepository tasksRepository,
+            IDailySessionsService sessionsRepository,
+            ITasksService tasksRepository,
             IMessenger messenger
             )
         {
@@ -284,7 +284,7 @@ namespace ExtendedPomodoro.ViewModels
 
         private async Task StoreDailySessionTimeSpentInfo(DateOnly sessionDate, int timeSpent)
         {
-            await _sessionsRepository.UpsertDailySessionTimeSpent(
+            await _sessionsRepository.UpsertTimeSpent(
                 DateOnly.FromDateTime(DateTime.Now), TimeSpan.FromSeconds(timeSpent));
         }
 
@@ -301,17 +301,17 @@ namespace ExtendedPomodoro.ViewModels
 
         private async Task StoreDailySessionTotalTasksCompleted(DateOnly sessionDate, int totaltasksCompleted)
         {
-            await _sessionsRepository.UpsertDailySessionTotalTasksCompleted(sessionDate, totaltasksCompleted);
+            await _sessionsRepository.UpsertTotalTasksCompleted(sessionDate, totaltasksCompleted);
         }
 
         private async Task<int> GetPomodoroCompletedToday()
         {
-            return await _sessionsRepository.GetDailySessionTotalPomodoroCompleted(DateOnly.FromDateTime(DateTime.Now));
+            return await _sessionsRepository.GetTotalPomodoroCompleted(DateOnly.FromDateTime(DateTime.Now));
         }
 
         private async Task UpdateTaskTimeSpent(int taskId, int timeEllapsed)
         {
-            await _tasksRepository.UpdateTaskTimeSpent(taskId, TimeSpan.FromSeconds(timeEllapsed));
+            await _tasksRepository.UpdateTimeSpent(taskId, TimeSpan.FromSeconds(timeEllapsed));
         }
 
         private async Task UpdateTaskStateToComplete(int taskId)
@@ -321,7 +321,7 @@ namespace ExtendedPomodoro.ViewModels
 
         private async Task UpdateTaskActPomodoro(int taskId, int totalPomodoroCompleted)
         {
-            await _tasksRepository.UpdateTaskActPomodoro(taskId, totalPomodoroCompleted);
+            await _tasksRepository.UpdateActPomodoro(taskId, totalPomodoroCompleted);
         }
 
         #endregion

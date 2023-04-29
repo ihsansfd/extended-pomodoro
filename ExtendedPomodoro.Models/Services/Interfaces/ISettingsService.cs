@@ -1,8 +1,8 @@
 ﻿using ExtendedPomodoro.Models.Domains;
 
-namespace ExtendedPomodoro.Models.Repositories
+namespace ExtendedPomodoro.Models.Services.Interfaces
 {
-    public interface ISettingsRepository
+    public interface ISettingsService
     {
         Task<SettingsDomain> GetSettings();
         Task UpdateSettings(SettingsDomain settingsDomain);

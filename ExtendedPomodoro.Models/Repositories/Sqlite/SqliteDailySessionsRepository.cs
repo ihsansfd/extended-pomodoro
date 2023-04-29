@@ -2,12 +2,18 @@
 using ExtendedPomodoro.Models.DbConnections;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.DTOs;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ExtendedPomodoro.Models.Repositories.Sqlite
 {
-    public class SqliteSessionsRepository : ISessionsRepository
+    public class SqliteDailySessionsRepository : IDailySessionsRepository
     {
-        private readonly SqliteDbConnectionFactory _connectionFactory;
+        private readonly IDbConnectionFactory _connectionFactory;
 
         private const string UPSERT_DAILY_SESSION_QUERY =
             @"
@@ -79,14 +85,12 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             MAX(datetime(CreatedAt)) AS MaxDate FROM tblDailySessions;
             ";
 
-        public SqliteSessionsRepository(SqliteDbConnectionFactory connectionFactory)
+        public SqliteDailySessionsRepository(IDbConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }
 
-        
-        public async IAsyncEnumerable<DailySessionDomain>
-            GetDailySessions(DateTime from, DateTime to)
+        public async Task<IEnumerable<DailySessionDTO>> GetDailySessions(DateTime from, DateTime to)
         {
             using (var db = _connectionFactory.Connect())
             {
@@ -96,16 +100,12 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                     ToDate = to
                 };
 
-                var records = await db.QueryAsync<DailySessionDTO>
-                    (SELECT_DAILY_SESSIONS_QUERY, data);
-
-                foreach (var record in records) yield return ConvertToDailySessionDomain(record);
+                return await db.QueryAsync<DailySessionDTO>(SELECT_DAILY_SESSIONS_QUERY, data);
             }
         }
 
-        public async Task<SumDailySessionsDomain> GetSumDailySessions(DateTime from, DateTime to)
+        public async Task<SumDailySessionsDTO> GetSumDailySessions(DateTime from, DateTime to)
         {
-
             using (var db = _connectionFactory.Connect())
             {
                 var data = new
@@ -114,125 +114,55 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                     ToDate = to
                 };
 
-                var res = await db.QueryFirstAsync<SumDailySessionsDTO>(
+                return await db.QueryFirstAsync<SumDailySessionsDTO>(
                     SELECT_DAILY_SESSIONS_SUM_QUERY, data);
-
-                return ConvertToSumDailySessionsDomain(from, to, res);
             }
         }
 
-        public async Task<DateRangeDailySessionsDomain> GetDateRangeDailySessions() {
+        public async Task<DateRangeDailySessionsDTO> GetDateRangeDailySessions()
+        {
             using (var db = _connectionFactory.Connect())
             {
-                var res = await db.QueryFirstAsync<DateRangeDailySessionsDTO>(
+                return await db.QueryFirstAsync<DateRangeDailySessionsDTO>(
                     SELECT_DATE_RANGE_DAILY_SESSIONS_QUERY);
-
-                return ConvertToSumDailySessionsDomain(res);
             }
         }
 
-        public async Task UpsertDailySession(UpsertDailySessionDomain domain)
+        public async Task UpsertDailySession(UpsertDailySessionDTO dto)
         {
             using (var db = _connectionFactory.Connect())
             {
-                var data = ConvertToUpsertSqliteDailySessionDTO(domain);
-                await db.ExecuteAsync(UPSERT_DAILY_SESSION_QUERY, data);
+                await db.ExecuteAsync(UPSERT_DAILY_SESSION_QUERY, dto);
             }
         }
 
-        public async Task UpsertDailySessionTimeSpent(DateOnly sessionDate, TimeSpan timeSpent)
+        public async Task UpsertTimeSpent(UpsertTimeSpentDTO dto)
         {
-            var now = DateTime.Now;
-
             using (var db = _connectionFactory.Connect())
             {
-                var data = new
-                {
-                    SessionDate = sessionDate.ToString(),
-                    TimeSpentInSeconds = timeSpent.TotalSeconds,
-                    CreatedAt = now,
-                    UpdatedAt = now
-                };
-                await db.ExecuteAsync(UPSERT_DAILY_SESSION_TIME_SPENT_QUERY, data);
+                await db.ExecuteAsync(UPSERT_DAILY_SESSION_TIME_SPENT_QUERY, dto);
             }
         }
 
-        public async Task UpsertDailySessionTotalTasksCompleted(DateOnly sessionDate, int totalTasksCompleted)
+        public async Task UpsertTotalTasksCompleted(UpsertTotalTasksCompletedDTO dto)
         {
-            var now = DateTime.Now;
-
             using (var db = _connectionFactory.Connect())
             {
-                var data = new
-                {
-                    SessionDate = sessionDate.ToString(),
-                    TotalTasksCompleted = totalTasksCompleted,
-                    CreatedAt = now,
-                    UpdatedAt = now
-                };
-                await db.ExecuteAsync(UPSERT_DAILY_SESSION_TOTAL_TASKS_COMPLETED_QUERY, data);
+                await db.ExecuteAsync(UPSERT_DAILY_SESSION_TOTAL_TASKS_COMPLETED_QUERY, dto);
             }
         }
 
-        public async Task<int> GetDailySessionTotalPomodoroCompleted(DateOnly SessionDate)
+        public async Task<int> GetTotalPomodoroCompleted(string SessionDate)
         {
             using (var db = _connectionFactory.Connect())
             {
                 var data = new
                 {
-                    SessionDate = SessionDate.ToString()
+                    SessionDate = SessionDate
                 };
 
                 return await db.ExecuteScalarAsync<int>(SELECT_DAILY_SESSION_TOTAL_POMODORO_COMPLETED_QUERY, data);
             }
         }
-
-        private static SqliteUpsertDailySessionDTO ConvertToUpsertSqliteDailySessionDTO(UpsertDailySessionDomain domain)
-        {
-            var now = DateTime.Now;
-
-            return new SqliteUpsertDailySessionDTO()
-            {
-                SessionDate = domain.SessionDate.ToString(),
-                TotalPomodoroCompleted = domain.TotalPomodoroCompleted,
-                TotalShortBreaksCompleted = domain.TotalShortBreaksCompleted,
-                TotalLongBreaksCompleted = domain.TotalLongBreaksCompleted,
-                CreatedAt = now,
-                UpdatedAt = now
-            };
-        }
-
-        private static SumDailySessionsDomain ConvertToSumDailySessionsDomain(DateTime from, DateTime to, SumDailySessionsDTO res)
-        {
-            return new(
-                from,
-                to,
-                TimeSpan.FromSeconds(res.TotalTimeSpentInSeconds),
-                res.TotalPomodoroCompleted,
-                res.TotalShortBreaksCompleted,
-                res.TotalLongBreaksCompleted,
-                res.TotalTasksCompleted
-                );
-        }
-       
-        private DailySessionDomain ConvertToDailySessionDomain(DailySessionDTO record)
-        {
-            return new(
-                DateOnly.FromDateTime(record.SessionDate),
-                TimeSpan.FromSeconds(record.TimeSpentInSeconds),
-                record.TotalPomodoroCompleted,
-                record.TotalShortBreaksCompleted,
-                record.TotalLongBreaksCompleted,
-                record.TotalTasksCompleted,
-                record.CreatedAt,
-                record.UpdatedAt
-                );
-        }
-
-        private DateRangeDailySessionsDomain ConvertToSumDailySessionsDomain(DateRangeDailySessionsDTO dto)
-        {
-            return new(dto.MinDate, dto.MaxDate);
-        }
-
     }
 }

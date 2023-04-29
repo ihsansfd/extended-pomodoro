@@ -2,13 +2,14 @@
 using ExtendedPomodoro.Models.DbConnections;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.DTOs;
+using ExtendedPomodoro.Models.Services.Interfaces;
 using System.Text.Json;
 
-namespace ExtendedPomodoro.Models.Repositories.Sqlite
+namespace ExtendedPomodoro.Models.Services
 {
-    public class SqliteSettingsRepository : ISettingsRepository
+    public class SettingsService : ISettingsService
     {
-        private readonly SqliteDbConnectionFactory _connectionFactory;
+        private readonly IDbConnectionFactory _connectionFactory;
 
         private const string SELECT_DEFAULT_SETTINGS_QUERY =
             @"SELECT * FROM tblSettings WHERE SettingsType = 'DEFAULT' LIMIT 1";
@@ -24,7 +25,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             DarkModeEnabled = @DarkModeEnabled, StartHotkey = @StartHotkey, PauseHotkey = @PauseHotkey
             WHERE SettingsType = 'MAIN'";
 
-        public SqliteSettingsRepository(SqliteDbConnectionFactory connectionFactory)
+        public SettingsService(IDbConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }
@@ -33,7 +34,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         {
             using (var db = _connectionFactory.Connect())
             {
-                var record = await db.QuerySingleAsync<SqliteSettingsDTO>(SELECT_MAIN_SETTINGS_QUERY);
+                var record = await db.QuerySingleAsync<SettingsDTO>(SELECT_MAIN_SETTINGS_QUERY);
 
                 return ConvertToSettingsDomain(record);
             }
@@ -43,15 +44,15 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         {
             using (var db = _connectionFactory.Connect())
             {
-                SqliteSettingsDTO data = new()
+                SettingsDTO data = new()
                 {
-                    PomodoroDuration = (int) domain.PomodoroDuration.TotalSeconds,
-                    ShortBreakDuration = (int) domain.ShortBreakDuration.TotalSeconds,
-                    LongBreakDuration = (int) domain.LongBreakDuration.TotalSeconds,
+                    PomodoroDuration = (int)domain.PomodoroDuration.TotalSeconds,
+                    ShortBreakDuration = (int)domain.ShortBreakDuration.TotalSeconds,
+                    LongBreakDuration = (int)domain.LongBreakDuration.TotalSeconds,
                     LongBreakInterval = domain.LongBreakInterval,
                     DailyPomodoroTarget = domain.DailyPomodoroTarget,
                     IsAutostart = domain.IsAutostart,
-                    AlarmSound = (int) domain.AlarmSound,
+                    AlarmSound = (int)domain.AlarmSound,
                     Volume = domain.Volume,
                     IsRepeatForever = domain.IsRepeatForever,
                     PushNotificationEnabled = domain.PushNotificationEnabled,
@@ -68,13 +69,13 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
         {
             using (var db = _connectionFactory.Connect())
             {
-                var data = await db.QuerySingleAsync<SqliteSettingsDTO>(SELECT_DEFAULT_SETTINGS_QUERY);
+                var data = await db.QuerySingleAsync<SettingsDTO>(SELECT_DEFAULT_SETTINGS_QUERY);
 
                 await db.ExecuteAsync(UPDATE_MAIN_SETTINGS_QUERY, data);
             }
         }
 
-        private static SettingsDomain ConvertToSettingsDomain(SqliteSettingsDTO dto)
+        private static SettingsDomain ConvertToSettingsDomain(SettingsDTO dto)
         {
             return new SettingsDomain(
                 TimeSpan.FromSeconds(dto.PomodoroDuration),
@@ -83,7 +84,7 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                 dto.LongBreakInterval,
                 dto.DailyPomodoroTarget,
                 dto.IsAutostart,
-                (AlarmSound) dto.AlarmSound,
+                (AlarmSound)dto.AlarmSound,
                 dto.Volume,
                 dto.IsRepeatForever,
                 dto.PushNotificationEnabled,
@@ -92,10 +93,6 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                 dto.PauseHotkey != null ? JsonSerializer.Deserialize<HotkeyDomain>(dto.PauseHotkey) : null
                 );
         }
-
-        //public async Task ResetToDefaultSettings();
-
-
 
     }
 }
