@@ -272,12 +272,13 @@ namespace ExtendedPomodoro.ViewModels
             int shortBreakCompleted = (currentSessionState is ShortBreakSessionState) ? 1 : 0;
             int longBreakCompleted = (currentSessionState is LongBreakSessionState) ? 1 : 0;
 
-            var domain = new UpsertDailySessionDomain(
-                sessionDate,
-                pomodoroCompleted,
-                shortBreakCompleted,
-                longBreakCompleted
-                );
+            var domain = new UpsertDailySessionDomain()
+            {
+                SessionDate = sessionDate,
+                TotalPomodoroCompleted = pomodoroCompleted,
+                TotalShortBreaksCompleted = shortBreakCompleted,
+                TotalLongBreaksCompleted = longBreakCompleted
+            };
 
             await _sessionsRepository.UpsertDailySession(domain);
         }

@@ -5,6 +5,7 @@ using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.ViewServices;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -96,8 +97,8 @@ namespace ExtendedPomodoro.ViewModels
 
         public async Task Initialize()
         {
-            FromDate = DateTime.Now.AddDays(-7);
-            ToDate = DateTime.Now;
+            FromDate = ConvertToDateWithMinTime(DateTime.Today).AddDays(-7);
+            ToDate = ConvertToDateWithMaxTime(DateTime.Today);
 
             await LoadDateRange();
         }
@@ -111,8 +112,10 @@ namespace ExtendedPomodoro.ViewModels
 
         private async Task LoadStats() {
 
-            var sumsTask = _repository.GetSumDailySessions(FromDate, ToDate);
-            var dailySessionsTask = _repository.GetDailySessions(FromDate, ToDate);
+            var sumsTask = _repository.GetSumDailySessions(
+                ConvertToDateWithMinTime(FromDate), ConvertToDateWithMaxTime(ToDate));
+            var dailySessionsTask = _repository.GetDailySessions(
+                ConvertToDateWithMinTime(FromDate), ConvertToDateWithMaxTime(ToDate));
             _dailySessions = dailySessionsTask.ToBlockingEnumerable();
 
             LoadPropertiesFrom(await sumsTask);
@@ -173,5 +176,16 @@ namespace ExtendedPomodoro.ViewModels
             TotalTimeSpentInMinutes = (int) properties.TotalTimeSpent.TotalMinutes;
             TotalTasksCompleted = properties.TotalTasksCompleted;
         }
+
+        private DateTime ConvertToDateWithMinTime(DateTime date)
+        {
+            return DateOnly.FromDateTime(date).ToDateTime(TimeOnly.MinValue);
+        }
+
+        private DateTime ConvertToDateWithMaxTime(DateTime date)
+        {
+            return DateOnly.FromDateTime(date).ToDateTime(TimeOnly.MaxValue);
+        }
+
     }
 }

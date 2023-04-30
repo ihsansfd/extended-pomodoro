@@ -28,13 +28,19 @@ namespace ExtendedPomodoro.Models.Services
                 await _repository.UpdateSettings(data);
         }
 
+        public async Task ResetToDefaultSettings()
+        {
+            var data = await _repository.GetDefaultSettings();
+            await _repository.UpdateSettings(data);
+        }
+
         private static SettingsDTO ConvertToSettingsDTO(SettingsDomain domain)
         {
             return new()
             {
-                PomodoroDuration = (int)domain.PomodoroDuration.TotalSeconds,
-                ShortBreakDuration = (int)domain.ShortBreakDuration.TotalSeconds,
-                LongBreakDuration = (int)domain.LongBreakDuration.TotalSeconds,
+                PomodoroDurationInSeconds = (int)domain.PomodoroDuration.TotalSeconds,
+                ShortBreakDurationInSeconds = (int)domain.ShortBreakDuration.TotalSeconds,
+                LongBreakDurationInSeconds = (int)domain.LongBreakDuration.TotalSeconds,
                 LongBreakInterval = domain.LongBreakInterval,
                 DailyPomodoroTarget = domain.DailyPomodoroTarget,
                 IsAutostart = domain.IsAutostart,
@@ -48,29 +54,27 @@ namespace ExtendedPomodoro.Models.Services
             };
         }
 
-        public async Task ResetToDefaultSettings()
-        {
-            var data = await _repository.GetDefaultSettings();
-            await _repository.UpdateSettings(data);
-        }
-
         private static SettingsDomain ConvertToSettingsDomain(SettingsDTO dto)
         {
-            return new SettingsDomain(
-                TimeSpan.FromSeconds(dto.PomodoroDuration),
-                TimeSpan.FromSeconds(dto.ShortBreakDuration),
-                TimeSpan.FromSeconds(dto.LongBreakDuration),
-                dto.LongBreakInterval,
-                dto.DailyPomodoroTarget,
-                dto.IsAutostart,
-                (AlarmSound)dto.AlarmSound,
-                dto.Volume,
-                dto.IsRepeatForever,
-                dto.PushNotificationEnabled,
-                dto.DarkModeEnabled,
-                dto.StartHotkey != null ? JsonSerializer.Deserialize<HotkeyDomain>(dto.StartHotkey) : null,
-                dto.PauseHotkey != null ? JsonSerializer.Deserialize<HotkeyDomain>(dto.PauseHotkey) : null
-                );
+
+            return new SettingsDomain()
+            {
+                PomodoroDuration = TimeSpan.FromSeconds(dto.PomodoroDurationInSeconds),
+                ShortBreakDuration = TimeSpan.FromSeconds(dto.ShortBreakDurationInSeconds),
+                LongBreakDuration = TimeSpan.FromSeconds(dto.LongBreakDurationInSeconds),
+                LongBreakInterval = dto.LongBreakInterval,
+                DailyPomodoroTarget = dto.DailyPomodoroTarget,
+                IsAutostart = dto.IsAutostart,
+                AlarmSound = (AlarmSound)dto.AlarmSound,
+                Volume = dto.Volume,
+                IsRepeatForever = dto.IsRepeatForever,
+                PushNotificationEnabled = dto.PushNotificationEnabled,
+                DarkModeEnabled = dto.DarkModeEnabled,
+                StartHotkeyDomain = dto.StartHotkey != null ? 
+                                    JsonSerializer.Deserialize<HotkeyDomain>(dto.StartHotkey) : null,
+                PauseHotkeyDomain = dto.PauseHotkey != null ? 
+                                    JsonSerializer.Deserialize<HotkeyDomain>(dto.PauseHotkey) : null
+            };
         }
 
     }

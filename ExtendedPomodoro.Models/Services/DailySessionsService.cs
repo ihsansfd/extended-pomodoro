@@ -102,16 +102,16 @@ namespace ExtendedPomodoro.Models.Services
             };
         }
 
-        private static SumDailySessionsDomain ConvertToSumDailySessionsDomain(DateTime from, DateTime to, SumDailySessionsDTO res)
+        private static SumDailySessionsDomain ConvertToSumDailySessionsDomain(DateTime from, DateTime to, SumDailySessionsDTO dto)
         {
             return new(
                 from,
                 to,
-                TimeSpan.FromSeconds(res.TotalTimeSpentInSeconds),
-                res.TotalPomodoroCompleted,
-                res.TotalShortBreaksCompleted,
-                res.TotalLongBreaksCompleted,
-                res.TotalTasksCompleted
+                TimeSpan.FromSeconds(dto.TotalTimeSpentInSeconds),
+                dto.TotalPomodoroCompleted,
+                dto.TotalShortBreaksCompleted,
+                dto.TotalLongBreaksCompleted,
+                dto.TotalTasksCompleted
                 );
         }
 

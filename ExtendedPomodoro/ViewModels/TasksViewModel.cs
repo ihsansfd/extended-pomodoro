@@ -302,7 +302,15 @@ namespace ExtendedPomodoro.ViewModels
 
             try
             {
-                await _repository.UpdateTask(new(Id, Name, Description, estPomodoro, _helper.ConvertIntegerToTaskState(TaskStatus)));
+                await _repository.UpdateTask(
+                    new() {
+                        Id = Id,
+                        Name = Name,
+                        Description = Description,
+                        EstPomodoro = estPomodoro,
+                        Taskstate = _helper.ConvertIntegerToTaskState(TaskStatus)
+                    }
+                    );
                 CloseModal();
 
                 _messenger.Send(new TaskUpdateInfoMessage(true));

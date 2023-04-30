@@ -23,9 +23,9 @@ namespace ExtendedPomodoro.Models.DbSetup
             @"
             CREATE TABLE IF NOT EXISTS tblSettings (
                 SettingsType VARCHAR(20) UNIQUE NOT NULL,
-                PomodoroDuration INT NOT NULL,
-                ShortBreakDuration INT NOT NULL,
-                LongBreakDuration INT NOT NULL,
+                PomodoroDurationInSeconds INT NOT NULL,
+                ShortBreakDurationInSeconds INT NOT NULL,
+                LongBreakDurationInSeconds INT NOT NULL,
                 LongBreakInterval INT NOT NULL,
                 DailyPomodoroTarget INT NOT NULL,
                 IsAutostart INT(1) NOT NULL,

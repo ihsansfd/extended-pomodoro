@@ -22,19 +22,20 @@
 
     public record class HotkeyDomain(int ModifierKeys, int Key);
 
-    public record class SettingsDomain(
-        TimeSpan PomodoroDuration,
-        TimeSpan ShortBreakDuration,
-        TimeSpan LongBreakDuration,
-        int LongBreakInterval,
-        int DailyPomodoroTarget,
-        bool IsAutostart,
-        AlarmSound AlarmSound,
-        int Volume,
-        bool IsRepeatForever,
-        bool PushNotificationEnabled,
-        bool DarkModeEnabled,
-        HotkeyDomain? StartHotkeyDomain,
-        HotkeyDomain? PauseHotkeyDomain
-     );
+    public record class SettingsDomain
+    {
+        public TimeSpan PomodoroDuration { get; set; }
+        public TimeSpan ShortBreakDuration { get; set; }
+        public TimeSpan LongBreakDuration { get; set; }
+        public int LongBreakInterval { get; set; }
+        public int DailyPomodoroTarget { get; set; }
+        public bool IsAutostart { get; set; }
+        public AlarmSound AlarmSound { get; set; }
+        public int Volume { get; set; }
+        public bool IsRepeatForever { get; set; }
+        public bool PushNotificationEnabled { get; set; }
+        public bool DarkModeEnabled { get; set; }
+        public HotkeyDomain? StartHotkeyDomain { get; set; }
+        public HotkeyDomain? PauseHotkeyDomain { get; set; }
+    };
 }

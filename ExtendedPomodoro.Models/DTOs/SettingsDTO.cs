@@ -3,9 +3,9 @@
     public class SettingsDTO
     {
         public string SettingsType { get; set; } = "MAIN";
-        public int PomodoroDuration { get; set; }
-        public int ShortBreakDuration { get; set; }
-        public int LongBreakDuration { get; set; }
+        public int PomodoroDurationInSeconds { get; set; }
+        public int ShortBreakDurationInSeconds { get; set; }
+        public int LongBreakDurationInSeconds { get; set; }
         public int LongBreakInterval { get; set; }
         public int DailyPomodoroTarget { get; set; }
         public bool IsAutostart { get; set; }

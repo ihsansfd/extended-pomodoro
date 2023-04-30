@@ -142,21 +142,22 @@ namespace ExtendedPomodoro.ViewModels
 
             if(HasErrors) return;
 
-            await _repository.UpdateSettings(new SettingsDomain(
-                TimeSpan.FromMinutes(PomodoroDurationInMinutes),
-                TimeSpan.FromMinutes(ShortBreakDurationInMinutes),
-                TimeSpan.FromMinutes(LongBreakDurationInMinutes),
-                LongBreakInterval,
-                DailyPomodoroTarget,
-                IsAutostart,
-                (AlarmSound) AlarmSound,
-                Volume,
-                IsRepeatForever,
-                PushNotificationEnabled,
-                DarkModeEnabled,
-                StartHotkey.ConvertToHotkeyDomain(),
-                PauseHotkey.ConvertToHotkeyDomain()
-                ));
+        await _repository.UpdateSettings(new SettingsDomain()
+        {
+            PomodoroDuration = TimeSpan.FromMinutes(PomodoroDurationInMinutes),
+            ShortBreakDuration = TimeSpan.FromMinutes(ShortBreakDurationInMinutes),
+            LongBreakDuration = TimeSpan.FromMinutes(LongBreakDurationInMinutes),
+            LongBreakInterval = LongBreakInterval,
+            DailyPomodoroTarget = DailyPomodoroTarget,
+            IsAutostart = IsAutostart,
+            AlarmSound = (AlarmSound) AlarmSound,
+            Volume = Volume,
+            IsRepeatForever = IsRepeatForever,
+            PushNotificationEnabled = PushNotificationEnabled,
+            DarkModeEnabled = DarkModeEnabled,
+            StartHotkeyDomain = StartHotkey.ConvertToHotkeyDomain(),
+            PauseHotkeyDomain = PauseHotkey.ConvertToHotkeyDomain()
+        });
 
             _messenger.Send(new SettingsUpdateInfoMessage(this));
         }
