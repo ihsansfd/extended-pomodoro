@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Helpers;
 using ExtendedPomodoro.Models.Domains;
 using System;
@@ -12,6 +11,7 @@ using System.Windows;
 using ExtendedPomodoro.FrameworkExtensions.Extensions;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Models.Services.Interfaces;
+using ExtendedPomodoro.Messages;
 
 namespace ExtendedPomodoro.ViewModels
 {

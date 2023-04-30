@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExtendedPomodoro.Entities
+namespace ExtendedPomodoro.Messages
 {
     public record class TimerTimeChangeInfoMessage(TimeSpan TimerSetFor, TimeSpan RemainingTime);
 }
