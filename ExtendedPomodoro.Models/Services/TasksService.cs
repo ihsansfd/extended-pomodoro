@@ -26,6 +26,8 @@ namespace ExtendedPomodoro.Models.Services
 
         public async Task<int> GetTotalPages(TaskState taskState = TaskState.IN_PROGRESS, int limit = 20)
         {
+            if (limit == 0) return 0;
+
             int totalRows = await _repository.GetTotalRows(ConvertTaskStateToInt(taskState));
             return (totalRows + (limit - 1)) / limit;
         }
