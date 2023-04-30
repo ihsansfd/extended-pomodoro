@@ -9,15 +9,18 @@ namespace ExtendedPomodoro.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is Hotkey val) return val.ToString();
-            return string.Empty;
+            return DoTheConversion(value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            return DoTheConversion(value);
+        }
+
+        private static object DoTheConversion(object value)
+        {
             if (value is Hotkey val) return val.ToString();
             return string.Empty;
         }
-    
     }
 }

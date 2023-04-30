@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.ViewModels;
 using NHotkey;
 using NHotkey.Wpf;

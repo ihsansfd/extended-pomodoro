@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.Messages;
 using System;
 using System.Windows.Threading;
 

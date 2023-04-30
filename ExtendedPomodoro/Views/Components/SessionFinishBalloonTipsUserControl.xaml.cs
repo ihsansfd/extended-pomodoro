@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using System;

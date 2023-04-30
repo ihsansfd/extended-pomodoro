@@ -9,15 +9,15 @@ namespace ExtendedPomodoro.Converters
     {
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return GetConvertedValue(value);
+            return DoTheConversion(value);
         }
 
         public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return GetConvertedValue(value);
+            return DoTheConversion(value);
         }
 
-        private object? GetConvertedValue(object value)
+        private object? DoTheConversion(object value)
         {
             if (value is TaskState valTaskState)
             {
