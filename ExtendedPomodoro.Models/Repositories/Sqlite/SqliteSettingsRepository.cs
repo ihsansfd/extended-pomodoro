@@ -19,8 +19,9 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             @"SELECT * FROM tblSettings WHERE SettingsType = 'MAIN' LIMIT 1";
 
         private const string UPDATE_MAIN_SETTINGS_QUERY =
-            @"UPDATE tblSettings SET PomodoroDuration = @PomodoroDurationInSeconds, ShortBreakDuration = @ShortBreakDurationInSeconds,
-            LongBreakDuration = @LongBreakDurationInSeconds, LongBreakInterval = @LongBreakInterval, 
+            @"UPDATE tblSettings SET PomodoroDurationInSeconds = @PomodoroDurationInSeconds, 
+                                     ShortBreakDurationInSeconds = @ShortBreakDurationInSeconds,
+                                     LongBreakDurationInSeconds = @LongBreakDurationInSeconds, LongBreakInterval = @LongBreakInterval, 
             DailyPomodoroTarget = @DailyPomodoroTarget, IsAutostart = @IsAutostart, AlarmSound = @AlarmSound,
             Volume = @Volume, IsRepeatForever = @IsRepeatForever, PushNotificationEnabled = @PushNotificationEnabled,
             DarkModeEnabled = @DarkModeEnabled, StartHotkey = @StartHotkey, PauseHotkey = @PauseHotkey
