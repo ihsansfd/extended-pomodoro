@@ -20,7 +20,7 @@ namespace ExtendedPomodoro.ViewModels
     public partial class SettingsViewModel : ObservableValidator
     {
         private readonly ISettingsService _repository;
-        private readonly MessageBoxService _messageBox;
+        private readonly IMessageBoxService _messageBox;
         private readonly IMessenger _messenger;
         private readonly SettingsViewService _settingsViewService;
         private readonly IAppSettingsProvider _appSettingsProvider;
@@ -109,7 +109,7 @@ namespace ExtendedPomodoro.ViewModels
 
         public SettingsViewModel(
             ISettingsService repository, 
-            MessageBoxService messageBoxService,
+            IMessageBoxService messageBoxService,
             IMessenger messenger,
             SettingsViewService settingsViewService,
             IAppSettingsProvider appSettingsProvider

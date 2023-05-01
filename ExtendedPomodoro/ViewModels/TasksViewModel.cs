@@ -12,6 +12,7 @@ using ExtendedPomodoro.FrameworkExtensions.Extensions;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Messages;
+using ExtendedPomodoro.Services.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -48,7 +49,7 @@ namespace ExtendedPomodoro.ViewModels
     {
        private readonly ITasksService _repository;
        private readonly TasksHelper _helper;
-       private readonly MessageBoxService _messageBox;
+       private readonly IMessageBoxService _messageBox;
        private readonly IMessenger _messenger;
 
        private int _currentPage = 1;
@@ -65,7 +66,7 @@ namespace ExtendedPomodoro.ViewModels
         public ReadTasksViewModel(
             ITasksService repository,
             TasksHelper helper,
-            MessageBoxService messageBoxService,
+            IMessageBoxService messageBoxService,
             IMessenger messenger)
         {
             _repository = repository;
@@ -178,12 +179,12 @@ namespace ExtendedPomodoro.ViewModels
     public partial class CreateTaskViewModel : ObservableValidator
     {
         private readonly ITasksService _repository;
-        private readonly MessageBoxService _messageBox;
+        private readonly IMessageBoxService _messageBox;
         private readonly IMessenger _messenger;
 
         public CreateTaskViewModel(
             ITasksService repository, 
-            MessageBoxService messageBoxService,
+            IMessageBoxService messageBoxService,
             IMessenger messenger)
         {
             _repository = repository;
@@ -249,7 +250,7 @@ namespace ExtendedPomodoro.ViewModels
     {
         private readonly ITasksService _repository;
         private readonly TasksHelper _helper;
-        private readonly MessageBoxService _messageBox;
+        private readonly IMessageBoxService _messageBox;
         private readonly IMessenger _messenger;
 
         [Required]
@@ -282,7 +283,7 @@ namespace ExtendedPomodoro.ViewModels
         public UpdateTaskViewModel(
             ITasksService repository, 
             TasksHelper helper,
-            MessageBoxService messageBoxService,
+            IMessageBoxService messageBoxService,
             IMessenger messenger)
         {
             _repository = repository;
@@ -367,12 +368,12 @@ namespace ExtendedPomodoro.ViewModels
     public partial class DeleteTaskViewModel : ObservableObject
     {
         private readonly ITasksService _repository;
-        private readonly MessageBoxService _messageBox;
+        private readonly IMessageBoxService _messageBox;
         private readonly IMessenger _messenger;
 
         public DeleteTaskViewModel(
             ITasksService repository,
-            MessageBoxService messageBoxService,
+            IMessageBoxService messageBoxService,
             IMessenger messenger)
         {
             _repository = repository;

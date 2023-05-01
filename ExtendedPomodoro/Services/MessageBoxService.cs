@@ -1,8 +1,9 @@
-﻿using System.Windows;
+﻿using ExtendedPomodoro.Services.Interfaces;
+using System.Windows;
 
 namespace ExtendedPomodoro.Services
 {
-    public class MessageBoxService
+    public class MessageBoxService : IMessageBoxService
     {
         public MessageBoxResult Show(string messageBoxText)
         {

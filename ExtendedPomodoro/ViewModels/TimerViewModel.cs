@@ -29,7 +29,8 @@ namespace ExtendedPomodoro.ViewModels
 
         private int _timeEllapsed = 0;
 
-        public TimerViewModel(ReadTasksViewModel readTasksViewModel,
+        public TimerViewModel(
+            ReadTasksViewModel readTasksViewModel,
             CreateTaskViewModel createTaskViewModel,
             TimerSessionState timerSessionState,
             TimerViewService timerViewService,

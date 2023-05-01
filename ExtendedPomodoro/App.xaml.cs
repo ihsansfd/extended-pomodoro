@@ -41,12 +41,11 @@ namespace ExtendedPomodoro
         protected override async void OnStartup(StartupEventArgs e)
         {
             // order matters
-
             base.OnStartup(e);
             EnsureOnlyOneInstanceIsRunning();
             await InitializeDb();
             await InitializeAppSettings();
-            await RegisterHotkeys();
+            RegisterHotkeys();
             SwitchThemeToCurrentSettings();
             await InitializeMainWindow();
         }
@@ -77,7 +76,7 @@ namespace ExtendedPomodoro
             mainWindow.Show();
         }
 
-        private async Task RegisterHotkeys()
+        private void RegisterHotkeys()
         {
             var settingsProvider = Services.GetRequiredService<IAppSettingsProvider>();
             var hotkeyService = Services.GetRequiredService<HotkeyLoaderService>();
@@ -137,7 +136,7 @@ namespace ExtendedPomodoro
                 ((s) => new(s.GetRequiredService<TimerViewModel>(), s.GetRequiredService<IMessenger>()));
             services.AddSingleton<HotkeyManager>((_) => HotkeyManager.Current);
             services.AddSingleton<HotkeyLoaderService>();
-            services.AddSingleton<MessageBoxService>();
+            services.AddSingleton<IMessageBoxService, MessageBoxService>();
             services.AddSingleton<IMessenger>((_) => MessengerFactory.Messenger);
             services.AddSingleton<AppThemeService>();
             services.AddSingleton<DialogWindowService>();
