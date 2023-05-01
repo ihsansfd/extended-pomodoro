@@ -6,20 +6,22 @@ using System.Windows.Threading;
 
 namespace ExtendedPomodoro.Services
 {
-    public class ExtendedTimerEventArgs : EventArgs
+    public class RemainingTimeChangedEventArgs : EventArgs
     {
-        public TimeSpan CurrentTime { get; set; }
+        public TimeSpan RemainingTime { get; set; }
+        public TimeSpan TimerSetFor { get; set; }
     }
 
     public class ExtendedTimer
     {
+        public event EventHandler<RemainingTimeChangedEventArgs>? RemainingTimeChanged;
+        
         private static readonly TimeSpan _INTERVAL = TimeSpan.FromSeconds(1);
-        private readonly IMessenger _messenger = MessengerFactory.Messenger;
         private readonly DispatcherTimer _timer;
 
         private TimeSpan _timerSetFor  = TimeSpan.Zero;
         private TimeSpan _remainingTime  = TimeSpan.Zero;
-
+        
         public ExtendedTimer()
         {
             _timer = new();
@@ -31,7 +33,12 @@ namespace ExtendedPomodoro.Services
             _timerSetFor = timerSetFor;
             _remainingTime = timerSetFor;
             _timer.Interval = _INTERVAL;
-            _messenger.Send(new TimerTimeChangeInfoMessage(_timerSetFor, _remainingTime));
+            
+            RemainingTimeChanged?.Invoke(this, new()
+            {
+                RemainingTime = _remainingTime,
+                TimerSetFor = _timerSetFor
+            });
         }
 
         public void Start()
@@ -53,7 +60,11 @@ namespace ExtendedPomodoro.Services
         {
             _remainingTime = _remainingTime.Subtract(_INTERVAL);
 
-           _messenger.Send(new TimerTimeChangeInfoMessage(_timerSetFor, _remainingTime));
+            RemainingTimeChanged?.Invoke(this, new()
+            {
+                RemainingTime = _remainingTime,
+                TimerSetFor = _timerSetFor
+            });
         }
 
         internal void Stop()

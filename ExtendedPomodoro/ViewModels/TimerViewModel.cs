@@ -101,9 +101,7 @@ namespace ExtendedPomodoro.ViewModels
         #region Timer variables, props, and commands
 
         public TimeSpan RemainingTime;
-
-        public bool NeedSessionSetup { get; set; } = true;
-
+        
         [ObservableProperty] // from 0 to 100, use converter to set it backwards
         private double _sessionProgress = 0.0;
 
@@ -168,7 +166,7 @@ namespace ExtendedPomodoro.ViewModels
             await ReadTasksViewModel.DisplayInProgressTasks();
             PomodoroCompletedToday = await GetPomodoroCompletedToday();
             DailyPomodoroTarget = _appSettingsProvider.AppSettings.DailyPomodoroTarget;
-            if (!_hasBeenSetup) await CurrentTimerSession.InitialSetup(this, _appSettingsProvider);
+            if (!_hasBeenSetup) await CurrentTimerSession.InitialSetup(this, _appSettingsProvider, _messenger);
             _hasBeenSetup = true;
         }
 
@@ -357,18 +355,33 @@ namespace ExtendedPomodoro.ViewModels
         protected static TimerViewModel _context;
         protected static IAppSettingsProvider _configuration;
 
-        protected static ExtendedTimer _timer { get; } = new();
+        protected static readonly ExtendedTimer _timer = new();
         protected static PomodoroSessionState _pomodoroSessionState = new();
         protected static ShortBreakSessionState _shortBreakSessionState = new();
         protected static LongBreakSessionState _longBreakSessionState = new();
 
+        private IMessenger _messenger;
+
         // Need to be called before anything else
-        public async Task InitialSetup(TimerViewModel context, IAppSettingsProvider configuration)
+        public async Task InitialSetup(
+            TimerViewModel context, 
+            IAppSettingsProvider configuration,
+            IMessenger messenger
+            )
         {
             _context = context;
             _configuration = configuration;
+            _messenger = messenger;
             _context.CurrentTimerSession = _pomodoroSessionState;
+            
             _context.CurrentTimerSession.Initialize();
+            
+            _timer.RemainingTimeChanged += TimerOnRemainingTimeChanged;
+        }
+
+        private void TimerOnRemainingTimeChanged(object? sender, RemainingTimeChangedEventArgs e)
+        {
+            _messenger.Send(new TimerTimeChangeInfoMessage(e.TimerSetFor, e.RemainingTime));
         }
 
         public void Start()
