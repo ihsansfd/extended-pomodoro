@@ -40,6 +40,8 @@ namespace ExtendedPomodoro
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            // order matters
+
             base.OnStartup(e);
             EnsureOnlyOneInstanceIsRunning();
             await InitializeDb();
@@ -51,17 +53,17 @@ namespace ExtendedPomodoro
 
         private async Task InitializeAppSettings()
         {
-            var provider = Services.GetRequiredService<IAppSettingsProvider>();
-            await provider.Initialize();
+            var settingsProvider = Services.GetRequiredService<IAppSettingsProvider>();
+            await settingsProvider.Initialize();
         }
 
         private void SwitchThemeToCurrentSettings()
         {
-            var provider = Services.GetRequiredService<IAppSettingsProvider>();
+            var settingsProvider = Services.GetRequiredService<IAppSettingsProvider>();
 
             var appThemeService = Services.GetRequiredService<AppThemeService>();
             appThemeService.SwitchThemeTo(
-                provider.AppSettings.DarkModeEnabled ? AppTheme.Dark : AppTheme.Light);
+                settingsProvider.AppSettings.DarkModeEnabled ? AppTheme.Dark : AppTheme.Light);
         }
 
         private async Task InitializeMainWindow()
@@ -77,12 +79,10 @@ namespace ExtendedPomodoro
 
         private async Task RegisterHotkeys()
         {
-            var settingsRepo = Services.GetRequiredService<ISettingsService>();
-            var settings = await settingsRepo.GetSettings();
-
+            var settingsProvider = Services.GetRequiredService<IAppSettingsProvider>();
             var hotkeyService = Services.GetRequiredService<HotkeyLoaderService>();
-            hotkeyService.RegisterOrUpdateStartTimerHotkey(settings.StartHotkeyDomain.ConvertToHotkey());
-            hotkeyService.RegisterOrUpdatePauseTimerHotkey(settings.PauseHotkeyDomain.ConvertToHotkey());
+            hotkeyService.RegisterOrUpdateStartTimerHotkey(settingsProvider.AppSettings.StartHotkey);
+            hotkeyService.RegisterOrUpdatePauseTimerHotkey(settingsProvider.AppSettings.PauseHotkey);
         }
 
         private async Task InitializeDb()
