@@ -15,15 +15,24 @@ namespace ExtendedPomodoro.Services
     {
         private readonly IMessenger _messenger;
 
-        private static readonly ResourceDictionary LIGHT_THEME_RESOURCE = 
-            new() { Source = new Uri("Themes/LightTheme.xaml", UriKind.Relative)};
+        private readonly ResourceDictionary _lightThemeResource;
 
-        private static readonly ResourceDictionary DARK_THEME_RESOURCE =
-            new() { Source = new Uri("Themes/DarkTheme.xaml", UriKind.Relative) };
+        private readonly ResourceDictionary _darkThemeResource;
 
-        public AppThemeService(IMessenger messenger) {
+        public AppThemeService(ResourceDictionary lightTheme, ResourceDictionary darkTheme,
+            IMessenger messenger) {
+
+            _lightThemeResource = lightTheme;
+            _darkThemeResource = darkTheme;
             _messenger = messenger;
+            _messenger.RegisterAll(this);
+        }
 
+        public AppThemeService(IMessenger messenger)
+        {
+            _lightThemeResource = new() { Source = new Uri("Themes/LightTheme.xaml", UriKind.Relative) };
+            _darkThemeResource = new() { Source = new Uri("Themes/DarkTheme.xaml", UriKind.Relative) };
+            _messenger = messenger;
             _messenger.RegisterAll(this);
         }
 
@@ -34,15 +43,15 @@ namespace ExtendedPomodoro.Services
             switch (theme)
             {
                 case AppTheme.Light:
-                    App.Current.Resources.MergedDictionaries.Insert(0, LIGHT_THEME_RESOURCE);
+                    App.Current.Resources.MergedDictionaries.Insert(0, _lightThemeResource);
                     break;
 
                 case AppTheme.Dark:
-                    App.Current.Resources.MergedDictionaries.Insert(0, DARK_THEME_RESOURCE);
+                    App.Current.Resources.MergedDictionaries.Insert(0, _darkThemeResource);
                     break;
 
                 default:
-                    App.Current.Resources.MergedDictionaries.Insert(0, LIGHT_THEME_RESOURCE);
+                    App.Current.Resources.MergedDictionaries.Insert(0, _lightThemeResource);
                     break;
             }
         }
