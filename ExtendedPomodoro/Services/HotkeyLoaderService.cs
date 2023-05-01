@@ -27,14 +27,14 @@ namespace ExtendedPomodoro.Services
             _messenger.RegisterAll(this);
         }
 
-        public void RegisterOrUpdateStartTimerHotkey(Hotkey? hotkeyDomain)
+        public void RegisterOrUpdateStartTimerHotkey(Hotkey? hotkey)
         {
-            RegisterOrUpdate("StartTimerHotkey", hotkeyDomain, _timerViewModel.StartSessionFromHotkey);
+            RegisterOrUpdate("StartTimerHotkey", hotkey, _timerViewModel.StartSessionFromHotkey);
         }
 
-        public void RegisterOrUpdatePauseTimerHotkey(Hotkey? hotkeyDomain)
+        public void RegisterOrUpdatePauseTimerHotkey(Hotkey? hotkey)
         {
-            RegisterOrUpdate("PauseTimerHotkey", hotkeyDomain, _timerViewModel.PauseSessionFromHotkey);
+            RegisterOrUpdate("PauseTimerHotkey", hotkey, _timerViewModel.PauseSessionFromHotkey);
         }
 
         private void RegisterOrUpdate(string identifier, 
@@ -52,8 +52,8 @@ namespace ExtendedPomodoro.Services
 
         public void Receive(SettingsUpdateInfoMessage message)
         {
-            RegisterOrUpdateStartTimerHotkey(message.SettingsViewModel.StartHotkey);
-            RegisterOrUpdatePauseTimerHotkey(message.SettingsViewModel.PauseHotkey);
+            RegisterOrUpdateStartTimerHotkey(message.AppSettings.StartHotkey);
+            RegisterOrUpdatePauseTimerHotkey(message.AppSettings.PauseHotkey);
         }
 
         ~HotkeyLoaderService()

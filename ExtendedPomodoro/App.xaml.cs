@@ -8,7 +8,9 @@ using ExtendedPomodoro.Models.Repositories;
 using ExtendedPomodoro.Models.Repositories.Sqlite;
 using ExtendedPomodoro.Models.Services;
 using ExtendedPomodoro.Models.Services.Interfaces;
+using ExtendedPomodoro.Proxies;
 using ExtendedPomodoro.Services;
+using ExtendedPomodoro.Services.Interfaces;
 using ExtendedPomodoro.ViewModels;
 using ExtendedPomodoro.ViewServices;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,25 +41,27 @@ namespace ExtendedPomodoro
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
             EnsureOnlyOneInstanceIsRunning();
-
             await InitializeDb();
-
-            await InitializeMainWindow();
-
+            await InitializeAppSettings();
             await RegisterHotkeys();
-
-            await SwitchThemeToCurrentSettings();
+            SwitchThemeToCurrentSettings();
+            await InitializeMainWindow();
         }
 
-        private async Task SwitchThemeToCurrentSettings()
+        private async Task InitializeAppSettings()
         {
-            var settingsRepo = Services.GetRequiredService<ISettingsService>();
-            var settings = await settingsRepo.GetSettings();
+            var provider = Services.GetRequiredService<IAppSettingsProvider>();
+            await provider.Initialize();
+        }
+
+        private void SwitchThemeToCurrentSettings()
+        {
+            var provider = Services.GetRequiredService<IAppSettingsProvider>();
 
             var appThemeService = Services.GetRequiredService<AppThemeService>();
-            appThemeService.SwitchThemeTo(settings.DarkModeEnabled ? AppTheme.Dark : AppTheme.Light);
+            appThemeService.SwitchThemeTo(
+                provider.AppSettings.DarkModeEnabled ? AppTheme.Dark : AppTheme.Light);
         }
 
         private async Task InitializeMainWindow()
@@ -140,6 +144,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<StatsViewService>();
             services.AddSingleton<TimerViewService>();
             services.AddSingleton<SettingsViewService>();
+            services.AddSingleton<IAppSettingsProvider, AppSettingsProvider>();
             return services.BuildServiceProvider();
         }
     }

@@ -1,6 +1,7 @@
-﻿using ExtendedPomodoro.ViewModels;
+﻿using ExtendedPomodoro.Models.Domains;
+using ExtendedPomodoro.Services.Entities;
 
 namespace ExtendedPomodoro.Messages
 {
-    public record class SettingsUpdateInfoMessage(SettingsViewModel SettingsViewModel);
+    public record class SettingsUpdateInfoMessage(AppSettings AppSettings);
 }

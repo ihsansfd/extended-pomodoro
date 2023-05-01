@@ -13,6 +13,7 @@ using ExtendedPomodoro.Helpers;
 using System.Windows;
 using ExtendedPomodoro.ViewServices;
 using ExtendedPomodoro.Models.Services.Interfaces;
+using ExtendedPomodoro.Services.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -22,6 +23,7 @@ namespace ExtendedPomodoro.ViewModels
         private readonly MessageBoxService _messageBox;
         private readonly IMessenger _messenger;
         private readonly SettingsViewService _settingsViewService;
+        private readonly IAppSettingsProvider _appSettingsProvider;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -109,13 +111,15 @@ namespace ExtendedPomodoro.ViewModels
             ISettingsService repository, 
             MessageBoxService messageBoxService,
             IMessenger messenger,
-            SettingsViewService settingsViewService
+            SettingsViewService settingsViewService,
+            IAppSettingsProvider appSettingsProvider
             )
         {
             _repository = repository;
             _messageBox = messageBoxService;
             _messenger = messenger;
             _settingsViewService = settingsViewService;
+            _appSettingsProvider = appSettingsProvider;
         }
 
         public async Task Initialize()
@@ -160,7 +164,7 @@ namespace ExtendedPomodoro.ViewModels
             PauseHotkeyDomain = PauseHotkey.ConvertToHotkeyDomain()
         });
 
-            _messenger.Send(new SettingsUpdateInfoMessage(this));
+            await _appSettingsProvider.LoadSettings();
         }
 
     }

@@ -126,7 +126,7 @@
                     </WrapPanel>
                     <TextBlock Style="{StaticResource RegularFontStyle}" Grid.Row="2" HorizontalAlignment="Center" Margin="0 20 0 0">
                         <Run>Completed:</Run>
-                        <Run Foreground="{StaticResource Primary}" FontFamily="{StaticResource FWSemiBold}" Text="{Binding PomodoroCompletedToday}"/><Run Foreground="{StaticResource Primary}" FontFamily="{StaticResource FWSemiBold}" Text="/"/><Run Foreground="{StaticResource Primary}" FontFamily="{StaticResource FWSemiBold}" Text="{Binding SettingsViewModel.DailyPomodoroTarget}"/>
+                        <Run Foreground="{StaticResource Primary}" FontFamily="{StaticResource FWSemiBold}" Text="{Binding PomodoroCompletedToday}"/><Run Foreground="{StaticResource Primary}" FontFamily="{StaticResource FWSemiBold}" Text="/"/><Run Foreground="{StaticResource Primary}" FontFamily="{StaticResource FWSemiBold}" Text="{Binding DailyPomodoroTarget}"/>
                     </TextBlock>
                 </Grid>
             </Grid>

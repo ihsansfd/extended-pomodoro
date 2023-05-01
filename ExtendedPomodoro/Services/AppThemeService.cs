@@ -49,7 +49,7 @@ namespace ExtendedPomodoro.Services
 
         public void Receive(SettingsUpdateInfoMessage message)
         {
-            bool isDarkMode = message.SettingsViewModel.DarkModeEnabled;
+            bool isDarkMode = message.AppSettings.DarkModeEnabled;
 
             if(isDarkMode) SwitchThemeTo(AppTheme.Dark);
             else SwitchThemeTo(AppTheme.Light);        
