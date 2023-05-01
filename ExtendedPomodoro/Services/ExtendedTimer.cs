@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using ExtendedPomodoro.Factories;
 using ExtendedPomodoro.Messages;
 using System;
 using System.Windows.Threading;
@@ -13,7 +14,7 @@ namespace ExtendedPomodoro.Services
     public class ExtendedTimer
     {
         private static readonly TimeSpan _INTERVAL = TimeSpan.FromSeconds(1);
-        private readonly IMessenger _messenger = MessengerService.Messenger;
+        private readonly IMessenger _messenger = MessengerFactory.Messenger;
         private readonly DispatcherTimer _timer;
 
         private TimeSpan _timerSetFor  = TimeSpan.Zero;

@@ -1,4 +1,5 @@
-﻿using ExtendedPomodoro.Views.Components;
+﻿using ExtendedPomodoro.Factories;
+using ExtendedPomodoro.Views.Components;
 using System.Windows;
 
 namespace ExtendedPomodoro.Services
@@ -21,7 +22,7 @@ namespace ExtendedPomodoro.Services
                 Height = domain.Height,
                 Title = domain.Title,
                 Content = domain.Content,
-                Owner = MainWindowService.MainWindow,
+                Owner = MainWindowFactory.MainWindow,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
             return window;
@@ -37,7 +38,7 @@ namespace ExtendedPomodoro.Services
                 Height = domain.Height,
                 Title = domain.Title,
                 Content = domain.Content,
-                Owner = MainWindowService.MainWindow,
+                Owner = MainWindowFactory.MainWindow,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
             return window;

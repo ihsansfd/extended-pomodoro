@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Entities;
-using ExtendedPomodoro.Services;
+using ExtendedPomodoro.Factories;
 using ExtendedPomodoro.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace ExtendedPomodoro.Views.Components
     /// </summary>
     public partial class ModalContentSessionFinishUserControl : UserControl
     {
-        private readonly IMessenger _messenger = MessengerService.Messenger;
+        private readonly IMessenger _messenger = MessengerFactory.Messenger;
 
         public ModalContentSessionFinishUserControl()
         {

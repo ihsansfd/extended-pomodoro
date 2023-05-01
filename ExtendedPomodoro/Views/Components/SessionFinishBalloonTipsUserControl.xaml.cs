@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using ExtendedPomodoro.Factories;
 using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
@@ -19,14 +20,14 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace ExtendedPomodoro.Views.Components
-{ 
+{
     /// <summary>
     /// Interaction logic for SessionFinishBalloonTipsUserControl.xaml
     /// </summary>
     public partial class SessionFinishBalloonTipsUserControl : UserControl, ICloseableControl
     {
         private readonly AutoCloseControlService _autoCloseService;
-        private readonly IMessenger _messenger = MessengerService.Messenger;
+        private readonly IMessenger _messenger = MessengerFactory.Messenger;
         public event EventHandler<EventArgs>? Closed;
 
         public SessionFinishBalloonTipsUserControl()

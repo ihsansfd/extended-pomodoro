@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using ExtendedPomodoro.Factories;
 using ExtendedPomodoro.Helpers;
 using ExtendedPomodoro.Models.DbConfigs;
 using ExtendedPomodoro.Models.DbConnections;
@@ -61,7 +62,7 @@ namespace ExtendedPomodoro
 
         private async Task InitializeMainWindow()
         {
-            var mainWindow = MainWindowService.MainWindow;
+            var mainWindow = MainWindowFactory.MainWindow;
             mainWindow.ShowInTaskbar = true;
             var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
             await mainWindowViewModel.Initialize();
@@ -133,7 +134,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<HotkeyManager>((_) => HotkeyManager.Current);
             services.AddSingleton<HotkeyLoaderService>();
             services.AddSingleton<MessageBoxService>();
-            services.AddSingleton<IMessenger>((_) => MessengerService.Messenger);
+            services.AddSingleton<IMessenger>((_) => MessengerFactory.Messenger);
             services.AddSingleton<AppThemeService>();
             services.AddSingleton<DialogWindowService>();
             services.AddSingleton<StatsViewService>();

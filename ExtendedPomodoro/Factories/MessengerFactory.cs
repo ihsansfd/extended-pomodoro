@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 
-namespace ExtendedPomodoro.Services
+namespace ExtendedPomodoro.Factories
 {
-    public class MessengerService
+    public class MessengerFactory
     {
         public static IMessenger Messenger { get; } = StrongReferenceMessenger.Default;
     }
