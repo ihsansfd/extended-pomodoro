@@ -106,13 +106,13 @@ namespace ExtendedPomodoro.ViewModels
         private double _sessionProgress = 0.0;
 
         [ObservableProperty]
-        private TimerSessionState _currentTimerSession;
+        private TimerSessionState _currentTimerSession = null!;
 
         [ObservableProperty]
         private bool _canPause;
 
         [ObservableProperty]
-        private string _remainingTimeFormatted;
+        private string _remainingTimeFormatted = null!;
 
         [ObservableProperty]
         private int _dailyPomodoroTarget;
@@ -256,13 +256,18 @@ namespace ExtendedPomodoro.ViewModels
         #endregion
 
         #region View Spesific
-
+        
+        public void InitializeTimerProgress(TimeSpan timerSetFor)
+        {
+            UpdateRemainingTime(timerSetFor);
+            SessionProgress = CalculateProgress(timerSetFor, timerSetFor); // should always return 100
+        }
         public void UpdateRemainingTime(TimeSpan remainingTime)
         {
             _remainingTime = remainingTime;
             FormatRemainingTime();
         }
-
+        
         private void FormatRemainingTime()
         {
             RemainingTimeFormatted = _remainingTime.ToString(@"mm\:ss");
@@ -447,7 +452,7 @@ namespace ExtendedPomodoro.ViewModels
         protected void InitializeTo(TimeSpan timerSetFor)
         {
             Timer.Initialize(timerSetFor);
-            _context.UpdateRemainingTime(timerSetFor);
+            _context.InitializeTimerProgress(timerSetFor);
         }
 
         protected async void FinishTo(TimerSessionState nextSession)
