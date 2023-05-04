@@ -5,23 +5,35 @@ using ExtendedPomodoro.ViewModels;
 using NHotkey;
 using NHotkey.Wpf;
 using System;
+using System.Windows.Input;
+using ExtendedPomodoro.Services.Interfaces;
 
 namespace ExtendedPomodoro.Services
 {
+
+    public class HotkeyManagerAdapter : IHotkeyManager
+    {
+        private readonly HotkeyManager _hotkeyManager = HotkeyManager.Current;
+
+        public void AddOrReplace(string name, Key key, ModifierKeys modifiers, 
+            EventHandler<HotkeyEventArgs> handler) =>
+            _hotkeyManager.AddOrReplace(name, key, modifiers, handler);
+
+        public void Remove(string name) =>
+            _hotkeyManager.Remove(name);
+    }
+
     public class HotkeyLoaderService : IRecipient<SettingsUpdateInfoMessage>
     {
         private readonly IMessenger _messenger;
-        private readonly HotkeyManager _hotkeyManager;
-        private readonly TimerViewModel _timerViewModel;
+        private readonly IHotkeyManager _hotkeyManager;
 
         public HotkeyLoaderService(
-            HotkeyManager hotkeyManager, 
-            TimerViewModel timerViewModel,
+            IHotkeyManager hotkeyManager, 
             IMessenger messenger
             )
         {
             _hotkeyManager = hotkeyManager;
-            _timerViewModel = timerViewModel;
             _messenger = messenger;
 
             _messenger.RegisterAll(this);
@@ -29,12 +41,14 @@ namespace ExtendedPomodoro.Services
 
         public void RegisterOrUpdateStartTimerHotkey(Hotkey? hotkey)
         {
-            RegisterOrUpdate("StartTimerHotkey", hotkey, _timerViewModel.StartSessionFromHotkey);
+            RegisterOrUpdate("StartTimerHotkey", hotkey, 
+                (_, _) => _messenger.Send(new StartHotkeyTriggeredMessage()));
         }
 
         public void RegisterOrUpdatePauseTimerHotkey(Hotkey? hotkey)
         {
-            RegisterOrUpdate("PauseTimerHotkey", hotkey, _timerViewModel.PauseSessionFromHotkey);
+            RegisterOrUpdate("PauseTimerHotkey", hotkey,
+                (_, _) => _messenger.Send(new PauseHotkeyTriggeredMessage()));
         }
 
         private void RegisterOrUpdate(string identifier, 

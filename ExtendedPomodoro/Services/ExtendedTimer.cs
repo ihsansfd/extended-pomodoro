@@ -16,25 +16,20 @@ namespace ExtendedPomodoro.Services
     {
         public event EventHandler<RemainingTimeChangedEventArgs>? RemainingTimeChanged;
         private readonly DispatcherTimer _timer;
-        private TimeSpan _interval = TimeSpan.FromSeconds(1);
         private TimeSpan _timerSetFor  = TimeSpan.Zero;
         private TimeSpan _remainingTime  = TimeSpan.Zero;
         
         public TimeSpan Interval
         {
-            get => _interval;
-            set
-            {
-                _interval = value;
-                _timer.Interval = _interval;
-            }
+            get => _timer.Interval;
+            set => _timer.Interval = value;
         }
         
         public ExtendedTimer()
         {
             _timer = new();
             _timer.Tick += OnTimeChanged;
-            _timer.Interval = Interval;
+            _timer.Interval = TimeSpan.FromSeconds(1);
         }
 
         public void Initialize(TimeSpan timerSetFor)
@@ -62,13 +57,13 @@ namespace ExtendedPomodoro.Services
             _timer.Stop();
         }
 
-        // public void SetInterval(TimeSpan timeSpan) => _interval = timeSpan; 
-
         private void OnTimeChanged(object? sender, EventArgs e)
         {
-            _remainingTime = _remainingTime.Subtract(Interval);
+            _remainingTime -= Interval;
 
-            RemainingTimeChanged?.Invoke(this, new()
+            if (_remainingTime == TimeSpan.Zero) _timer.Stop();
+
+            RemainingTimeChanged?.Invoke(this, new RemainingTimeChangedEventArgs
             {
                 RemainingTime = _remainingTime,
                 TimerSetFor = _timerSetFor

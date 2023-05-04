@@ -1,5 +1,5 @@
-﻿using ExtendedPomodoro.Models.Domains;
-using ExtendedPomodoro.Services.Entities;
+﻿using ExtendedPomodoro.Entities;
+using ExtendedPomodoro.Models.Domains;
 using System;
 using System.Collections.Generic;
 using System.Linq;

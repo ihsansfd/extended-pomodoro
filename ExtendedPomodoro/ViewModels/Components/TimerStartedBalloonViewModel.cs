@@ -13,7 +13,5 @@ namespace ExtendedPomodoro.ViewModels.Components
         [ObservableProperty]
         private TimerSessionState _currentSession = null!;
 
-        [RelayCommand]
-        public override void Close() => base.Close();
     }
 }

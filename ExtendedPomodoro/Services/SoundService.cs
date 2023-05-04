@@ -2,101 +2,192 @@
 using System;
 using System.Threading;
 using System.Windows.Media;
+using ExtendedPomodoro.Services.Interfaces;
+using static System.IO.Path;
+using static System.AppDomain;
 
 namespace ExtendedPomodoro.Services
 {
-    // This is to be used in view layer, look at System.Windows.Media namespace
-    public class SoundService
+    public class MediaPlayerAdapter : IMediaPlayer
     {
-        private static readonly char SEPERATOR = System.IO.Path.DirectorySeparatorChar;
-        private static readonly string PROJECT_PATH = AppDomain.CurrentDomain.BaseDirectory.TrimEnd(SEPERATOR);
+        private readonly MediaPlayer _mediaPlayer = new();
 
-        private MediaPlayer _soundPlayer = new();
-
-        private MediaPlayer _soundPlayerMouseClick = new();
-
-        public int Volume { get; set; } = 50;
-        public TimeSpan RepeatFor { get; set; } = TimeSpan.Zero;
-
-        public SoundService() {
-
-            InitializeMouseClickEffect();
+        public double Volume
+        {
+            get => _mediaPlayer.Volume;
+            set => _mediaPlayer.Volume = value;
         }
 
-        private bool stillRepeat = false;
+        public TimeSpan Position
+        {
+            get => _mediaPlayer.Position;
+            set => _mediaPlayer.Position = value;
+        }
 
-        public void Play(string filePath)
+        public event EventHandler MediaEnded
+        {
+            add => _mediaPlayer.MediaEnded += value;
+            remove => _mediaPlayer.MediaEnded -= value;
+        }
+
+        public void Open(Uri source) => _mediaPlayer.Open(source);
+
+        public void Play() => _mediaPlayer.Play();
+
+        public void Pause() => _mediaPlayer.Pause();
+
+        public void Stop() => _mediaPlayer.Stop();
+
+        public void Close() => _mediaPlayer.Close();
+    }
+
+    public class SoundService : ISoundService
+    {
+        public int Volume { get => (int)_soundPlayer.Volume; set => _soundPlayer.Volume = value; }
+
+        public TimeSpan RepeatFor { get; set; } = TimeSpan.Zero;
+        private readonly IMediaPlayer _soundPlayer;
+        private bool _stillRepeat = false;
+
+        public SoundService(IMediaPlayer mediaPlayer)
+        {
+            _soundPlayer = mediaPlayer;
+        }
+
+        public void Open(Uri source)
         {
             _soundPlayer.Close();
+            _soundPlayer.Open(source);
+        }
 
-            _soundPlayer.Open(new Uri(filePath));
-
+        public void Play()
+        {
             if (RepeatFor != Timeout.InfiniteTimeSpan)
             {
                 ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(false),
-                    (_, _) => stillRepeat = false, null, RepeatFor, true);
+                    (_, _) => _stillRepeat = false, null, RepeatFor, true);
             }
 
-            stillRepeat = true;
+            _stillRepeat = RepeatFor != TimeSpan.Zero;
 
-            _soundPlayer.Volume = Volume;
-            _soundPlayer.Play();
+            Replay();
 
             _soundPlayer.MediaEnded += OnSoundEnd;
 
             void OnSoundEnd(object? sender, EventArgs e)
             {
-                if (stillRepeat)
-                {
-                    _soundPlayer.Position = TimeSpan.Zero; // reset back to zero so we can play again from the start.
-                    _soundPlayer.Play();
-                }
+                if (_stillRepeat) Replay();
 
                 else
                 {
-                    _soundPlayer.Close();
+                    _soundPlayer.Pause();
                     _soundPlayer.MediaEnded -= OnSoundEnd;
-                    stillRepeat = false;
-                };
+                    _stillRepeat = false;
+                }
             }
-        }
-
-        public void Play(AlarmSound alarmSound)
-        {
-            string fileName = alarmSound.ToString();
-
-            var theFile = string.Format("{0}" + SEPERATOR + "Assets" + SEPERATOR + "AlarmSounds"
-                + SEPERATOR + "{1}.mp3", PROJECT_PATH, fileName);
-
-            Play(theFile);
-        }
-
-        // as this need fast, we load the media player directly.
-        public void PlayMouseClickEffect()
-        {
-            _soundPlayerMouseClick.Play();
-            _soundPlayerMouseClick.Volume = Volume;
-            _soundPlayerMouseClick.MediaEnded += OnSoundEnd;
-
-            void OnSoundEnd(object? sender, EventArgs e)
-            {
-                _soundPlayerMouseClick.Position = TimeSpan.Zero;
-                _soundPlayerMouseClick.Pause();
-            }
-        }
-
-        private void InitializeMouseClickEffect()
-        {
-            var theFile = string.Format("{0}" + SEPERATOR + "Assets" + SEPERATOR + "SoundEffects"
-              + SEPERATOR + "{1}.mp3", PROJECT_PATH, "MouseClick");
-
-            _soundPlayerMouseClick.Open(new Uri(theFile));
         }
 
         public void Stop()
         {
             _soundPlayer.Stop();
-            stillRepeat = false;
+            _stillRepeat = false;
         }
+
+        private void Replay()
+        {
+            _soundPlayer.Position = TimeSpan.Zero;
+            _soundPlayer.Play();
+        }
+    }
+
+    public class AlarmSoundService
+    {
+        private string _alarmSoundFilePath;
+
+        private AlarmSound _alarmSound = AlarmSound.Chimes;
+
+        public AlarmSound AlarmSound
+        {
+            get => _alarmSound;
+            set
+            {
+                _alarmSound = value;
+                _alarmSoundFilePath = GetFilePath(value);
+                _soundService.Open(new Uri(_alarmSoundFilePath));
+            }
+
+        }
+
+        private readonly ISoundService _soundService;
+
+        public int Volume
+        {
+            get => _soundService.Volume;
+            set => _soundService.Volume = value;
+        }
+
+        public TimeSpan RepeatFor
+        {
+            get => _soundService.RepeatFor;
+            set => _soundService.RepeatFor = value;
+        }
+
+        public bool RepeatForeverOrDefault
+        {
+            set => _soundService.RepeatFor = value
+                ? Timeout.InfiniteTimeSpan
+                : TimeSpan.FromSeconds(15);
+        }
+
+        public AlarmSoundService(ISoundService soundService)
+        {
+            _soundService = soundService;
+            _alarmSoundFilePath = GetFilePath(AlarmSound);
+            _soundService.Open(new Uri(_alarmSoundFilePath));
+        }
+
+        public void Play()
+        {
+
+            _soundService.Play();
+        }
+
+        public void Stop() => _soundService.Stop();
+
+        private string GetFilePath(AlarmSound alarmSound)
+        {
+            return string.Format("{0}" + DirectorySeparatorChar + "Assets" +
+                          DirectorySeparatorChar + "AlarmSounds" + DirectorySeparatorChar +
+                          "{1}.mp3", CurrentDomain.BaseDirectory, alarmSound.ToString());
+        }
+    }
+
+    public class MouseClickSoundService
+    {
+        private static readonly string MouseClickSoundFilePath =
+            string.Format("{0}" + DirectorySeparatorChar + "Assets" + DirectorySeparatorChar +
+                          "SoundEffects" + DirectorySeparatorChar + "{1}.mp3",
+                CurrentDomain.BaseDirectory, "MouseClick");
+
+        private readonly ISoundService _soundService;
+
+        public int Volume
+        {
+            get => _soundService.Volume;
+            set => _soundService.Volume = value;
+        }
+
+        public MouseClickSoundService(ISoundService soundService)
+        {
+            _soundService = soundService;
+            _soundService.Open(new Uri(MouseClickSoundFilePath));
+            _soundService.RepeatFor = TimeSpan.Zero;
+        }
+
+        public void Play()
+        {
+            _soundService.Play();
+        }
+
     }
 }

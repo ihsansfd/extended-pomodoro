@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -20,6 +21,7 @@ namespace ExtendedPomodoro.ViewModels
         public AutoCloseControlViewModel()
         {
             _timer = new DispatcherTimer();
+            CloseCommand = new RelayCommand(Close);
         }
 
         public void Start()
@@ -39,7 +41,9 @@ namespace ExtendedPomodoro.ViewModels
             if (RemainingTimeInSeconds <= 0) Close();
         }
 
-        public virtual void Close()
+        public ICommand CloseCommand { get; }
+
+        protected virtual void Close()
         {
             _timer.Stop();
             _timer.Tick -= OnTimerTickChanged;

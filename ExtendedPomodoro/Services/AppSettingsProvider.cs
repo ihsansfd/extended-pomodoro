@@ -4,7 +4,6 @@ using ExtendedPomodoro.Helpers;
 using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.Services.Interfaces;
-using ExtendedPomodoro.Services.Entities;
 using ExtendedPomodoro.Services.Interfaces;
 using System;
 using System.Collections.Generic;
