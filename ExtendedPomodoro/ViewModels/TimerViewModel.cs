@@ -18,7 +18,9 @@ namespace ExtendedPomodoro.ViewModels
     public partial class TimerViewModel : ObservableObject,
         IRecipient<TimerTimeChangeInfoMessage>,
         IRecipient<SettingsUpdateInfoMessage>,
-        IRecipient<StartSessionInfoMessage>
+        IRecipient<StartSessionInfoMessage>,
+        IRecipient<StartHotkeyTriggeredMessage>,
+        IRecipient<PauseHotkeyTriggeredMessage>
     {
         private readonly IAppSettingsProvider _appSettingsProvider;
         private readonly IDailySessionsService _sessionsRepository;
@@ -120,14 +122,14 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         private void StartSession() {
             CurrentTimerSession.Start();
-            _timerViewService.PlayMouseClickEffectSound(_appSettingsProvider.AppSettings.Volume);
+            _timerViewService.PlayMouseClickEffectSound();
         }
 
         [RelayCommand]
         private void PauseSession()
         {
             CurrentTimerSession.Pause();
-            _timerViewService.PlayMouseClickEffectSound(_appSettingsProvider.AppSettings.Volume);
+            _timerViewService.PlayMouseClickEffectSound();
         }
 
         [RelayCommand]
@@ -136,20 +138,20 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         private void ResetSession() => CurrentTimerSession.Reset();
 
-        public void StartSessionFromHotkey(object? sender, HotkeyEventArgs e)
+        public void StartSessionFromHotkey()
         {
             CurrentTimerSession.Start();
-            _timerViewService.PlayMouseClickEffectSound(_appSettingsProvider.AppSettings.Volume);
+            _timerViewService.PlayMouseClickEffectSound();
             if(_appSettingsProvider.AppSettings.PushNotificationEnabled)
             {
                 _timerViewService.ShowTimerStartedBalloonTips(CurrentTimerSession);
             }
         }
 
-        public void PauseSessionFromHotkey(object? sender, HotkeyEventArgs e)
+        public void PauseSessionFromHotkey()
         {
             CurrentTimerSession.Pause();
-            _timerViewService.PlayMouseClickEffectSound(_appSettingsProvider.AppSettings.Volume);
+            _timerViewService.PlayMouseClickEffectSound();
 
             if(_appSettingsProvider.AppSettings.PushNotificationEnabled)
             {
@@ -165,7 +167,7 @@ namespace ExtendedPomodoro.ViewModels
         {
             await ReadTasksViewModel.DisplayInProgressTasks();
             PomodoroCompletedToday = await GetPomodoroCompletedToday();
-            DailyPomodoroTarget = _appSettingsProvider.AppSettings.DailyPomodoroTarget;
+            AssignFromSettings();
             if (!_hasBeenSetup) CurrentTimerSession.InitialSetup(this, _appSettingsProvider, _messenger);
             _hasBeenSetup = true;
         }
@@ -188,6 +190,16 @@ namespace ExtendedPomodoro.ViewModels
 
         }
 
+        public void Receive(StartHotkeyTriggeredMessage message)
+        {
+            StartSessionFromHotkey();
+        }
+
+        public void Receive(PauseHotkeyTriggeredMessage message)
+        {
+            PauseSessionFromHotkey();
+        }
+
         /// <summary>
         /// If there are changes in settings while the timer hasn't run, reinitialized.
         /// </summary>
@@ -195,7 +207,7 @@ namespace ExtendedPomodoro.ViewModels
         public void Receive(SettingsUpdateInfoMessage message)
         {
             if (SessionProgress <= 0.0) CurrentTimerSession.Initialize();
-            DailyPomodoroTarget = message.AppSettings.DailyPomodoroTarget;
+            AssignFromSettings();
         }
 
         /// <summary>
@@ -211,14 +223,10 @@ namespace ExtendedPomodoro.ViewModels
 
                 if (_appSettingsProvider.AppSettings.PushNotificationEnabled)
                 {
-                    _timerViewService.ShowSessionFinishBalloonTips(finishedSession, nextSession);
+                    _timerViewService.ShowSessionFinishBalloonTips(finishedSession, nextSession, 15000);
                 }
 
-                _timerViewService.PlaySound((AlarmSound)
-                    _appSettingsProvider.AppSettings.AlarmSound, 
-                    _appSettingsProvider.AppSettings.Volume,
-                    _appSettingsProvider.AppSettings.IsRepeatForever ? 
-                    Timeout.InfiniteTimeSpan : TimeSpan.FromSeconds(15));
+                _timerViewService.PlayAlarmSound();
                 _timerViewService.AutoCloseDialogAndSound = 
                     !_appSettingsProvider.AppSettings.IsRepeatForever;
             }
@@ -341,6 +349,14 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         #endregion
+
+        private void AssignFromSettings()
+        {
+            DailyPomodoroTarget = _appSettingsProvider.AppSettings.DailyPomodoroTarget;
+            _timerViewService.AlarmSound = _appSettingsProvider.AppSettings.AlarmSound;
+            _timerViewService.SoundVolume = _appSettingsProvider.AppSettings.Volume;
+            _timerViewService.IsAlarmRepeatForever = _appSettingsProvider.AppSettings.IsRepeatForever;
+        }
 
         ~TimerViewModel()
         {

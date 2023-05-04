@@ -10,17 +10,17 @@ namespace ExtendedPomodoro.ViewServices
 {
     public class SettingsViewService
     {
-        SoundService _soundService;
+        private readonly AlarmSoundService _alarmSoundService;
 
-        public SettingsViewService(SoundService soundService ) { 
-            _soundService = soundService;
+        public SettingsViewService(AlarmSoundService alarmSoundService ) {
+            _alarmSoundService = alarmSoundService;
         }
 
         public void PlaySound(AlarmSound alarmSound, int volume, TimeSpan repeatFor)
         {
-            _soundService.Volume = volume;
-            _soundService.RepeatFor = repeatFor;
-            _soundService.Play(alarmSound);
+            _alarmSoundService.Volume = volume;
+            _alarmSoundService.RepeatFor = repeatFor;
+            _alarmSoundService.AlarmSound = alarmSound;
         }
     }
 }

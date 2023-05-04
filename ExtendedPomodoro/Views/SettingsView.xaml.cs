@@ -11,7 +11,6 @@ namespace ExtendedPomodoro.Views
     /// </summary>
     public partial class SettingsView : Page
     {
-        private readonly SoundService _soundService = new();
         public SettingsView()
         {
             InitializeComponent();

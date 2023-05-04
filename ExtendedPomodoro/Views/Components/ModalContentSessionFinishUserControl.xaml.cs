@@ -24,8 +24,6 @@ namespace ExtendedPomodoro.Views.Components
     /// </summary>
     public partial class ModalContentSessionFinishUserControl : UserControl
     {
-        private readonly IMessenger _messenger = MessengerFactory.Messenger;
-
         public ModalContentSessionFinishUserControl()
         {
             DataContext = this;
@@ -49,6 +47,5 @@ namespace ExtendedPomodoro.Views.Components
 
         public static readonly DependencyProperty NextSessionProperty =
             DependencyProperty.Register("NextSession", typeof(TimerSessionState), typeof(ModalContentSessionFinishUserControl));
-
     }
 }

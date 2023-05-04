@@ -5,6 +5,9 @@ using ExtendedPomodoro.Views.Components;
 using Hardcodet.Wpf.TaskbarNotification;
 using System;
 using System.Windows;
+using CommunityToolkit.Mvvm.Messaging;
+using ExtendedPomodoro.ViewModels.Components;
+using ExtendedPomodoro.Views.Interfaces;
 
 namespace ExtendedPomodoro.ViewServices
 {
@@ -12,22 +15,50 @@ namespace ExtendedPomodoro.ViewServices
     {
         public bool AutoCloseDialogAndSound { get; set; }
 
-        private readonly DialogWindowService _dialogWindowService;
-        private readonly SoundService _soundService = new();
-        private readonly TaskbarIcon _taskbarIcon = new();
-        private Window _currentSessionFinishDialog;
-        private SessionFinishBalloonTipsUserControl? _currentSessionFinishBalloon;
-        private ICloseableControl? _currentTimerManiputedByHotkeyBalloon;
-
-        public TimerViewService(DialogWindowService dialogWindowService)
+        public AlarmSound AlarmSound
         {
-            _dialogWindowService = dialogWindowService;
+            set => _alarmSoundService.AlarmSound = value;
         }
 
-        public void PlayMouseClickEffectSound(int volume = 50)
+        public bool IsAlarmRepeatForever
         {
-            _soundService.Volume = volume;
-            _soundService.PlayMouseClickEffect();
+            set => _alarmSoundService.RepeatForeverOrDefault = value;
+        }
+
+        public int SoundVolume
+        {
+            set
+            {
+                _alarmSoundService.Volume = value;
+                _mouseClickSoundService.Volume = value;
+            }
+        }
+
+        private readonly DialogWindowService _dialogWindowService;
+        private readonly AlarmSoundService _alarmSoundService;
+        private readonly MouseClickSoundService _mouseClickSoundService;
+        private readonly TaskbarIcon _taskbarIcon = new();
+        private readonly IMessenger _messenger;
+        private Window? _currentSessionFinishDialog;
+        private SessionFinishBalloonViewModel? _currentSessionFinishBalloonViewModel;
+        private AutoCloseControlViewModel? _currentBalloonViewModel;
+
+        public TimerViewService(
+            DialogWindowService dialogWindowService, 
+            AlarmSoundService alarmSoundService,
+            MouseClickSoundService mouseClickSoundService,
+            IMessenger messenger
+            )
+        {
+            _dialogWindowService = dialogWindowService;
+            _alarmSoundService = alarmSoundService;
+            _mouseClickSoundService = mouseClickSoundService;
+            _messenger = messenger;
+        }
+
+        public void PlayMouseClickEffectSound()
+        {
+            _mouseClickSoundService.Play();
         }
 
         public void OpenSessionFinishDialog(TimerSessionState finishedSession,
@@ -38,6 +69,7 @@ namespace ExtendedPomodoro.ViewServices
                 NextSession = nextSession,
                 FinishedSession = finishedSession,
             };
+
             var dialog = _dialogWindowService.GenerateClosableDialogWindow(
                 new(320, 260, "Session Has Finished", userControl));
             _currentSessionFinishDialog = dialog;
@@ -48,84 +80,101 @@ namespace ExtendedPomodoro.ViewServices
         }
 
         public void ShowSessionFinishBalloonTips(TimerSessionState finishedSession,
-            TimerSessionState nextSession)
+            TimerSessionState nextSession, int autoCloseAfterInMillSeconds)
         {
-            _taskbarIcon.CloseBalloon();
-            _currentSessionFinishBalloon?.Close();
+            CloseAllBalloons();
+
+            var vm = new SessionFinishBalloonViewModel(_messenger)
+            {
+                NextSession = nextSession,
+                FinishedSession = finishedSession,
+                AutoCloseAfterInMilliseconds = autoCloseAfterInMillSeconds
+            };
+
+            vm.Closed += OnCloseSessionFinishBalloon;
+
+            _currentSessionFinishBalloonViewModel = vm;
 
             var sessionFinishBalloon = new SessionFinishBalloonTipsUserControl()
             {
-                FinishedSession = finishedSession,
-                NextSession = nextSession,
-                AutoCloseAfter = 15000 // in milliseconds
+                DataContext = vm
             };
 
-            sessionFinishBalloon.Closed += OnCloseSessionFinishBalloon;
-
-            _currentSessionFinishBalloon = sessionFinishBalloon;
+            vm.Start();
 
             _taskbarIcon.ShowCustomBalloon(sessionFinishBalloon,
                 System.Windows.Controls.Primitives.PopupAnimation.Slide, 15000);
         }
 
-        public void PlaySound(AlarmSound alarmSound, int volume, TimeSpan repeatFor)
+        public void PlayAlarmSound()
         {
-            _soundService.Volume = volume;
-            _soundService.RepeatFor = repeatFor;
-            _soundService.Play(alarmSound);
+            _alarmSoundService.Play();
         }
 
-        public void ShowTimerStartedBalloonTips(TimerSessionState currentSession, int autoCloseAfter = 5000)
+        public void ShowTimerStartedBalloonTips(TimerSessionState currentSession, 
+            int autoCloseAfterInMillSeconds = 5000)
         {
-            CloseTimerActionBalloon();
+            CloseAllBalloons();
+
+            var vm = new TimerStartedBalloonViewModel()
+            {
+                AutoCloseAfterInMilliseconds = autoCloseAfterInMillSeconds,
+                CurrentSession = currentSession
+            };
+
+            _currentBalloonViewModel = vm;
 
             var timerStartedBalloon = new TimerStartedBalloonTipsUserControl()
             {
-                CurrentSession = currentSession,
-                AutoCloseAfter = autoCloseAfter // in milliseconds
+                DataContext = vm
             };
 
-            _currentTimerManiputedByHotkeyBalloon = timerStartedBalloon;
+            vm.Start();
 
             _taskbarIcon.ShowCustomBalloon(timerStartedBalloon,
-                System.Windows.Controls.Primitives.PopupAnimation.Slide, autoCloseAfter);
+                System.Windows.Controls.Primitives.PopupAnimation.Slide, autoCloseAfterInMillSeconds);
         }
 
-        public void ShowTimerPausedBalloonTips(TimerSessionState currentSession, int autoCloseAfter = 5000)
+        public void ShowTimerPausedBalloonTips(TimerSessionState currentSession, int autoCloseAfterInMillSeconds = 5000)
         {
-            CloseTimerActionBalloon();
+            CloseAllBalloons();
+
+            var vm = new TimerPausedBalloonViewModel()
+            {
+                AutoCloseAfterInMilliseconds = autoCloseAfterInMillSeconds,
+                CurrentSession = currentSession
+            };
 
             var timerPausedBalloon = new TimerPausedBalloonTipsUserControl()
             {
-                CurrentSession = currentSession,
-                AutoCloseAfter = autoCloseAfter // in milliseconds
+                DataContext = vm
             };
 
-            _currentTimerManiputedByHotkeyBalloon = timerPausedBalloon;
+            vm.Start();
 
             _taskbarIcon.ShowCustomBalloon(timerPausedBalloon,
-                System.Windows.Controls.Primitives.PopupAnimation.Slide, autoCloseAfter);
+                System.Windows.Controls.Primitives.PopupAnimation.Slide, autoCloseAfterInMillSeconds);
         }
 
-        public void OnCloseSessionFinishBalloon(object? sender, EventArgs e)
+
+        private void OnCloseSessionFinishBalloon(object? sender, EventArgs? args)
         {
-            if(AutoCloseDialogAndSound)
+            if (AutoCloseDialogAndSound)
             {
+                _alarmSoundService.Stop();
                 _currentSessionFinishDialog?.Close();
-                _soundService.Stop();
             }
 
-            if (_currentSessionFinishBalloon != null)
+            if (_currentSessionFinishBalloonViewModel != null)
             {
-                _currentSessionFinishBalloon.Closed -= OnCloseSessionFinishBalloon;
+                _currentSessionFinishBalloonViewModel.Closed -= OnCloseSessionFinishBalloon;
             }
-
         }
 
         private void OnCloseSessionFinishDialog(object sender, System.Windows.RoutedEventArgs e)
         {
-            _currentSessionFinishBalloon?.Close();
-            _soundService.Stop();
+            CloseSessionFinishBalloon();
+            _alarmSoundService.Stop();
 
             if (_currentSessionFinishDialog != null)
             {
@@ -133,10 +182,18 @@ namespace ExtendedPomodoro.ViewServices
             }
         }
 
-        private void CloseTimerActionBalloon()
+        private void CloseSessionFinishBalloon()
         {
-            _currentTimerManiputedByHotkeyBalloon?.Close();
+            if (_currentSessionFinishBalloonViewModel != null) 
+                _currentSessionFinishBalloonViewModel.CloseRequested = true;
             _taskbarIcon.CloseBalloon();
         }
+
+        private void CloseAllBalloons()
+        {
+            if (_currentBalloonViewModel != null) _currentBalloonViewModel.CloseRequested = true;
+            _taskbarIcon.CloseBalloon();
+        }
+
     }
 }

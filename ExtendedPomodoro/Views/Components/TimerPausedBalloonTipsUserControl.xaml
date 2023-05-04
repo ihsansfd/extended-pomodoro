@@ -11,9 +11,20 @@
              d:DesignHeight="225" d:DesignWidth="320">
     <UserControl.Resources>
         <conv:TimerSessionStateToColorConverter x:Key="TimerSessionStateToColorConv"/>
-        <SolidColorBrush x:Key="CurrentessionBackground" Color="{Binding CurrentSession, 
+        <conv:InvertBooleanToVisibilityConverter x:Key="InvertBoolToVisibilityConv"/>
+        <SolidColorBrush x:Key="CurrentSessionBackground" Color="{Binding CurrentSession, 
             Converter={StaticResource TimerSessionStateToColorConv}}"/>
     </UserControl.Resources>
+    <behaviors:Interaction.Triggers>
+        <behaviors:PropertyChangedTrigger Binding="{Binding CloseRequested}" >
+            <behaviors:ChangePropertyAction 
+                TargetName="TheUserControl"
+                PropertyName="Visibility" 
+                Value="{Binding CloseRequested,
+                                Converter={StaticResource InvertBoolToVisibilityConv}}"
+            />
+        </behaviors:PropertyChangedTrigger>
+    </behaviors:Interaction.Triggers>
     <Border 
        Style="{StaticResource BalloonBorderBaseStyle}"
         BorderThickness="1"
@@ -35,23 +46,18 @@
                 <Canvas Height="105" Width="105">
                     <Path 
                         Data="M105 52.5C105 66.4239 99.4688 79.7775 89.6231 89.6231C79.7775 99.4688 66.4239 105 52.5 105C38.5761 105 25.2226 99.4688 15.3769 89.6231C5.53124 79.7775 0 66.4239 0 52.5C0 38.5761 5.53124 25.2226 15.3769 15.3769C25.2226 5.53124 38.5761 0 52.5 0C66.4239 0 79.7775 5.53124 89.6231 15.3769C99.4688 25.2226 105 38.5761 105 52.5ZM41.0156 32.8125C36.4875 32.8125 32.8125 36.4875 32.8125 41.0156V63.9844C32.8125 66.16 33.6768 68.2465 35.2151 69.7849C36.7535 71.3232 38.84 72.1875 41.0156 72.1875C43.1912 72.1875 45.2777 71.3232 46.8161 69.7849C48.3545 68.2465 49.2188 66.16 49.2188 63.9844V41.0156C49.2188 36.4875 45.5438 32.8125 41.0156 32.8125ZM63.9844 32.8125C59.4562 32.8125 55.7812 36.4875 55.7812 41.0156V63.9844C55.7812 66.16 56.6455 68.2465 58.1839 69.7849C59.7223 71.3232 61.8088 72.1875 63.9844 72.1875C66.16 72.1875 68.2465 71.3232 69.7849 69.7849C71.3232 68.2465 72.1875 66.16 72.1875 63.9844V41.0156C72.1875 36.4875 68.5125 32.8125 63.9844 32.8125Z" 
-                        Fill="{StaticResource CurrentessionBackground}" />
+                        Fill="{StaticResource CurrentSessionBackground}" />
                 </Canvas>
             </Viewbox>
             <!--#endregion the icon path-->
 
             <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 20">
-                <Button Style="{StaticResource ButtonStyle}">
-                    <behaviors:Interaction.Triggers>
-                        <behaviors:EventTrigger EventName="Click">
-                            <behaviors:CallMethodAction 
-                                TargetObject="{Binding ElementName=TheUserControl}"
-                                MethodName="Close"/>
-                        </behaviors:EventTrigger>
-                    </behaviors:Interaction.Triggers>
+                <Button Style="{StaticResource ButtonStyle}"
+                        Command="{Binding CloseCommand}"
+                        >
                     <Button.Content>
                             <TextBlock>
-                        <Run>OK (</Run><Run x:Name="PART_RemainingTimeInSecondsRun"/><Run>s)</Run>
+                                <Run>OK (</Run><Run Text="{Binding RemainingTimeInSeconds}"/><Run>s)</Run>
                             </TextBlock>
                         </Button.Content>
                 </Button>

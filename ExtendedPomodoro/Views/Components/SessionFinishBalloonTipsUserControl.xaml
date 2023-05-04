@@ -3,21 +3,34 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels.Components"
              xmlns:local="clr-namespace:ExtendedPomodoro.Views.Components"
              xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
              x:Name="TheUserControl"
              xmlns:conv="clr-namespace:ExtendedPomodoro.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="225" d:DesignWidth="320">
-
+             d:DesignHeight="225" d:DesignWidth="320"
+             d:DataContext="vms:SessionFinishBalloonViewModel"
+             >
     <UserControl.Resources>
         <conv:TimerSessionStateToColorConverter x:Key="TimerSessionStateToColorConv"/>
+        <conv:InvertBooleanToVisibilityConverter x:Key="InvertBoolToVisibilityConv"/>
         <SolidColorBrush x:Key="FinishedSessionBackground" Color="{Binding FinishedSession, 
             Converter={StaticResource TimerSessionStateToColorConv}}"/>
 
         <SolidColorBrush x:Key="NextSessionBackground" Color="{Binding NextSession, 
             Converter={StaticResource TimerSessionStateToColorConv}}"/>
     </UserControl.Resources>
+    <behaviors:Interaction.Triggers>
+        <behaviors:PropertyChangedTrigger Binding="{Binding CloseRequested}" >
+            <behaviors:ChangePropertyAction 
+                TargetName="TheUserControl"
+                PropertyName="Visibility" 
+                Value="{Binding CloseRequested,
+                                Converter={StaticResource InvertBoolToVisibilityConv}}"
+            />
+        </behaviors:PropertyChangedTrigger>
+    </behaviors:Interaction.Triggers>
     <Border 
         Style="{StaticResource BalloonBorderBaseStyle}"
         BorderThickness="1"
@@ -92,30 +105,25 @@
             <!--#endregion the icon path-->
 
             <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 20">
-                <Button Style="{StaticResource ButtonStyle}">
-                    <behaviors:Interaction.Triggers>
-                        <behaviors:EventTrigger EventName="Click">
-                            <behaviors:CallMethodAction 
-                                TargetObject="{Binding ElementName=TheUserControl}"
-                                MethodName="Close"/>
-                        </behaviors:EventTrigger>
-                    </behaviors:Interaction.Triggers>
+                <Button Command="{Binding CloseCommand}" Style="{StaticResource ButtonStyle}">
                     <Button.Content>
                         <TextBlock>
-                            <Run>OK (</Run><Run x:Name="PART_RemainingTimeInSecondsRun"/><Run>s)</Run>
+                            <Run>OK (</Run><Run Text="{Binding RemainingTimeInSeconds}"/><Run>s)</Run>
                         </TextBlock>
                     </Button.Content>
                 </Button>
                 <Button Background="{StaticResource NextSessionBackground}"
                     Foreground="{StaticResource White}"
                     Margin="15 0 0 0" 
-                    Click="ButtonStartNextSession_Click"
+                    Command="{Binding StartNextSessionCommand}"
                     Style="{StaticResource ButtonStyle}">
-                    <TextBlock>
-                        <Run>Start </Run>
-                        <Run Text="{Binding NextSession.Name, Mode=OneWay}"/>
-                        <Run>Session</Run>
-                    </TextBlock>
+                    <Button.Content>
+                            <TextBlock>
+                                <Run>Start </Run>
+                                <Run Text="{Binding NextSession.Name, Mode=OneWay}"/>
+                                <Run>Session</Run>
+                            </TextBlock>
+                    </Button.Content>
                 </Button>
             </WrapPanel>
         </Grid>

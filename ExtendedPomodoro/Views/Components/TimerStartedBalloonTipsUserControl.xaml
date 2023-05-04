@@ -4,16 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ExtendedPomodoro.Views.Components"
+             xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
              xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:conv="clr-namespace:ExtendedPomodoro.Converters"
              mc:Ignorable="d" 
              x:Name="TheUserControl"
-             d:DesignHeight="225" d:DesignWidth="320">
+             d:DesignHeight="225" d:DesignWidth="320"
+             d:DataContext="vms:TimerStartedBalloonViewModel"
+             >
     <UserControl.Resources>
         <conv:TimerSessionStateToColorConverter x:Key="TimerSessionStateToColorConv"/>
-        <SolidColorBrush x:Key="CurrentessionBackground" Color="{Binding CurrentSession, 
+        <conv:InvertBooleanToVisibilityConverter x:Key="InvertBoolToVisibilityConv"/>
+        <SolidColorBrush x:Key="CurrentSessionBackground" Color="{Binding CurrentSession, 
             Converter={StaticResource TimerSessionStateToColorConv}}"/>
     </UserControl.Resources>
+    <behaviors:Interaction.Triggers>
+        <behaviors:PropertyChangedTrigger Binding="{Binding CloseRequested}" >
+            <behaviors:ChangePropertyAction 
+                TargetName="TheUserControl"
+                PropertyName="Visibility" 
+                Value="{Binding CloseRequested,
+                                Converter={StaticResource InvertBoolToVisibilityConv}}"
+            />
+        </behaviors:PropertyChangedTrigger>
+    </behaviors:Interaction.Triggers>
     <Border 
         Style="{StaticResource BalloonBorderBaseStyle}"
         BorderThickness="1"
@@ -26,7 +40,8 @@
                 HorizontalAlignment="Center"
                 Margin="0 20 0 0"
                 Style="{StaticResource TextBlockBalloonTipsTitle}">
-                <Run Text="{Binding CurrentSession.Name, Mode=OneWay}"/>
+                <Run Text="{Binding CurrentSession.Name,
+                            Mode=OneWay}"/>
                 <Run>session has started.</Run>
             </TextBlock>
 
@@ -34,23 +49,16 @@
             <Viewbox Width="100" Height="100" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
                 <Canvas Height="100" Width="100">
                     <Path Data="M100 50C100 63.2608 94.7322 75.9785 85.3553 85.3553C75.9785 94.7322 63.2608 100 50 100C36.7392 100 24.0215 94.7322 14.6447 85.3553C5.26784 75.9785 0 63.2608 0 50C0 36.7392 5.26784 24.0215 14.6447 14.6447C24.0215 5.26784 36.7392 0 50 0C63.2608 0 75.9785 5.26784 85.3553 14.6447C94.7322 24.0215 100 36.7392 100 50ZM42.4375 31.8312C41.9702 31.4986 41.4204 31.3009 40.8483 31.2599C40.2761 31.2189 39.7037 31.3362 39.1938 31.5989C38.6839 31.8616 38.2561 32.2596 37.9573 32.7493C37.6586 33.2389 37.5004 33.8014 37.5 34.375V65.625C37.5004 66.1986 37.6586 66.7611 37.9573 67.2507C38.2561 67.7404 38.6839 68.1384 39.1938 68.4011C39.7037 68.6638 40.2761 68.7811 40.8483 68.7401C41.4204 68.6991 41.9702 68.5014 42.4375 68.1687L64.3125 52.5437C64.7176 52.2547 65.0478 51.873 65.2756 51.4306C65.5034 50.9881 65.6223 50.4977 65.6223 50C65.6223 49.5023 65.5034 49.0119 65.2756 48.5694C65.0478 48.127 64.7176 47.7453 64.3125 47.4562L42.4375 31.8312Z" 
-                          Fill="{StaticResource CurrentessionBackground}" />
+                          Fill="{StaticResource CurrentSessionBackground}" />
                 </Canvas>
             </Viewbox>
             <!--#endregion the icon path-->
 
             <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 20">
-                <Button Style="{StaticResource ButtonStyle}">
-                    <behaviors:Interaction.Triggers>
-                        <behaviors:EventTrigger EventName="Click">
-                            <behaviors:CallMethodAction 
-                                TargetObject="{Binding ElementName=TheUserControl}"
-                                MethodName="Close"/>
-                        </behaviors:EventTrigger>
-                    </behaviors:Interaction.Triggers>
+                <Button Style="{StaticResource ButtonStyle}" Command="{Binding CloseCommand}">
                     <Button.Content>
                         <TextBlock>
-                        <Run>OK (</Run><Run x:Name="PART_RemainingTimeInSecondsRun"/><Run>s)</Run>
+                        <Run>OK (</Run><Run Text="{Binding RemainingTimeInSeconds}"/><Run>s)</Run>
                         </TextBlock>
                     </Button.Content>
                 </Button>
