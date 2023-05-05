@@ -2,73 +2,73 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Threading.Tasks;
+using ExtendedPomodoro.Messages;
+using ExtendedPomodoro.ViewModels.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
-
-    public partial class MainWindowViewModel : ObservableObject, 
-        IRecipient<CurrentViewModelMessage>
+    public partial class MainWindowViewModel : ObservableObject
     {
+        private readonly INavigableViewModel _timerViewModel;
+        private readonly INavigableViewModel _statsViewModel;
+        private readonly INavigableViewModel _tasksViewModel;
+        private readonly INavigableViewModel _settingsViewModel;
         private readonly IMessenger _messenger;
-        private readonly NavigationViewModel _navigationViewModel;
-        public TimerViewModel TimerViewModel { get; }
-        private readonly StatsViewModel _statsViewModel;
-        private readonly TasksViewModel _tasksViewModel;
-        private readonly SettingsViewModel _settingsViewModel;
 
         [ObservableProperty]
-        private ObservableObject _currentViewModel;
+        private INavigableViewModel _currentViewModel;
 
         public MainWindowViewModel(
-            IMessenger messenger,
-            NavigationViewModel navigationViewModel,
-          TimerViewModel timerViewModel, SettingsViewModel settingsViewModel, StatsViewModel statsViewModel, TasksViewModel tasksViewModel)
+            INavigableViewModel timerViewModel,
+            INavigableViewModel tasksViewModel,
+            INavigableViewModel statsViewModel,
+            INavigableViewModel settingsViewModel,       
+            IMessenger messenger
+            )
         {
-            _messenger = messenger;
-            _navigationViewModel = navigationViewModel;
-            TimerViewModel = timerViewModel;
+            _timerViewModel = timerViewModel;
             _settingsViewModel = settingsViewModel;
             _tasksViewModel = tasksViewModel;
             _statsViewModel = statsViewModel;
-
-            _messenger.RegisterAll(this);
+            _messenger = messenger;
         }
 
         public async Task Initialize()
         {
             await NavigateToTimer();
-
         }
 
         [RelayCommand]
-        public async Task NavigateToTimer()
+        private async Task NavigateToTimer()
         {
-            _navigationViewModel.SetCurrentViewModel(TimerViewModel);
-            await TimerViewModel.Initialize();
+            CurrentViewModel = _timerViewModel;
+            await _timerViewModel.Load();
         }
 
         [RelayCommand]
-        public async Task NavigateToStats()
+        private async Task NavigateToStats()
         {
-            _navigationViewModel.SetCurrentViewModel(_statsViewModel);
-            await _statsViewModel.Initialize();
+            CurrentViewModel = _statsViewModel;
+            await _statsViewModel.Load();
         }
 
         [RelayCommand]
-
-        public async Task NavigateToSettings() { 
-             _navigationViewModel.SetCurrentViewModel(_settingsViewModel);
-             await _settingsViewModel.Initialize();
+        private async Task NavigateToSettings() {
+            CurrentViewModel = _settingsViewModel;
+             await _settingsViewModel.Load();
          }
 
         [RelayCommand]
-        public async Task NavigateToTasks()
+        private async Task NavigateToTasks()
         {
-            _navigationViewModel.SetCurrentViewModel(_tasksViewModel);
-            await _tasksViewModel.ReadTasksViewModel.LoadTasks();
+            CurrentViewModel = _tasksViewModel;
+            await _tasksViewModel.Load();
         }
 
-        public void Receive(CurrentViewModelMessage currentViewModelMessage) =>
-            CurrentViewModel = currentViewModelMessage.Message;
+        [RelayCommand]
+        private void HandleWindowClosed()
+        {
+            _messenger.Send(new MainWindowIsClosingMessage());
+        }
     }
 }

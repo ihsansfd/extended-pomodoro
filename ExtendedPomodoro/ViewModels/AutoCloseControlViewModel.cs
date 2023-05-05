@@ -3,6 +3,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ExtendedPomodoro.ViewModels.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {

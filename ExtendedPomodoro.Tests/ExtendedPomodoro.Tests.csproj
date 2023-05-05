@@ -31,8 +31,4 @@
     <ProjectReference Include="..\ExtendedPomodoro\ExtendedPomodoro.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="App\VIewModels\" />
-  </ItemGroup>
-
 </Project>

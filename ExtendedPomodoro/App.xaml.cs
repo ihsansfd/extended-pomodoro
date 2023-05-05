@@ -126,7 +126,15 @@ namespace ExtendedPomodoro
             services.AddSingleton<SqliteDbSetup>();
             services.AddSingleton<IDbConnectionFactory, SqliteDbConnectionFactory>();
             services.AddSingleton<IDatabaseSetup, SqliteDbSetup>();
-            services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<MainWindowViewModel>(
+                (s) => 
+                    new MainWindowViewModel(
+                        s.GetRequiredService<TimerViewModel>(),
+                        s.GetRequiredService<TasksViewModel>(),
+                        s.GetRequiredService<StatsViewModel>(),
+                        s.GetRequiredService<SettingsViewModel>(),
+                        s.GetRequiredService<IMessenger>()
+                        ));
             services.AddSingleton<SoundService>();
             services.AddSingleton<TimerViewModel>();
             services.AddSingleton<TimerSessionState>();
@@ -134,8 +142,6 @@ namespace ExtendedPomodoro
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<StatsViewModel>();
             services.AddSingleton<TasksViewModel>();
-            services.AddSingleton<NavigationViewModel>
-                ((s) => new(s.GetRequiredService<TimerViewModel>(), s.GetRequiredService<IMessenger>()));
             services.AddSingleton<IHotkeyManager, HotkeyManagerAdapter>();
             services.AddSingleton<HotkeyLoaderService>();
             services.AddSingleton<IMessageBoxService, MessageBoxService>();

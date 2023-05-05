@@ -13,12 +13,12 @@ using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.Services.Interfaces;
+using ExtendedPomodoro.ViewModels.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
-    public class TasksViewModel : ObservableObject
+    public class TasksViewModel : ObservableObject, INavigableViewModel
     {
-
         public ReadTasksViewModel ReadTasksViewModel { get;}
 
         public CreateTaskViewModel CreateTaskViewModel { get; }
@@ -36,6 +36,11 @@ namespace ExtendedPomodoro.ViewModels
             CreateTaskViewModel = createTaskViewModel;
             UpdateTaskViewModel = updateTaskViewModel;
             DeleteTaskViewModel = deleteTaskViewModel;
+        }
+
+        public async Task Load()
+        {
+            await ReadTasksViewModel.LoadTasks();
         }
 
     }

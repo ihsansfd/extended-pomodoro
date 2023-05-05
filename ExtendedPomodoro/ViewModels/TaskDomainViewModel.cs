@@ -1,6 +1,6 @@
 ﻿namespace ExtendedPomodoro.ViewModels
 {
-    public record class TaskDomainViewModel(
+    public record TaskDomainViewModel(
         int Id,
         string Name,
         string? Description,

@@ -22,7 +22,7 @@
     <!--#region behavior -->
     <behaviors:Interaction.Triggers>
         <behaviors:EventTrigger EventName="Closing">
-            <behaviors:InvokeCommandAction Command="{Binding TimerViewModel.HandleWindowClosedCommand}"/>
+            <behaviors:InvokeCommandAction Command="{Binding HandleWindowClosedCommand}"/>
         </behaviors:EventTrigger>
     </behaviors:Interaction.Triggers>
     <!--#endregion-->

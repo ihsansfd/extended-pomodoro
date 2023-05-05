@@ -12,15 +12,19 @@ using NHotkey;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ExtendedPomodoro.ViewModels.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
-    public partial class TimerViewModel : ObservableObject,
+    public partial class TimerViewModel : 
+        ObservableObject, 
+        INavigableViewModel,
         IRecipient<TimerTimeChangeInfoMessage>,
         IRecipient<SettingsUpdateInfoMessage>,
         IRecipient<StartSessionInfoMessage>,
         IRecipient<StartHotkeyTriggeredMessage>,
-        IRecipient<PauseHotkeyTriggeredMessage>
+        IRecipient<PauseHotkeyTriggeredMessage>,
+        IRecipient<MainWindowIsClosingMessage>
     {
         private readonly IAppSettingsProvider _appSettingsProvider;
         private readonly IDailySessionsService _sessionsRepository;
@@ -167,7 +171,7 @@ namespace ExtendedPomodoro.ViewModels
 
         #region bootstrap
 
-        public async Task Initialize()
+        public async Task Load()
         {
             await ReadTasksViewModel.DisplayInProgressTasks();
             PomodoroCompletedToday = await GetPomodoroCompletedToday();
@@ -215,6 +219,13 @@ namespace ExtendedPomodoro.ViewModels
             AssignFromSettings();
         }
 
+        public async void Receive(MainWindowIsClosingMessage message)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
+            await StoreAndResetTimeElapsed(today, SelectedTask);
+        }
+
         /// <summary>
         /// Do Finish logic.
         /// Give information to the listeners that session has finished. 
@@ -256,14 +267,6 @@ namespace ExtendedPomodoro.ViewModels
         public void Receive(StartSessionInfoMessage message)
         {
             if (message.IsStartSession) StartSession();
-        }
-
-        [RelayCommand]
-        private async Task HandleWindowClosed()
-        {
-            var today = DateOnly.FromDateTime(DateTime.Now);
-
-            await StoreAndResetTimeElapsed(today, SelectedTask);
         }
 
         #endregion

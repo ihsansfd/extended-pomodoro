@@ -14,14 +14,14 @@ using System.Windows;
 using ExtendedPomodoro.ViewServices;
 using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Services.Interfaces;
+using ExtendedPomodoro.ViewModels.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
-    public partial class SettingsViewModel : ObservableValidator
+    public partial class SettingsViewModel : ObservableValidator, INavigableViewModel
     {
         private readonly ISettingsService _repository;
         private readonly IMessageBoxService _messageBox;
-        private readonly IMessenger _messenger;
         private readonly SettingsViewService _settingsViewService;
         private readonly IAppSettingsProvider _appSettingsProvider;
 
@@ -98,7 +98,7 @@ namespace ExtendedPomodoro.ViewModels
             if (confirmationRes != MessageBoxResult.Yes) return;
 
             await _repository.ResetToDefaultSettings();
-            await Initialize();
+            await Load();
         }
 
         [RelayCommand]
@@ -110,19 +110,17 @@ namespace ExtendedPomodoro.ViewModels
         public SettingsViewModel(
             ISettingsService repository, 
             IMessageBoxService messageBoxService,
-            IMessenger messenger,
             SettingsViewService settingsViewService,
             IAppSettingsProvider appSettingsProvider
             )
         {
             _repository = repository;
             _messageBox = messageBoxService;
-            _messenger = messenger;
             _settingsViewService = settingsViewService;
             _appSettingsProvider = appSettingsProvider;
         }
 
-        public async Task Initialize()
+        public async Task Load()
         {
             SettingsDomain settingsDomain = await _repository.GetSettings();
             PomodoroDurationInMinutes = settingsDomain.PomodoroDuration.TotalSeconds.SecondsToMinutes();

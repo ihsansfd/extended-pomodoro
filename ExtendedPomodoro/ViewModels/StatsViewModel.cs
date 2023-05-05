@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.Services.Interfaces;
+using ExtendedPomodoro.ViewModels.Interfaces;
 using ExtendedPomodoro.ViewServices;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace ExtendedPomodoro.ViewModels
     public record StatAxesDomainViewModel(double[] XAxis, double[] YAxis); 
     public record StatAxesDisplayDomainViewModel(StatAxesDomainViewModel Axes, bool Display = true); 
 
-    public partial class StatsViewModel : ObservableObject
+    public partial class StatsViewModel : ObservableObject, INavigableViewModel
     {
 
         private readonly IDailySessionsService _repository;
@@ -95,7 +96,7 @@ namespace ExtendedPomodoro.ViewModels
             _statsViewService = statsService;
         }
 
-        public async Task Initialize()
+        public async Task Load()
         {
             FromDate = ConvertToDateWithMinTime(DateTime.Today).AddDays(-7);
             ToDate = ConvertToDateWithMaxTime(DateTime.Today);
