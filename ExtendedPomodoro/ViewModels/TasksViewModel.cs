@@ -260,7 +260,7 @@ namespace ExtendedPomodoro.ViewModels
         [NotifyDataErrorInfo]
         [Required(ErrorMessage = "Task name is required")]
         [ObservableProperty]
-        private string _name;
+        private string _name = null!;
 
         [ObservableProperty]
         private string? _description;
@@ -409,20 +409,20 @@ namespace ExtendedPomodoro.ViewModels
     {
         public int TaskId
         {
-            get { return (int)GetValue(TaskIdProperty); }
-            set { SetValue(TaskIdProperty, value); }
+            get => (int)GetValue(TaskIdProperty);
+            set => SetValue(TaskIdProperty, value);
         }
 
         public static readonly DependencyProperty TaskIdProperty =
-            DependencyProperty.Register("TaskId", typeof(int), typeof(UpdateTaskStateDomainViewModel), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(TaskId), typeof(int), typeof(UpdateTaskStateDomainViewModel), new PropertyMetadata(0));
 
         public int IntendedTaskState
         {
-            get { return (int)GetValue(IntendedTaskStateProperty); }
-            set { SetValue(IntendedTaskStateProperty, value); }
+            get => (int)GetValue(IntendedTaskStateProperty);
+            set => SetValue(IntendedTaskStateProperty, value);
         }
         public static readonly DependencyProperty IntendedTaskStateProperty =
-            DependencyProperty.Register("IntendedTaskState", typeof(int), typeof(UpdateTaskStateDomainViewModel), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(IntendedTaskState), typeof(int), typeof(UpdateTaskStateDomainViewModel), new PropertyMetadata(0));
     }
 
 }

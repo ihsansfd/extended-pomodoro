@@ -63,7 +63,7 @@
     <PackageReference Include="MahApps.Metro.IconPacks.BootstrapIcons" Version="4.11.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-    <PackageReference Include="NHotkey.Wpf" Version="2.1.0" />
+    <PackageReference Include="NHotkey.Wpf" Version="2.1.1" />
     <PackageReference Include="ScottPlot.WPF" Version="4.1.63" />
     <PackageReference Include="XamlRadialProgressBar" Version="1.0.3" />
   </ItemGroup>
@@ -101,6 +101,10 @@
     <Resource Include="Assets\Fonts\Inter-Thin.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Entities\" />
   </ItemGroup>
 
 </Project>

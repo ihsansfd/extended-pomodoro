@@ -2,7 +2,7 @@
 using ExtendedPomodoro.Factories;
 using ExtendedPomodoro.Messages;
 using System;
-using System.Windows.Threading;
+using ExtendedPomodoro.Services.Interfaces;
 
 namespace ExtendedPomodoro.Services
 {
@@ -15,7 +15,7 @@ namespace ExtendedPomodoro.Services
     public class ExtendedTimer
     {
         public event EventHandler<RemainingTimeChangedEventArgs>? RemainingTimeChanged;
-        private readonly DispatcherTimer _timer;
+        private readonly ITimer _timer;
         private TimeSpan _timerSetFor  = TimeSpan.Zero;
         private TimeSpan _remainingTime  = TimeSpan.Zero;
         
@@ -25,9 +25,9 @@ namespace ExtendedPomodoro.Services
             set => _timer.Interval = value;
         }
         
-        public ExtendedTimer()
+        public ExtendedTimer(ITimer timer)
         {
-            _timer = new();
+            _timer = timer;
             _timer.Tick += OnTimeChanged;
             _timer.Interval = TimeSpan.FromSeconds(1);
         }
@@ -61,7 +61,7 @@ namespace ExtendedPomodoro.Services
         {
             _remainingTime -= Interval;
 
-            if (_remainingTime == TimeSpan.Zero) _timer.Stop();
+            if (_remainingTime <= TimeSpan.Zero) _timer.Stop();
 
             RemainingTimeChanged?.Invoke(this, new RemainingTimeChangedEventArgs
             {

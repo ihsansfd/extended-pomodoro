@@ -22,6 +22,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using ExtendedPomodoro.Core.Timeout;
 
 namespace ExtendedPomodoro
 {
@@ -90,6 +91,7 @@ namespace ExtendedPomodoro
             await dbSetup.Setup();
         }
 
+        // TODO: place this into the Core.
         private static void EnsureOnlyOneInstanceIsRunning()
         {
             Process proc = Process.GetCurrentProcess();
@@ -134,7 +136,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<TasksViewModel>();
             services.AddSingleton<NavigationViewModel>
                 ((s) => new(s.GetRequiredService<TimerViewModel>(), s.GetRequiredService<IMessenger>()));
-            services.AddSingleton<HotkeyManager>((_) => HotkeyManager.Current);
+            services.AddSingleton<IHotkeyManager, HotkeyManagerAdapter>();
             services.AddSingleton<HotkeyLoaderService>();
             services.AddSingleton<IMessageBoxService, MessageBoxService>();
             services.AddSingleton<IMessenger>((_) => MessengerFactory.Messenger);
@@ -144,6 +146,13 @@ namespace ExtendedPomodoro
             services.AddSingleton<TimerViewService>();
             services.AddSingleton<SettingsViewService>();
             services.AddSingleton<IAppSettingsProvider, AppSettingsProvider>();
+            services.AddTransient<ISoundService, SoundService>();
+            services.AddTransient<RegisterWaitTimeoutCallback>((_) => WaitTimeoutProvider.RegisterWaitTimeout);
+            services.AddTransient<IMediaPlayer, MediaPlayerAdapter>();
+            services.AddTransient<AlarmSoundService>();
+            services.AddTransient<MouseClickSoundService>();
+            services.AddTransient<ITimer, DispatcherTimerAdapter>();
+            services.AddTransient<ExtendedTimer>();
             return services.BuildServiceProvider();
         }
     }

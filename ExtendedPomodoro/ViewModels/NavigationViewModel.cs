@@ -8,7 +8,7 @@ namespace ExtendedPomodoro.ViewModels
         private readonly IMessenger _messenger;
 
         [ObservableProperty]
-        private ObservableObject _currentViewModel;
+        private ObservableObject _currentViewModel = null!;
 
         public NavigationViewModel(ObservableObject currentViewModel, IMessenger messenger)
         {

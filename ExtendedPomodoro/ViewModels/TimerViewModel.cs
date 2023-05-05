@@ -27,6 +27,8 @@ namespace ExtendedPomodoro.ViewModels
         private readonly ITasksService _tasksRepository;
         private readonly IMessenger _messenger;
         private readonly TimerViewService _timerViewService;
+        private readonly ExtendedTimer _extendedTimer;
+
         private bool _hasBeenSetup;
 
         private int _timeElapsed = 0;
@@ -39,7 +41,8 @@ namespace ExtendedPomodoro.ViewModels
             IAppSettingsProvider appSettingsProvider,
             IDailySessionsService sessionsRepository,
             ITasksService tasksRepository,
-            IMessenger messenger
+            IMessenger messenger,
+            ExtendedTimer extendedTimer
             )
         {
 
@@ -51,6 +54,7 @@ namespace ExtendedPomodoro.ViewModels
             _sessionsRepository = sessionsRepository;
             _tasksRepository = tasksRepository;
             _messenger = messenger;
+            _extendedTimer = extendedTimer;
 
             _messenger.RegisterAll(this);
         }
@@ -168,7 +172,8 @@ namespace ExtendedPomodoro.ViewModels
             await ReadTasksViewModel.DisplayInProgressTasks();
             PomodoroCompletedToday = await GetPomodoroCompletedToday();
             AssignFromSettings();
-            if (!_hasBeenSetup) CurrentTimerSession.InitialSetup(this, _appSettingsProvider, _messenger);
+            if (!_hasBeenSetup) CurrentTimerSession.InitialSetup(
+                this, _appSettingsProvider, _messenger, _extendedTimer);
             _hasBeenSetup = true;
         }
 
@@ -364,7 +369,6 @@ namespace ExtendedPomodoro.ViewModels
         }
     }
 
-
     public class TimerSessionState
     {
         public virtual string Name { get; } = string.Empty;
@@ -374,26 +378,26 @@ namespace ExtendedPomodoro.ViewModels
         private static bool _isPaused;
         private static TimerViewModel _context = null!;
         private static IMessenger _messenger = null!;
+
         protected static IAppSettingsProvider Configuration = null!;
-        
-        private static readonly ExtendedTimer Timer = new();
+        protected static ExtendedTimer Timer = null!;
         protected static readonly PomodoroSessionState PomodoroSessionState = new();
         protected static readonly ShortBreakSessionState ShortBreakSessionState = new();
         protected static readonly LongBreakSessionState LongBreakSessionState = new();
 
-        
         // Need to be called before anything else
         public void InitialSetup(
             TimerViewModel context, 
             IAppSettingsProvider configuration,
-            IMessenger messenger
+            IMessenger messenger,
+            ExtendedTimer timer
             )
         {
             _context = context;
             Configuration = configuration;
             _messenger = messenger;
+            Timer = timer;
             _context.CurrentTimerSession = PomodoroSessionState;
-            
             _context.CurrentTimerSession.Initialize();
             
             Timer.RemainingTimeChanged += TimerOnRemainingTimeChanged;

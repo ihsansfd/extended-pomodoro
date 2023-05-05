@@ -2,56 +2,27 @@
 using System;
 using System.Threading;
 using System.Windows.Media;
+using ExtendedPomodoro.Core.Timeout;
 using ExtendedPomodoro.Services.Interfaces;
 using static System.IO.Path;
 using static System.AppDomain;
 
 namespace ExtendedPomodoro.Services
 {
-    public class MediaPlayerAdapter : IMediaPlayer
-    {
-        private readonly MediaPlayer _mediaPlayer = new();
-
-        public double Volume
-        {
-            get => _mediaPlayer.Volume;
-            set => _mediaPlayer.Volume = value;
-        }
-
-        public TimeSpan Position
-        {
-            get => _mediaPlayer.Position;
-            set => _mediaPlayer.Position = value;
-        }
-
-        public event EventHandler MediaEnded
-        {
-            add => _mediaPlayer.MediaEnded += value;
-            remove => _mediaPlayer.MediaEnded -= value;
-        }
-
-        public void Open(Uri source) => _mediaPlayer.Open(source);
-
-        public void Play() => _mediaPlayer.Play();
-
-        public void Pause() => _mediaPlayer.Pause();
-
-        public void Stop() => _mediaPlayer.Stop();
-
-        public void Close() => _mediaPlayer.Close();
-    }
-
     public class SoundService : ISoundService
     {
         public int Volume { get => (int)_soundPlayer.Volume; set => _soundPlayer.Volume = value; }
 
         public TimeSpan RepeatFor { get; set; } = TimeSpan.Zero;
         private readonly IMediaPlayer _soundPlayer;
+        private readonly RegisterWaitTimeoutCallback _registerWaitTimeoutCallback;
         private bool _stillRepeat = false;
 
-        public SoundService(IMediaPlayer mediaPlayer)
+        public SoundService(IMediaPlayer mediaPlayer, 
+            RegisterWaitTimeoutCallback registerWaitTimeoutCallback)
         {
             _soundPlayer = mediaPlayer;
+            _registerWaitTimeoutCallback = registerWaitTimeoutCallback;
         }
 
         public void Open(Uri source)
@@ -62,17 +33,16 @@ namespace ExtendedPomodoro.Services
 
         public void Play()
         {
-            if (RepeatFor != Timeout.InfiniteTimeSpan)
+            if (RepeatFor > TimeSpan.Zero && RepeatFor != Timeout.InfiniteTimeSpan)
             {
-                ThreadPool.RegisterWaitForSingleObject(new AutoResetEvent(false),
-                    (_, _) => _stillRepeat = false, null, RepeatFor, true);
+                _registerWaitTimeoutCallback.Invoke(() =>_stillRepeat = false, RepeatFor);
             }
 
-            _stillRepeat = RepeatFor != TimeSpan.Zero;
-
-            Replay();
+            _stillRepeat = RepeatFor > TimeSpan.Zero || RepeatFor == Timeout.InfiniteTimeSpan;
 
             _soundPlayer.MediaEnded += OnSoundEnd;
+
+            Replay();
 
             void OnSoundEnd(object? sender, EventArgs e)
             {
@@ -87,10 +57,9 @@ namespace ExtendedPomodoro.Services
             }
         }
 
-        public void Stop()
-        {
-            _soundPlayer.Stop();
+        public void Stop()  {
             _stillRepeat = false;
+            _soundPlayer.Stop();
         }
 
         private void Replay()
@@ -146,11 +115,7 @@ namespace ExtendedPomodoro.Services
             _soundService.Open(new Uri(_alarmSoundFilePath));
         }
 
-        public void Play()
-        {
-
-            _soundService.Play();
-        }
+        public void Play() => _soundService.Play();
 
         public void Stop() => _soundService.Stop();
 
@@ -184,10 +149,6 @@ namespace ExtendedPomodoro.Services
             _soundService.RepeatFor = TimeSpan.Zero;
         }
 
-        public void Play()
-        {
-            _soundService.Play();
-        }
-
+        public void Play() => _soundService.Play();
     }
 }

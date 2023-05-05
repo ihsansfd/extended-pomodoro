@@ -4,16 +4,15 @@ using System.Windows;
 
 namespace ExtendedPomodoro.Services
 {
-
-    public record class MaximizableDialogServiceDomain(double Width, double Height, string Title,
+    public record MaximizableDialogServiceDomain(double Width, double Height, string Title,
         FrameworkElement Content, bool IsLogoShown = false);
 
-    public record class ClosableDialogServiceDomain(double Width, double Height, string Title,
+    public record ClosableDialogServiceDomain(double Width, double Height, string Title,
         FrameworkElement Content, bool IsLogoShown = false, bool IsOKButtonShown = true);
 
     public class DialogWindowService
     {
-        public Window GenerateMaximizibleDialogWindow(MaximizableDialogServiceDomain domain)
+        public Window GenerateMaximizableDialogWindow(MaximizableDialogServiceDomain domain)
         {
             var window = new MaximizableWindow
             {

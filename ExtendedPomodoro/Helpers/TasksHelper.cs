@@ -27,9 +27,8 @@ namespace ExtendedPomodoro.Helpers
 
         public static ValidationResult ValidateEstPomodoro(string? estPomodoro, ValidationContext context)
         {
-
-            return string.IsNullOrWhiteSpace(estPomodoro) || int.TryParse(estPomodoro, out _) ?
-                ValidationResult.Success : new("Est. Pomodoro must be an integer");
+            return (string.IsNullOrWhiteSpace(estPomodoro) || int.TryParse(estPomodoro, out _) ?
+                ValidationResult.Success : new("Est. Pomodoro must be an integer"))!;
         }
     }
 }

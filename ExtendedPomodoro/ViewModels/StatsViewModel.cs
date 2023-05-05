@@ -20,8 +20,8 @@ namespace ExtendedPomodoro.ViewModels
         TIME_SPENT = 4
     }
 
-    public record class StatAxesDomainViewModel(double[] XAxis, double[] YAxis); 
-    public record class StatAxesDisplayDomainViewModel(StatAxesDomainViewModel Axes, bool Display = true); 
+    public record StatAxesDomainViewModel(double[] XAxis, double[] YAxis); 
+    public record StatAxesDisplayDomainViewModel(StatAxesDomainViewModel Axes, bool Display = true); 
 
     public partial class StatsViewModel : ObservableObject
     {
@@ -124,7 +124,8 @@ namespace ExtendedPomodoro.ViewModels
 
         private void LoadAxes()
         {
-             XAxis = _dailySessions.Select(prop => prop.SessionDate.ToDateTime(TimeOnly.MinValue).ToOADate()).ToArray();
+             XAxis = _dailySessions.Select(prop =>
+                 prop.SessionDate.ToDateTime(TimeOnly.MinValue).ToOADate()).ToArray();
              YAxis = Array.Empty<double>();
 
             switch((StatsValue)StatsValueToDisplay)
@@ -132,35 +133,37 @@ namespace ExtendedPomodoro.ViewModels
                 case StatsValue.POMODORO_COMPLETED:
                 {
                     YAxis = _dailySessions.Select(prop => 
-                    Convert.ToDouble(prop.TotalPomodoroCompleted)).ToArray();
+                        Convert.ToDouble(prop.TotalPomodoroCompleted)).ToArray();
                     break;
                 }
 
                 case StatsValue.SHORT_BREAKS_COMPLETED:
-                    {
-                        YAxis = _dailySessions.Select(prop => 
+                {
+                    YAxis = _dailySessions.Select(prop => 
                         Convert.ToDouble(prop.TotalShortBreaksCompleted)).ToArray();
-                        break;
-                    }
+                    break;
+                }
 
                 case StatsValue.LONG_BREAKS_COMPLETED:
-                    {
-                        YAxis = _dailySessions.Select(prop => 
+                {
+                    YAxis = _dailySessions.Select(prop => 
                         Convert.ToDouble(prop.TotalLongBreaksCompleted)).ToArray();
-                        break;
-                    }
+                    break;
+                }
 
                 case StatsValue.TASKS_COMPLETED:
-                    {
-                        YAxis = _dailySessions.Select(prop => Convert.ToDouble(prop.TotalTasksCompleted)).ToArray();
-                        break;
-                    }
+                {
+                    YAxis = _dailySessions.Select(prop => 
+                        Convert.ToDouble(prop.TotalTasksCompleted)).ToArray();
+                    break;
+                }
 
                 case StatsValue.TIME_SPENT:
-                    {
-                        YAxis = _dailySessions.Select(prop => prop.TimeSpent.TotalMinutes).ToArray();
-                        break;
-                    }
+                {
+                    YAxis = _dailySessions.Select(prop => 
+                        prop.TimeSpent.TotalMinutes).ToArray();
+                    break;
+                }
             }
 
             DisplayChart = XAxis.Length > 0 && YAxis.Length > 0;
@@ -177,12 +180,12 @@ namespace ExtendedPomodoro.ViewModels
             TotalTasksCompleted = properties.TotalTasksCompleted;
         }
 
-        private DateTime ConvertToDateWithMinTime(DateTime date)
+        private static DateTime ConvertToDateWithMinTime(DateTime date)
         {
             return DateOnly.FromDateTime(date).ToDateTime(TimeOnly.MinValue);
         }
 
-        private DateTime ConvertToDateWithMaxTime(DateTime date)
+        private static DateTime ConvertToDateWithMaxTime(DateTime date)
         {
             return DateOnly.FromDateTime(date).ToDateTime(TimeOnly.MaxValue);
         }
