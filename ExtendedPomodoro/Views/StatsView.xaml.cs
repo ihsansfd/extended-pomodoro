@@ -11,7 +11,7 @@ namespace ExtendedPomodoro.Views
     public partial class StatsView : Page
     {
         private readonly ScatterPlotService _scatterPlotService = new();
-        private StatsViewModel _viewModel;
+        private StatsViewModel _viewModel = null!;
 
         public StatsView()
         {
@@ -28,12 +28,11 @@ namespace ExtendedPomodoro.Views
 
         private async void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (this.DataContext is StatsViewModel)
-            {
-                _viewModel = (StatsViewModel)this.DataContext;
-                _viewModel.NewStatsAxes += OnNewStatsAxes;
-                await _viewModel.GenerateStats();
-            }
+            if (DataContext is not StatsViewModel vm) return;
+
+            _viewModel = vm;
+            _viewModel.NewStatsAxes += OnNewStatsAxes;
+            await _viewModel.GenerateStats();
         }
 
         private void OnNewStatsAxes(object? sender, StatAxesDisplayDomainViewModel domain)
@@ -60,7 +59,7 @@ namespace ExtendedPomodoro.Views
         private void Unsubscribe()
         {
             DataContextChanged -= OnDataContextChanged;
-            if (_viewModel != null) _viewModel.NewStatsAxes -= OnNewStatsAxes;
+            _viewModel.NewStatsAxes -= OnNewStatsAxes;
         }
 
     }

@@ -3,18 +3,8 @@ using System.Windows.Input;
 
 namespace ExtendedPomodoro.Entities
 {
-    public class Hotkey
+    public record Hotkey(Key Key, ModifierKeys Modifiers)
     {
-        public Key Key { get; }
-
-        public ModifierKeys Modifiers { get; }
-
-        public Hotkey(Key key, ModifierKeys modifiers)
-        {
-            Key = key;
-            Modifiers = modifiers;
-        }
-
         public override string ToString()
         {
             var str = new StringBuilder();

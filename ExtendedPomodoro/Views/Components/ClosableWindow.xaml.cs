@@ -11,14 +11,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using ExtendedPomodoro.Views.Interfaces;
 
 namespace ExtendedPomodoro.Views.Components
 {
     /// <summary>
     /// Interaction logic for ClosableWindow.xaml
     /// </summary>
-    public partial class ClosableWindow : Window, ICloseableControl
+    public partial class ClosableWindow : Window
     {
         public ClosableWindow()
         {

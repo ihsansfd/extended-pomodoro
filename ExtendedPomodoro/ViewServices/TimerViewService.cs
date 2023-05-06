@@ -7,7 +7,6 @@ using System;
 using System.Windows;
 using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.ViewModels.Components;
-using ExtendedPomodoro.Views.Interfaces;
 
 namespace ExtendedPomodoro.ViewServices
 {

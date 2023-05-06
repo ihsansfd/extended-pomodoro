@@ -14,15 +14,13 @@ using ExtendedPomodoro.Services.Interfaces;
 using ExtendedPomodoro.ViewModels;
 using ExtendedPomodoro.ViewServices;
 using Microsoft.Extensions.DependencyInjection;
-using NHotkey.Wpf;
-using System;
 using System.Configuration;
-using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using ExtendedPomodoro.Core.Timeout;
+using ExtendedPomodoro.ViewServices.Interfaces;
 
 namespace ExtendedPomodoro
 {
@@ -150,7 +148,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<DialogWindowService>();
             services.AddSingleton<StatsViewService>();
             services.AddSingleton<TimerViewService>();
-            services.AddSingleton<SettingsViewService>();
+            services.AddSingleton<ISettingsViewService, SettingsViewService>();
             services.AddSingleton<IAppSettingsProvider, AppSettingsProvider>();
             services.AddTransient<ISoundService, SoundService>();
             services.AddTransient<RegisterWaitTimeoutCallback>((_) => WaitTimeoutProvider.RegisterWaitTimeout);

@@ -1,86 +1,82 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ExtendedPomodoro.FrameworkExtensions.Extensions;
-using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Models.Domains;
 using System;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using CommunityToolkit.Mvvm.Messaging;
-using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Helpers;
 using System.Windows;
-using ExtendedPomodoro.ViewServices;
 using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Services.Interfaces;
 using ExtendedPomodoro.ViewModels.Interfaces;
+using ExtendedPomodoro.ViewServices.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
     public partial class SettingsViewModel : ObservableValidator, INavigableViewModel
     {
-        private readonly ISettingsService _repository;
+        private readonly ISettingsService _settingsService;
         private readonly IMessageBoxService _messageBox;
-        private readonly SettingsViewService _settingsViewService;
+        private readonly ISettingsViewService _settingsViewService;
         private readonly IAppSettingsProvider _appSettingsProvider;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Pomodoro duration is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         [Range(0.1, int.MaxValue, ErrorMessage = "Please specify value > 0")]
         private double _pomodoroDurationInMinutes;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Short break duration is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         [Range(0.1, int.MaxValue, ErrorMessage = "Please specify value > 0")]
         private double _shortBreakDurationInMinutes;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Long break duration is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         [Range(0.1, int.MaxValue, ErrorMessage = "Please specify value > 0")]
         private double _longBreakDurationInMinutes;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Long break interval is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         private int _longBreakInterval;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Daily pomodoro target is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         private int _dailyPomodoroTarget;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Is autostart is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         private bool _isAutostart;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Alarm Sound is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         private int _alarmSound;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Volume is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         private int _volume;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Is repeat forever is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         private bool _isRepeatForever;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Is push notification enabled is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         private bool _pushNotificationEnabled;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Is dark mode enabled is required")]
+        [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
         private bool _darkModeEnabled;
 
         [ObservableProperty]
@@ -90,31 +86,34 @@ namespace ExtendedPomodoro.ViewModels
         private Hotkey? _pauseHotkey;
 
         [RelayCommand]
-        public async Task ResetToDefaultSettings()
+        private async Task ResetToDefaultSettings()
         {
-            var confirmationRes = _messageBox.Show("Are you sure to reset the Settings?", "Confirmation",
-                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var confirmationRes = _messageBox.Show(
+                "Are you sure to reset the Settings?", 
+                "Confirmation",
+                MessageBoxButton.YesNo, 
+                MessageBoxImage.Question);
 
             if (confirmationRes != MessageBoxResult.Yes) return;
 
-            await _repository.ResetToDefaultSettings();
+            await _settingsService.ResetToDefaultSettings();
             await Load();
         }
 
         [RelayCommand]
-        public void PlayAlarmSoundTester()
+        private void PlayAlarmSoundTester()
         {
             _settingsViewService.PlaySound((AlarmSound)AlarmSound, Volume, TimeSpan.FromSeconds(3));
         }
 
         public SettingsViewModel(
-            ISettingsService repository, 
+            ISettingsService settingsService, 
             IMessageBoxService messageBoxService,
-            SettingsViewService settingsViewService,
+            ISettingsViewService settingsViewService,
             IAppSettingsProvider appSettingsProvider
             )
         {
-            _repository = repository;
+            _settingsService = settingsService;
             _messageBox = messageBoxService;
             _settingsViewService = settingsViewService;
             _appSettingsProvider = appSettingsProvider;
@@ -122,10 +121,10 @@ namespace ExtendedPomodoro.ViewModels
 
         public async Task Load()
         {
-            SettingsDomain settingsDomain = await _repository.GetSettings();
-            PomodoroDurationInMinutes = settingsDomain.PomodoroDuration.TotalSeconds.SecondsToMinutes();
-            ShortBreakDurationInMinutes = settingsDomain.ShortBreakDuration.TotalSeconds.SecondsToMinutes();
-            LongBreakDurationInMinutes = settingsDomain.LongBreakDuration.TotalSeconds.SecondsToMinutes();
+            SettingsDomain settingsDomain = await _settingsService.GetSettings();
+            PomodoroDurationInMinutes = settingsDomain.PomodoroDuration.TotalMinutes;
+            ShortBreakDurationInMinutes = settingsDomain.ShortBreakDuration.TotalMinutes;
+            LongBreakDurationInMinutes = settingsDomain.LongBreakDuration.TotalMinutes;
             LongBreakInterval = settingsDomain.LongBreakInterval;
             DailyPomodoroTarget = settingsDomain.DailyPomodoroTarget;
             IsAutostart = settingsDomain.IsAutostart;
@@ -139,13 +138,13 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         [RelayCommand]
-        public async Task UpdateSettings()
+        private async Task UpdateSettings()
         {
             ValidateAllProperties();
 
             if(HasErrors) return;
 
-        await _repository.UpdateSettings(new SettingsDomain()
+        await _settingsService.UpdateSettings(new SettingsDomain()
         {
             PomodoroDuration = TimeSpan.FromMinutes(PomodoroDurationInMinutes),
             ShortBreakDuration = TimeSpan.FromMinutes(ShortBreakDurationInMinutes),
