@@ -1,37 +1,35 @@
 ﻿namespace ExtendedPomodoro.Models.Domains
 {
+    public record DailySessionDomain()
+    {
+        public DateOnly SessionDate { get; set; }
+        public TimeSpan TimeSpent { get; set; }
+        public int TotalPomodoroCompleted { get; set; }
+        public int TotalShortBreaksCompleted { get; set; }
+        public int TotalLongBreaksCompleted { get; set; }
+        public int TotalTasksCompleted { get; set; }
+        public DateTime CreatedAt { get; set; } 
+        public DateTime UpdatedAt { get; set; }
+    }
 
-    // TODO: Refactor for too long parameter list, make properties
-    public record class DailySessionDomain(
-        DateOnly SessionDate, 
-        TimeSpan TimeSpent, 
-        int TotalPomodoroCompleted,
-        int TotalShortBreaksCompleted,
-        int TotalLongBreaksCompleted,
-        int TotalTasksCompleted,
-        DateTime CreatedAt,
-        DateTime UpdatedAt
-        );
-
-    public record class UpsertDailySessionDomain
+    public record UpsertDailySessionDomain
     {
         public DateOnly SessionDate { get; set; }
         public int TotalPomodoroCompleted { get; set; }
         public int TotalShortBreaksCompleted { get; set; }
         public int TotalLongBreaksCompleted { get; set; }
     }
-        
-    public record class SumDailySessionsDomain(
-        DateTime fromDate,
-        DateTime toDate,
-        TimeSpan TotalTimeSpent,
-        int TotalPomodoroCompleted,
-        int TotalShortBreaksCompleted,
-        int TotalLongBreaksCompleted,
-        int TotalTasksCompleted
-        );
 
-    public record class DateRangeDailySessionsDomain(
+    public record SumDailySessionsDomain
+    {
+        public TimeSpan TotalTimeSpent { get; set; }
+        public int TotalPomodoroCompleted { get; set; }
+        public int TotalShortBreaksCompleted { get; set; }
+        public int TotalLongBreaksCompleted { get; set; }
+        public int TotalTasksCompleted { get; set; }
+    };
+
+    public record DateRangeDailySessionsDomain(
         DateTime MinDate,
         DateTime MaxDate
         );

@@ -21,14 +21,15 @@ namespace ExtendedPomodoro.Models.Services
         {
             var records = await _repository.GetDailySessions(from, to);
 
-            foreach (var record in records) yield return ConvertToDailySessionDomain(record);
+            foreach (var record in records) 
+                yield return ConvertToDailySessionDomain(record);
         }
 
         public async Task<SumDailySessionsDomain> GetSumDailySessions(DateTime from, DateTime to)
         {
             var res = await _repository.GetSumDailySessions(from, to);
 
-            return ConvertToSumDailySessionsDomain(from, to, res);
+            return ConvertToSumDailySessionsDomain(res);
         }
 
         public async Task<DateRangeDailySessionsDomain> GetDateRangeDailySessions()
@@ -56,7 +57,8 @@ namespace ExtendedPomodoro.Models.Services
         {
             var now = DateTime.Now;
 
-            var data = ConvertToUpsertTotalTasksCompletedDTO(sessionDate, totalTasksCompleted, now);
+            var data = 
+                ConvertToUpsertTotalTasksCompletedDTO(sessionDate, totalTasksCompleted, now);
             await _repository.UpsertTotalTasksCompleted(data);
         }
 
@@ -65,9 +67,10 @@ namespace ExtendedPomodoro.Models.Services
             return await _repository.GetTotalPomodoroCompleted(SessionDate.ToString());
         }
 
-        private static UpsertTotalTasksCompletedDTO ConvertToUpsertTotalTasksCompletedDTO(DateOnly sessionDate, int totalTasksCompleted, DateTime now)
+        private static UpsertTotalTasksCompletedDTO ConvertToUpsertTotalTasksCompletedDTO(
+            DateOnly sessionDate, int totalTasksCompleted, DateTime now)
         {
-            return new()
+            return new UpsertTotalTasksCompletedDTO()
             {
                 SessionDate = sessionDate.ToString(),
                 TotalTasksCompleted = totalTasksCompleted,
@@ -76,9 +79,10 @@ namespace ExtendedPomodoro.Models.Services
             };
         }
 
-        private static UpsertTimeSpentDTO ConvertToUpsertTimeSpentDTO(DateOnly sessionDate, TimeSpan timeSpent, DateTime now)
+        private static UpsertTimeSpentDTO 
+            ConvertToUpsertTimeSpentDTO(DateOnly sessionDate, TimeSpan timeSpent, DateTime now)
         {
-            return new()
+            return new UpsertTimeSpentDTO()
             {
                 SessionDate = sessionDate.ToString(),
                 TimeSpentInSeconds = (int)timeSpent.TotalSeconds,
@@ -87,7 +91,8 @@ namespace ExtendedPomodoro.Models.Services
             };
         }
 
-        private static UpsertDailySessionDTO ConvertToUpsertDailySessionDTO(UpsertDailySessionDomain domain)
+        private static UpsertDailySessionDTO 
+            ConvertToUpsertDailySessionDTO(UpsertDailySessionDomain domain)
         {
             var now = DateTime.Now;
 
@@ -102,37 +107,68 @@ namespace ExtendedPomodoro.Models.Services
             };
         }
 
-        private static SumDailySessionsDomain ConvertToSumDailySessionsDomain(DateTime from, DateTime to, SumDailySessionsDTO dto)
+        private static SumDailySessionsDomain 
+            ConvertToSumDailySessionsDomain(SumDailySessionsDTO dto)
         {
-            return new(
-                from,
-                to,
-                TimeSpan.FromSeconds(dto.TotalTimeSpentInSeconds),
-                dto.TotalPomodoroCompleted,
-                dto.TotalShortBreaksCompleted,
-                dto.TotalLongBreaksCompleted,
-                dto.TotalTasksCompleted
-                );
+            return new SumDailySessionsDomain()
+            {
+                TotalTimeSpent = TimeSpan.FromSeconds(dto.TotalTimeSpentInSeconds),
+                TotalPomodoroCompleted = dto.TotalPomodoroCompleted,
+                TotalShortBreaksCompleted = dto.TotalShortBreaksCompleted,
+                TotalLongBreaksCompleted = dto.TotalLongBreaksCompleted,
+                TotalTasksCompleted = dto.TotalTasksCompleted
+            };
         }
 
-        private DailySessionDomain ConvertToDailySessionDomain(DailySessionDTO record)
+        private static DailySessionDomain ConvertToDailySessionDomain(DailySessionDTO record)
         {
-            return new(
-                DateOnly.FromDateTime(record.SessionDate),
-                TimeSpan.FromSeconds(record.TimeSpentInSeconds),
-                record.TotalPomodoroCompleted,
-                record.TotalShortBreaksCompleted,
-                record.TotalLongBreaksCompleted,
-                record.TotalTasksCompleted,
-                record.CreatedAt,
-                record.UpdatedAt
-                );
+            return new DailySessionDomain()
+            {
+                SessionDate = DateOnly.FromDateTime(record.SessionDate),
+                TimeSpent = TimeSpan.FromSeconds(record.TimeSpentInSeconds),
+                TotalPomodoroCompleted = record.TotalPomodoroCompleted,
+                TotalShortBreaksCompleted = record.TotalShortBreaksCompleted,
+                TotalLongBreaksCompleted = record.TotalLongBreaksCompleted,
+                TotalTasksCompleted = record.TotalTasksCompleted,
+                CreatedAt = record.CreatedAt,
+                UpdatedAt = record.UpdatedAt
+            };
         }
 
-        private DateRangeDailySessionsDomain ConvertToSumDailySessionsDomain(DateRangeDailySessionsDTO dto)
+        private static DateRangeDailySessionsDomain 
+            ConvertToSumDailySessionsDomain(DateRangeDailySessionsDTO dto)
         {
-            return new(dto.MinDate, dto.MaxDate);
+            return new DateRangeDailySessionsDomain(dto.MinDate, dto.MaxDate);
         }
+    }
 
+    public static class DailySessionsExtensions
+    {
+        public static SumDailySessionsDomain SumEach(this IEnumerable<DailySessionDomain> domain)
+        {
+            var totalPomodoroCompleted = 0;
+            var totalShortBreaksCompleted = 0;
+            var totalLongBreaksCompleted = 0;
+            var totalTasksCompleted = 0;
+            var totalTimeSpent = TimeSpan.Zero;
+
+            foreach (var record in domain)
+            {
+                totalPomodoroCompleted += record.TotalPomodoroCompleted;
+                totalShortBreaksCompleted += record.TotalShortBreaksCompleted;
+                totalLongBreaksCompleted += record.TotalLongBreaksCompleted;
+                totalTasksCompleted += record.TotalTasksCompleted;
+                totalTimeSpent += record.TimeSpent;
+            }
+
+            return new SumDailySessionsDomain()
+            {
+                TotalPomodoroCompleted = totalPomodoroCompleted,
+                TotalShortBreaksCompleted = totalShortBreaksCompleted,
+                TotalLongBreaksCompleted = totalLongBreaksCompleted,
+                TotalTasksCompleted = totalTasksCompleted,
+                TotalTimeSpent = totalTimeSpent
+            };
+        }
     }
 }

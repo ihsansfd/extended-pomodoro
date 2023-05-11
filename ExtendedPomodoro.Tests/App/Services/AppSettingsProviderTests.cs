@@ -32,6 +32,16 @@ namespace ExtendedPomodoro.Tests.App.Services
         [Fact]
         public async Task Initialize_ExecutedProperly()
         {
+            _settingsService.Setup((x) => x.GetSettings()).ReturnsAsync(
+                new SettingsDomain()
+                {
+                    PomodoroDuration = TimeSpan.FromMinutes(25),
+                    ShortBreakDuration = TimeSpan.FromMinutes(10),
+                    LongBreakDuration = TimeSpan.FromMinutes(10),
+                    DailyPomodoroTarget = 10,
+                    IsAutostart = true,
+                });
+
             await _appSettingsProvider.Initialize();
         }
 

@@ -42,27 +42,27 @@ namespace ExtendedPomodoro.ViewModels
         private async Task NavigateToTimer()
         {
             CurrentViewModel = _timerViewModel;
-            await _timerViewModel.Load();
+            await CurrentViewModel.Load();
         }
 
         [RelayCommand]
         private async Task NavigateToStats()
         {
             CurrentViewModel = _statsViewModel;
-            await _statsViewModel.Load();
+            await CurrentViewModel.Load();
         }
 
         [RelayCommand]
         private async Task NavigateToSettings() {
             CurrentViewModel = _settingsViewModel;
-             await _settingsViewModel.Load();
+             await CurrentViewModel.Load();
          }
 
         [RelayCommand]
         private async Task NavigateToTasks()
         {
             CurrentViewModel = _tasksViewModel;
-            await _tasksViewModel.Load();
+            await CurrentViewModel.Load();
         }
 
         [RelayCommand]

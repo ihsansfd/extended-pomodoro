@@ -42,7 +42,6 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
         void NavigateToStats_Successfully()
         {
             _sut.NavigateToStatsCommand.Execute(null);
-
             Assert.Equal(_statsViewModelMock.Object, _sut.CurrentViewModel);
         }
 

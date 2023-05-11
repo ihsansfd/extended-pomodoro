@@ -2,10 +2,11 @@
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.ViewModels;
 using ExtendedPomodoro.Views.Components;
+using ExtendedPomodoro.ViewServices.Interfaces;
 
 namespace ExtendedPomodoro.ViewServices
 {
-    public class StatsViewService
+    public class StatsViewService : IStatsViewService
     {
         private readonly DialogWindowService _dialogWindowService;
         private readonly IMessenger _messenger;
@@ -20,13 +21,13 @@ namespace ExtendedPomodoro.ViewServices
 
         }
 
-        public void OpenScatterPlotStats(StatAxesDomainViewModel axes)
+        public void OpenScatterPlotStats(ChartDataDomainViewModel axes)
         {
             var userControl = new ScatterPlotStatsUserControl
             {
                 Axes = axes
             };
-            userControl.Initialize();
+            userControl.Load();
 
             var dialog = _dialogWindowService.GenerateMaximizableDialogWindow(
                 new(800, 450, "Fullscreen Stats", userControl));

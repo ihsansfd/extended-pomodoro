@@ -56,7 +56,6 @@ namespace ExtendedPomodoro.Models.Services
 
         private static SettingsDomain ConvertToSettingsDomain(SettingsDTO dto)
         {
-
             return new SettingsDomain()
             {
                 PomodoroDuration = TimeSpan.FromSeconds(dto.PomodoroDurationInSeconds),

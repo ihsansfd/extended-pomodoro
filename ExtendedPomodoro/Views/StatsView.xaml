@@ -51,7 +51,7 @@
                 x:Name="ToDate" 
                 Style="{StaticResource RightArrowDatePickerStyle}" 
                 SelectedDate="{Binding ToDate}"
-                DisplayDateStart="{Binding ElementName=FromDate, Path=SelectedDate, Mode=OneWay}"
+                DisplayDateStart="{Binding MinDate}"
                 DisplayDateEnd="{Binding MaxDate}"
                     >
                     <behaviors:Interaction.Triggers>
@@ -166,11 +166,6 @@
                             Style="{StaticResource ComboBoxStyle}"
                             SelectedValuePath="Tag"
                             SelectedValue="{Binding StatsValueToDisplay, Mode=TwoWay}">
-                            <behaviors:Interaction.Triggers>
-                                <behaviors:EventTrigger EventName="SelectionChanged">
-                                    <behaviors:InvokeCommandAction Command="{Binding GenerateAxesCommand}"/>
-                                </behaviors:EventTrigger>
-                            </behaviors:Interaction.Triggers>
                             <ComboBox.Items>
                             <ComboBoxItem Tag="0" Content="Pomodoro Completed"/>
                             <ComboBoxItem Tag="1" Content="Short Breaks Completed"/>

@@ -2,6 +2,7 @@
 using ExtendedPomodoro.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using ExtendedPomodoro.Factories;
 
 namespace ExtendedPomodoro.Views
 {
@@ -10,57 +11,25 @@ namespace ExtendedPomodoro.Views
     /// </summary>
     public partial class StatsView : Page
     {
-        private readonly ScatterPlotService _scatterPlotService = new();
-        private StatsViewModel _viewModel = null!;
+        private readonly StatsViewModel _viewModel;
 
         public StatsView()
         {
-            InitializeComponent();
-
-            DataContextChanged += OnDataContextChanged;
-            FormatChart();
+            InitializeComponent(); 
+            DataContext = _viewModel = StatsViewModelFactory.GetSingleton();
+            _viewModel.NewChartData += OnNewChartData;
+            ScatterPlotService.GenerateChartFrom(StatsPlotView, _viewModel.ChartData);
+            ScatterPlotService.FormatChart(StatsPlotView);
         }
 
-        private void FormatChart()
+        private void OnNewChartData(object? sender, ChartDataDomainViewModel data)
         {
-            _scatterPlotService.FormatChart(StatsPlotView);
-        }
-
-        private async void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (DataContext is not StatsViewModel vm) return;
-
-            _viewModel = vm;
-            _viewModel.NewStatsAxes += OnNewStatsAxes;
-            await _viewModel.GenerateStats();
-        }
-
-        private void OnNewStatsAxes(object? sender, StatAxesDisplayDomainViewModel domain)
-        {
-            if (!domain.Display) return;
-            GenerateChartFrom(domain.Axes);
-        }
-
-        private void GenerateChartFrom(StatAxesDomainViewModel axes)
-        {
-            _scatterPlotService.GenerateChartFrom(StatsPlotView, axes);
-        }
-
-        ~StatsView()
-        {
-            Unsubscribe();
+            ScatterPlotService.GenerateChartFrom(StatsPlotView, data);
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            Unsubscribe();
+            _viewModel.NewChartData -= OnNewChartData;
         }
-
-        private void Unsubscribe()
-        {
-            DataContextChanged -= OnDataContextChanged;
-            _viewModel.NewStatsAxes -= OnNewStatsAxes;
-        }
-
     }
 }

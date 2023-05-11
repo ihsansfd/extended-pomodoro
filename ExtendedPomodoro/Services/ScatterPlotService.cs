@@ -7,7 +7,7 @@ namespace ExtendedPomodoro.Services
 {
     public class ScatterPlotService
     {
-        public void FormatChart(WpfPlot wpfPlot)
+        public static void FormatChart(WpfPlot wpfPlot)
         {
             wpfPlot.Configuration.ScrollWheelZoom = false;
             var mainBrushResource = ((SolidColorBrush)Application.Current.FindResource("MainBrush")).Color;
@@ -21,7 +21,7 @@ namespace ExtendedPomodoro.Services
                 grid: System.Drawing.Color.Transparent);
         }
 
-        public void GenerateChartFrom(WpfPlot wpfPlot, StatAxesDomainViewModel axes)
+        public static void GenerateChartFrom(WpfPlot wpfPlot, ChartDataDomainViewModel axes)
         {
             wpfPlot.Plot.Clear();
             var scatter = wpfPlot.Plot.AddScatter(axes.XAxis, axes.YAxis);

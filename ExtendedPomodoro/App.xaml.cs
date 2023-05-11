@@ -24,15 +24,14 @@ using ExtendedPomodoro.ViewServices.Interfaces;
 
 namespace ExtendedPomodoro
 {
-
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
-        private ServiceProvider Services { get; }
+        public static ServiceProvider Services { get; }
 
-        public App()
+        static App()
         {
             Services = ConfigureServices();
         }
@@ -92,9 +91,8 @@ namespace ExtendedPomodoro
         // TODO: place this into the Core.
         private static void EnsureOnlyOneInstanceIsRunning()
         {
-            Process proc = Process.GetCurrentProcess();
-            int count = Process.GetProcesses().Where(p =>
-                p.ProcessName == proc.ProcessName).Count();
+            var proc = Process.GetCurrentProcess();
+            int count = Process.GetProcesses().Count(p => p.ProcessName == proc.ProcessName);
 
             if (count > 1)
             {
@@ -143,10 +141,10 @@ namespace ExtendedPomodoro
             services.AddSingleton<IHotkeyManager, HotkeyManagerAdapter>();
             services.AddSingleton<HotkeyLoaderService>();
             services.AddSingleton<IMessageBoxService, MessageBoxService>();
-            services.AddSingleton<IMessenger>((_) => MessengerFactory.Messenger);
+            services.AddSingleton<IMessenger>((_) => StrongReferenceMessenger.Default);
             services.AddSingleton<AppThemeService>();
             services.AddSingleton<DialogWindowService>();
-            services.AddSingleton<StatsViewService>();
+            services.AddSingleton<IStatsViewService, StatsViewService>();
             services.AddSingleton<TimerViewService>();
             services.AddSingleton<ISettingsViewService, SettingsViewService>();
             services.AddSingleton<IAppSettingsProvider, AppSettingsProvider>();

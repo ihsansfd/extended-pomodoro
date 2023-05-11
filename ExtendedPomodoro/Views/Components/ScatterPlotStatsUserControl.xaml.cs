@@ -22,23 +22,22 @@ namespace ExtendedPomodoro.Views.Components
     /// </summary>
     public partial class ScatterPlotStatsUserControl : UserControl
     {
-        public StatAxesDomainViewModel Axes { get; set; }
-        private readonly ScatterPlotService _scatterPlotService = new();
+        public ChartDataDomainViewModel Axes { get; set; }
 
         public ScatterPlotStatsUserControl()
         {
             InitializeComponent();
         }
 
-        public void Initialize()
+        public void Load()
         {
             GenerateTheChart();
         }
 
         private void GenerateTheChart()
         {
-            _scatterPlotService.FormatChart(StatsPlotView);
-            _scatterPlotService.GenerateChartFrom(StatsPlotView, Axes);
+            ScatterPlotService.FormatChart(StatsPlotView);
+            ScatterPlotService.GenerateChartFrom(StatsPlotView, Axes);
         }
     }
 

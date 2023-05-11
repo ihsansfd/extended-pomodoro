@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using ExtendedPomodoro.Core.Extensions;
+using ExtendedPomodoro.Models.Services;
+using ExtendedPomodoro.ViewServices.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -21,19 +24,16 @@ namespace ExtendedPomodoro.ViewModels
         TIME_SPENT = 4
     }
 
-    public record StatAxesDomainViewModel(double[] XAxis, double[] YAxis); 
-    public record StatAxesDisplayDomainViewModel(StatAxesDomainViewModel Axes, bool Display = true); 
+    public record ChartDataDomainViewModel(double[] XAxis, double[] YAxis);
 
     public partial class StatsViewModel : ObservableObject, INavigableViewModel
     {
+        private readonly IDailySessionsService _sessionsService;
+        private readonly IStatsViewService _statsViewService;
 
-        private readonly IDailySessionsService _repository;
-        private readonly StatsViewService _statsViewService;
+        private IEnumerable<DailySessionDomain> _dailySessions = Array.Empty<DailySessionDomain>();
 
-        private IEnumerable<DailySessionDomain> _dailySessions;
-
-        public double[] XAxis { get; set; }
-        public double[] YAxis { get; set; }
+        public ChartDataDomainViewModel ChartData { get; set; }
 
         [ObservableProperty]
         private DateTime _fromDate;
@@ -69,126 +69,99 @@ namespace ExtendedPomodoro.ViewModels
         private int _statsValueToDisplay = (int)StatsValue.POMODORO_COMPLETED;
 
         [RelayCommand]
-        public void GenerateAxes()
-        {
-            LoadAxes();
-        }
+        private void GenerateStats() => LoadStats();
 
         [RelayCommand]
-        public async Task GenerateStats()
+        private void ViewStatsInFullScreen()
         {
-            await LoadStats();
+            _statsViewService.OpenScatterPlotStats(ChartData);
         }
 
-        [RelayCommand]
-        public void ViewStatsInFullScreen()
-        {
-            _statsViewService.OpenScatterPlotStats(new(XAxis, YAxis));
-        }
+        public event EventHandler<ChartDataDomainViewModel> NewChartData;
 
-        public event EventHandler<StatAxesDisplayDomainViewModel> NewStatsAxes;
-
-        public StatsViewModel(IDailySessionsService sessionsRepository, 
-            StatsViewService statsService
+        public StatsViewModel(IDailySessionsService sessionsService, 
+            IStatsViewService statsViewService
             )
         {
-            _repository = sessionsRepository;
-            _statsViewService = statsService;
+            _sessionsService = sessionsService;
+            _statsViewService = statsViewService;
         }
 
         public async Task Load()
         {
-            FromDate = ConvertToDateWithMinTime(DateTime.Today).AddDays(-7);
-            ToDate = ConvertToDateWithMaxTime(DateTime.Today);
+            FromDate = DateTime.Today.ToMinTime().AddDays(-7);
+            ToDate = DateTime.Today.ToMaxTime();
 
             await LoadDateRange();
+            LoadStats();
+        }
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            if (e.PropertyName == nameof(StatsValueToDisplay))
+            {
+                LoadChartData();
+            }
         }
 
         private async Task LoadDateRange()
         {
-            var dateRange = await _repository.GetDateRangeDailySessions();
+            var dateRange = await _sessionsService.GetDateRangeDailySessions();
             MinDate = dateRange.MinDate;
             MaxDate = dateRange.MaxDate;
         }
 
-        private async Task LoadStats() {
+        private void LoadStats() {
 
-            var sumsTask = _repository.GetSumDailySessions(
-                ConvertToDateWithMinTime(FromDate), ConvertToDateWithMaxTime(ToDate));
-            var dailySessionsTask = _repository.GetDailySessions(
-                ConvertToDateWithMinTime(FromDate), ConvertToDateWithMaxTime(ToDate));
-            _dailySessions = dailySessionsTask.ToBlockingEnumerable();
+            _dailySessions = _sessionsService.GetDailySessions(
+                FromDate.ToMinTime(), ToDate.ToMaxTime()).ToBlockingEnumerable();
 
-            LoadPropertiesFrom(await sumsTask);
-            LoadAxes();
+            LoadSumProperties();
+            LoadChartData();
         }
 
-        private void LoadAxes()
+        private void LoadChartData()
         {
-             XAxis = _dailySessions.Select(prop =>
+            var xAxis = _dailySessions.Select(prop =>
                  prop.SessionDate.ToDateTime(TimeOnly.MinValue).ToOADate()).ToArray();
-             YAxis = Array.Empty<double>();
 
-            switch((StatsValue)StatsValueToDisplay)
+            var yAxis = (StatsValue)StatsValueToDisplay switch
             {
-                case StatsValue.POMODORO_COMPLETED:
-                {
-                    YAxis = _dailySessions.Select(prop => 
-                        Convert.ToDouble(prop.TotalPomodoroCompleted)).ToArray();
-                    break;
-                }
+                StatsValue.POMODORO_COMPLETED => _dailySessions.Select(prop =>
+                        Convert.ToDouble(prop.TotalPomodoroCompleted))
+                    .ToArray(),
+                StatsValue.SHORT_BREAKS_COMPLETED => _dailySessions.Select(prop =>
+                        Convert.ToDouble(prop.TotalShortBreaksCompleted))
+                    .ToArray(),
+                StatsValue.LONG_BREAKS_COMPLETED => _dailySessions.Select(prop =>
+                        Convert.ToDouble(prop.TotalLongBreaksCompleted))
+                    .ToArray(),
+                StatsValue.TASKS_COMPLETED => _dailySessions.Select(prop => Convert.ToDouble(prop.TotalTasksCompleted))
+                    .ToArray(),
+                StatsValue.TIME_SPENT => _dailySessions.Select(prop => prop.TimeSpent.TotalMinutes).ToArray(),
+                _ => Array.Empty<double>()
+            };
 
-                case StatsValue.SHORT_BREAKS_COMPLETED:
-                {
-                    YAxis = _dailySessions.Select(prop => 
-                        Convert.ToDouble(prop.TotalShortBreaksCompleted)).ToArray();
-                    break;
-                }
+            ChartData = new ChartDataDomainViewModel(xAxis, yAxis);
 
-                case StatsValue.LONG_BREAKS_COMPLETED:
-                {
-                    YAxis = _dailySessions.Select(prop => 
-                        Convert.ToDouble(prop.TotalLongBreaksCompleted)).ToArray();
-                    break;
-                }
+            var newChartData = DisplayChart = ChartData.XAxis.Length > 0 
+                                              && ChartData.YAxis.Length > 0;
 
-                case StatsValue.TASKS_COMPLETED:
-                {
-                    YAxis = _dailySessions.Select(prop => 
-                        Convert.ToDouble(prop.TotalTasksCompleted)).ToArray();
-                    break;
-                }
-
-                case StatsValue.TIME_SPENT:
-                {
-                    YAxis = _dailySessions.Select(prop => 
-                        prop.TimeSpent.TotalMinutes).ToArray();
-                    break;
-                }
-            }
-
-            DisplayChart = XAxis.Length > 0 && YAxis.Length > 0;
-
-            NewStatsAxes?.Invoke(this, new(new(XAxis, YAxis), DisplayChart));
+            if(newChartData) 
+                NewChartData?.Invoke(this, ChartData);
         }
 
-        public void LoadPropertiesFrom(SumDailySessionsDomain properties)
+        private void LoadSumProperties()
         {
+            var properties = _dailySessions.SumEach();
+
             TotalPomodoroCompleted = properties.TotalPomodoroCompleted;
             TotalShortBreaksCompleted = properties.TotalShortBreaksCompleted;
             TotalLongBreaksCompleted = properties.TotalLongBreaksCompleted;
             TotalTimeSpentInMinutes = (int) properties.TotalTimeSpent.TotalMinutes;
             TotalTasksCompleted = properties.TotalTasksCompleted;
-        }
-
-        private static DateTime ConvertToDateWithMinTime(DateTime date)
-        {
-            return DateOnly.FromDateTime(date).ToDateTime(TimeOnly.MinValue);
-        }
-
-        private static DateTime ConvertToDateWithMaxTime(DateTime date)
-        {
-            return DateOnly.FromDateTime(date).ToDateTime(TimeOnly.MaxValue);
         }
 
     }
