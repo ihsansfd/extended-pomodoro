@@ -21,10 +21,11 @@ namespace ExtendedPomodoro.ViewModels
         SHORT_BREAKS_COMPLETED = 1,
         LONG_BREAKS_COMPLETED = 2,
         TASKS_COMPLETED = 3,
-        TIME_SPENT = 4
+        TIME_SPENT = 4,
+        DAILY_POMODORO_TARGET = 5
     }
 
-    public record ChartDataDomainViewModel(double[] XAxis, double[] YAxis);
+    public record ChartDataDomainViewModel(double[] XAxis, double[] YAxis, bool DisplayAsPercentage = false);
 
     public partial class StatsViewModel : ObservableObject, INavigableViewModel
     {
@@ -64,6 +65,9 @@ namespace ExtendedPomodoro.ViewModels
 
         [ObservableProperty]
         private int _totalTasksCompleted;
+
+        [ObservableProperty]
+        private SumDailyPomodoroTargetDomain _sumDailyPomodoroTarget;
 
         [ObservableProperty]
         private int _statsValueToDisplay = (int)StatsValue.POMODORO_COMPLETED;
@@ -140,11 +144,16 @@ namespace ExtendedPomodoro.ViewModels
                     .ToArray(),
                 StatsValue.TASKS_COMPLETED => _dailySessions.Select(prop => Convert.ToDouble(prop.TotalTasksCompleted))
                     .ToArray(),
+                StatsValue.DAILY_POMODORO_TARGET => _dailySessions.Select(prop => 
+                    Convert.ToDouble(prop.DailyPomodoroTarget == 0 ? 1 : 
+                        Math.Min((double)prop.TotalPomodoroCompleted / (double)prop.DailyPomodoroTarget, 1)))
+                    .ToArray(),
                 StatsValue.TIME_SPENT => _dailySessions.Select(prop => prop.TimeSpent.TotalMinutes).ToArray(),
                 _ => Array.Empty<double>()
             };
 
-            ChartData = new ChartDataDomainViewModel(xAxis, yAxis);
+            ChartData = new ChartDataDomainViewModel(xAxis, yAxis, DisplayAsPercentage: 
+                (StatsValue)StatsValueToDisplay == StatsValue.DAILY_POMODORO_TARGET);
 
             var newChartData = DisplayChart = ChartData.XAxis.Length > 0 
                                               && ChartData.YAxis.Length > 0;
@@ -162,6 +171,7 @@ namespace ExtendedPomodoro.ViewModels
             TotalLongBreaksCompleted = properties.TotalLongBreaksCompleted;
             TotalTimeSpentInMinutes = (int) properties.TotalTimeSpent.TotalMinutes;
             TotalTasksCompleted = properties.TotalTasksCompleted;
+            SumDailyPomodoroTarget = properties.SumDailyPomodoroTarget;
         }
 
     }

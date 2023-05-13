@@ -7,6 +7,7 @@
         public int TotalPomodoroCompleted { get; set; }
         public int TotalShortBreaksCompleted { get; set; }
         public int TotalLongBreaksCompleted { get; set; }
+        public int DailyPomodoroTarget { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
@@ -18,6 +19,15 @@
         public DateTime CreatedAt  { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
+
+    public class UpsertDailyPomodoroTargetDTO
+    {
+        public string SessionDate { get; set; }
+        public int DailyPomodoroTarget { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+
 
     public class UpsertTotalTasksCompletedDTO
     {
@@ -35,6 +45,7 @@
         public int TotalShortBreaksCompleted { get; set; }
         public int TotalLongBreaksCompleted { get; set; }
         public int TotalTasksCompleted { get; set; }
+        public int DailyPomodoroTarget { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

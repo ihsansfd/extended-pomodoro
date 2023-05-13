@@ -61,13 +61,15 @@
                     </behaviors:Interaction.Triggers>
                 </DatePicker>
             </WrapPanel>
-            <WrapPanel Grid.Row="1" HorizontalAlignment="Center">
-                <Grid>
+                <Grid  Grid.Row="1" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
@@ -100,7 +102,7 @@
                     Text="Long Breaks"
                     Grid.Row="2"
                     Grid.Column="0"
-                    Margin="0 0 20 0"
+                    Margin="0 0 20 10"
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
                     <TextBlock 
                     Text="{Binding TotalLongBreaksCompleted}"
@@ -108,44 +110,45 @@
                     Grid.Column="1"
                     Style="{StaticResource TextBlockFormValueStyle}" 
                     HorizontalAlignment="Right"/>
-                </Grid>
-                <Grid Grid.Column="1" Margin="40 0 0 0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock 
+
+                    <TextBlock 
                     Text="Time Spent"
                     Grid.Column="0"
+                    Grid.Row="3"
                     Margin="0 0 20 10"
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
                         <TextBlock 
                     Text="{Binding TotalTimeSpentInMinutes, StringFormat={}{0} minutes}"
+                    Grid.Row="3"
                     Grid.Column="1"
                     Style="{StaticResource TextBlockFormValueStyle}" 
                     HorizontalAlignment="Right"/>
-
                         <TextBlock 
                     Text="Tasks Completed"
-                    Grid.Row="1"
+                    Grid.Row="4"
                     Grid.Column="0"
-                    Margin="0 0 20 0"
+                    Margin="0 0 20 10"
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
                         <TextBlock 
                     Text="{Binding TotalTasksCompleted}"
-                    Grid.Row="1"
+                    Grid.Row="4"
                     Grid.Column="1"
                     Style="{StaticResource TextBlockFormValueStyle}" 
                     HorizontalAlignment="Right"/>
-                    </Grid>
-
+                    <TextBlock 
+                        Text="Pomodoro Target Success Rate"
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        Margin="0 0 20 0"
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
+                    <TextBlock 
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        Text="{Binding SumDailyPomodoroTarget.SuccessRate}"
+                        Style="{StaticResource TextBlockFormValueStyle}" 
+                        HorizontalAlignment="Right">
+                    </TextBlock>
                 </Grid>
-            </WrapPanel>
             <Border CornerRadius="5" Grid.Row="2" Margin="0 30 0 0">
 
                 <Grid>
@@ -172,6 +175,7 @@
                             <ComboBoxItem Tag="2" Content="Long Breaks Completed"/>
                             <ComboBoxItem Tag="3" Content="Tasks Completed"/>
                             <ComboBoxItem Tag="4" Content="Time Spent"/>
+                            <ComboBoxItem Tag="5" Content="Daily Pomodoro Target"/>
                         </ComboBox.Items>
                     </ComboBox>
                     </WrapPanel>

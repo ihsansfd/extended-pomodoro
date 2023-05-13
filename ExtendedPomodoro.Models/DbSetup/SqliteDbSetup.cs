@@ -55,6 +55,7 @@ namespace ExtendedPomodoro.Models.DbSetup
                 TotalShortBreaksCompleted INT DEFAULT 0 NOT NULL,
                 TotalLongBreaksCompleted INT DEFAULT 0 NOT NULL,
                 TotalTasksCompleted INT DEFAULT 0 NOT NULL,
+                DailyPomodoroTarget INT DEFAULT 0 NOT NULL,
                 CreatedAt TEXT,
                 UpdatedAt TEXT
             );";

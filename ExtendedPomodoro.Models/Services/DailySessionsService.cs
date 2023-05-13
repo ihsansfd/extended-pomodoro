@@ -62,6 +62,15 @@ namespace ExtendedPomodoro.Models.Services
             await _repository.UpsertTotalTasksCompleted(data);
         }
 
+        public async Task UpsertDailyPomodoroTarget(DateOnly sessionDate, int dailyPomodoroTarget)
+        {
+            var now = DateTime.Now;
+            var data = 
+                ConvertToUpsertDailyPomodoroTargetDTO(sessionDate, dailyPomodoroTarget, now);
+
+            await _repository.UpsertDailyPomodoroTarget(data);
+        }
+
         public async Task<int> GetTotalPomodoroCompleted(DateOnly SessionDate)
         {
             return await _repository.GetTotalPomodoroCompleted(SessionDate.ToString());
@@ -74,6 +83,18 @@ namespace ExtendedPomodoro.Models.Services
             {
                 SessionDate = sessionDate.ToString(),
                 TotalTasksCompleted = totalTasksCompleted,
+                CreatedAt = now,
+                UpdatedAt = now
+            };
+        }
+
+        private static UpsertDailyPomodoroTargetDTO ConvertToUpsertDailyPomodoroTargetDTO(
+            DateOnly sessionDate, int dailyPomodoroTarget, DateTime now)
+        {
+            return new UpsertDailyPomodoroTargetDTO()
+            {
+                SessionDate = sessionDate.ToString(),
+                DailyPomodoroTarget = dailyPomodoroTarget,
                 CreatedAt = now,
                 UpdatedAt = now
             };
@@ -102,6 +123,7 @@ namespace ExtendedPomodoro.Models.Services
                 TotalPomodoroCompleted = domain.TotalPomodoroCompleted,
                 TotalShortBreaksCompleted = domain.TotalShortBreaksCompleted,
                 TotalLongBreaksCompleted = domain.TotalLongBreaksCompleted,
+                DailyPomodoroTarget = domain.DailyPomodoroTarget,
                 CreatedAt = now,
                 UpdatedAt = now
             };
@@ -130,6 +152,7 @@ namespace ExtendedPomodoro.Models.Services
                 TotalShortBreaksCompleted = record.TotalShortBreaksCompleted,
                 TotalLongBreaksCompleted = record.TotalLongBreaksCompleted,
                 TotalTasksCompleted = record.TotalTasksCompleted,
+                DailyPomodoroTarget = record.DailyPomodoroTarget,
                 CreatedAt = record.CreatedAt,
                 UpdatedAt = record.UpdatedAt
             };
@@ -144,7 +167,7 @@ namespace ExtendedPomodoro.Models.Services
 
     public static class DailySessionsExtensions
     {
-        public static SumDailySessionsDomain SumEach(this IEnumerable<DailySessionDomain> domain)
+        public static SumDailySessionsDomain SumEach(this IEnumerable<DailySessionDomain> domains)
         {
             var totalPomodoroCompleted = 0;
             var totalShortBreaksCompleted = 0;
@@ -152,13 +175,21 @@ namespace ExtendedPomodoro.Models.Services
             var totalTasksCompleted = 0;
             var totalTimeSpent = TimeSpan.Zero;
 
-            foreach (var record in domain)
+            var sumDailyPomodoroTarget = new SumDailyPomodoroTargetDomain();
+
+            foreach (var record in domains)
             {
                 totalPomodoroCompleted += record.TotalPomodoroCompleted;
                 totalShortBreaksCompleted += record.TotalShortBreaksCompleted;
                 totalLongBreaksCompleted += record.TotalLongBreaksCompleted;
                 totalTasksCompleted += record.TotalTasksCompleted;
                 totalTimeSpent += record.TimeSpent;
+                sumDailyPomodoroTarget.TotalTarget += 1;
+                if (record.TotalPomodoroCompleted >= record.DailyPomodoroTarget)
+                {
+                    sumDailyPomodoroTarget.TotalActual += 1;
+                }
+
             }
 
             return new SumDailySessionsDomain()
@@ -167,7 +198,8 @@ namespace ExtendedPomodoro.Models.Services
                 TotalShortBreaksCompleted = totalShortBreaksCompleted,
                 TotalLongBreaksCompleted = totalLongBreaksCompleted,
                 TotalTasksCompleted = totalTasksCompleted,
-                TotalTimeSpent = totalTimeSpent
+                TotalTimeSpent = totalTimeSpent,
+                SumDailyPomodoroTarget = sumDailyPomodoroTarget
             };
         }
     }

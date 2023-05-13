@@ -12,7 +12,8 @@ namespace ExtendedPomodoro.Models.Repositories
     {
         Task UpsertDailySession(UpsertDailySessionDTO dto);
         Task UpsertTimeSpent(UpsertTimeSpentDTO data);
-        Task<int> GetTotalPomodoroCompleted(string SessionDate);
+        Task UpsertDailyPomodoroTarget(UpsertDailyPomodoroTargetDTO dto);
+        Task<int> GetTotalPomodoroCompleted(string sessionDate);
         Task UpsertTotalTasksCompleted(UpsertTotalTasksCompletedDTO dto);
         Task<SumDailySessionsDTO> GetSumDailySessions(DateTime from, DateTime to);
         Task<IEnumerable<DailySessionDTO>> GetDailySessions(DateTime from, DateTime to);

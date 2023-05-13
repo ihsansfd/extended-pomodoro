@@ -33,8 +33,6 @@ namespace ExtendedPomodoro.ViewModels
         private readonly TimerViewService _timerViewService;
         private readonly ExtendedTimer _extendedTimer;
 
-        private bool _hasBeenSetup;
-
         private int _timeElapsed = 0;
 
         public TimerViewModel(
@@ -61,6 +59,9 @@ namespace ExtendedPomodoro.ViewModels
             _extendedTimer = extendedTimer;
 
             _messenger.RegisterAll(this);
+
+            CurrentTimerSession.InitialSetup(
+                this, _appSettingsProvider, _messenger, _extendedTimer);
         }
 
         #region Tasks
@@ -176,9 +177,6 @@ namespace ExtendedPomodoro.ViewModels
             await ReadTasksViewModel.DisplayInProgressTasks();
             PomodoroCompletedToday = await GetPomodoroCompletedToday();
             AssignFromSettings();
-            if (!_hasBeenSetup) CurrentTimerSession.InitialSetup(
-                this, _appSettingsProvider, _messenger, _extendedTimer);
-            _hasBeenSetup = true;
         }
 
         #endregion
@@ -308,7 +306,8 @@ namespace ExtendedPomodoro.ViewModels
                 SessionDate = sessionDate,
                 TotalPomodoroCompleted = pomodoroCompleted,
                 TotalShortBreaksCompleted = shortBreakCompleted,
-                TotalLongBreaksCompleted = longBreakCompleted
+                TotalLongBreaksCompleted = longBreakCompleted,
+                DailyPomodoroTarget = _appSettingsProvider.AppSettings.DailyPomodoroTarget
             };
 
             await _sessionsRepository.UpsertDailySession(domain);
@@ -374,8 +373,8 @@ namespace ExtendedPomodoro.ViewModels
 
     public class TimerSessionState
     {
-        public virtual string Name { get; } = string.Empty;
-        public virtual string SessionMessage { get; } = string.Empty;
+        public virtual string Name => string.Empty;
+        public virtual string SessionMessage => string.Empty;
 
         private static bool _isRunning;
         private static bool _isPaused;
@@ -508,8 +507,8 @@ namespace ExtendedPomodoro.ViewModels
 
     public class PomodoroSessionState : TimerSessionState
     {
-        public override string Name { get; } = "Pomodoro";
-        public override string SessionMessage { get; } = "Stay Focus";
+        public override string Name => "Pomodoro";
+        public override string SessionMessage => "Stay Focus";
 
         private static int _totalPomodoroCompletedSkipIncluded  = 0;
 
@@ -555,8 +554,8 @@ namespace ExtendedPomodoro.ViewModels
 
     public class ShortBreakSessionState : TimerSessionState
     {
-        public override string Name { get; } = "Short Break";
-        public override string SessionMessage { get; } = "Short Break";
+        public override string Name => "Short Break";
+        public override string SessionMessage => "Short Break";
 
         public override void Initialize()
         {
@@ -581,8 +580,8 @@ namespace ExtendedPomodoro.ViewModels
 
     public class LongBreakSessionState : TimerSessionState
     {
-        public override string Name { get; } = "Long Break";
-        public override string SessionMessage { get; } = "Long Break";
+        public override string Name => "Long Break";
+        public override string SessionMessage => "Long Break";
 
         public override void Initialize()
         {
