@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using ExtendedPomodoro.Services;
 
 namespace ExtendedPomodoro.Tests.App.Converters
 {
@@ -56,10 +57,10 @@ namespace ExtendedPomodoro.Tests.App.Converters
         public IEnumerator<object[]> GetEnumerator()
         {
             yield return new object[] 
-            {new PomodoroSessionState(), Color.FromRgb(1, 1, 1) };
+            {typeof(PomodoroSessionState), Color.FromRgb(1, 1, 1) };
             yield return new object[] 
-            { new ShortBreakSessionState(), Color.FromRgb(2, 2, 2) };
-            yield return new object[] { new LongBreakSessionState(), Color.FromRgb(3, 3, 3) };
+            { typeof(ShortBreakSessionState), Color.FromRgb(2, 2, 2) };
+            yield return new object[] { typeof(LongBreakSessionState), Color.FromRgb(3, 3, 3) };
             yield return new object[] { typeof(object), Color.FromRgb(1, 1, 1) };
         }
 

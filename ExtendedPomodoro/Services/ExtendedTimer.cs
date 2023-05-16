@@ -12,7 +12,7 @@ namespace ExtendedPomodoro.Services
         public TimeSpan TimerSetFor { get; init; }
     }
 
-    public class ExtendedTimer
+    public class ExtendedTimer : IExtendedTimer
     {
         public event EventHandler<RemainingTimeChangedEventArgs>? RemainingTimeChanged;
         private readonly ITimer _timer;

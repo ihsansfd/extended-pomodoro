@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Messages;
+using ExtendedPomodoro.Services;
 
 namespace ExtendedPomodoro.ViewModels.Components
 {

@@ -133,7 +133,6 @@ namespace ExtendedPomodoro
                         ));
             services.AddSingleton<SoundService>();
             services.AddSingleton<TimerViewModel>();
-            services.AddSingleton<TimerSessionState>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<StatsViewModel>();
@@ -154,7 +153,9 @@ namespace ExtendedPomodoro
             services.AddTransient<AlarmSoundService>();
             services.AddTransient<MouseClickSoundService>();
             services.AddTransient<ITimer, DispatcherTimerAdapter>();
-            services.AddTransient<ExtendedTimer>();
+            services.AddTransient<IExtendedTimer, ExtendedTimer>();
+            services.AddTransient<ITimerSession, TimerSession>();
+
             return services.BuildServiceProvider();
         }
     }

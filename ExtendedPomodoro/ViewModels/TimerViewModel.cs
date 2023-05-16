@@ -19,7 +19,6 @@ namespace ExtendedPomodoro.ViewModels
     public partial class TimerViewModel : 
         ObservableObject, 
         INavigableViewModel,
-        IRecipient<TimerTimeChangeInfoMessage>,
         IRecipient<SettingsUpdateInfoMessage>,
         IRecipient<StartSessionInfoMessage>,
         IRecipient<StartHotkeyTriggeredMessage>,
@@ -31,37 +30,39 @@ namespace ExtendedPomodoro.ViewModels
         private readonly ITasksService _tasksRepository;
         private readonly IMessenger _messenger;
         private readonly TimerViewService _timerViewService;
-        private readonly ExtendedTimer _extendedTimer;
+        private readonly ITimerSession _timerSession;
 
         private int _timeElapsed = 0;
 
         public TimerViewModel(
             ReadTasksViewModel readTasksViewModel,
             CreateTaskViewModel createTaskViewModel,
-            TimerSessionState timerSessionState,
+            ITimerSession timerSession,
             TimerViewService timerViewService,
             IAppSettingsProvider appSettingsProvider,
             IDailySessionsService sessionsRepository,
             ITasksService tasksRepository,
-            IMessenger messenger,
-            ExtendedTimer extendedTimer
+            IMessenger messenger
             )
         {
 
             ReadTasksViewModel = readTasksViewModel;
             CreateTaskViewModel = createTaskViewModel;
-            CurrentTimerSession = timerSessionState;
+            _timerSession = timerSession;
             _appSettingsProvider = appSettingsProvider;
             _timerViewService = timerViewService;
             _sessionsRepository = sessionsRepository;
             _tasksRepository = tasksRepository;
             _messenger = messenger;
-            _extendedTimer = extendedTimer;
-
             _messenger.RegisterAll(this);
 
-            CurrentTimerSession.InitialSetup(
-                this, _appSettingsProvider, _messenger, _extendedTimer);
+            _timerSession.SessionFinish += TimerSession_OnSessionFinish;
+            _timerSession.CurrentSessionStateChanged += TimerSession_OnCurrentSessionStateChanged;
+            _timerSession.TimerSetForInitialized += TimerSession_OnTimerSetForInitialized;
+            _timerSession.CanPausedChanged += TimerSession_OnCanPausedChanged;
+            _timerSession.RemainingTimeChanged += TimerSession_OnRemainingTimeChanged;
+            CurrentTimerSession = _timerSession.CurrentSessionState;
+            _timerSession.Initialize();
         }
 
         #region Tasks
@@ -130,26 +131,26 @@ namespace ExtendedPomodoro.ViewModels
 
         [RelayCommand]
         private void StartSession() {
-            CurrentTimerSession.Start();
+            _timerSession.Start();
             _timerViewService.PlayMouseClickEffectSound();
         }
 
         [RelayCommand]
         private void PauseSession()
         {
-            CurrentTimerSession.Pause();
+            _timerSession.Pause();
             _timerViewService.PlayMouseClickEffectSound();
         }
 
         [RelayCommand]
-        private void SkipSession() => CurrentTimerSession.Skip();
+        private void SkipSession() => _timerSession.Skip();
 
         [RelayCommand]
-        private void ResetSession() => CurrentTimerSession.Reset();
+        private void ResetSession() => _timerSession.Reset();
 
         public void StartSessionFromHotkey()
         {
-            CurrentTimerSession.Start();
+            _timerSession.Start();
             _timerViewService.PlayMouseClickEffectSound();
             if(_appSettingsProvider.AppSettings.PushNotificationEnabled)
             {
@@ -159,7 +160,7 @@ namespace ExtendedPomodoro.ViewModels
 
         public void PauseSessionFromHotkey()
         {
-            CurrentTimerSession.Pause();
+            _timerSession.Pause();
             _timerViewService.PlayMouseClickEffectSound();
 
             if(_appSettingsProvider.AppSettings.PushNotificationEnabled)
@@ -183,16 +184,32 @@ namespace ExtendedPomodoro.ViewModels
 
         #region messages and events
 
-        public void Receive(TimerTimeChangeInfoMessage message)
+
+        private void TimerSession_OnCanPausedChanged(object? sender, bool canPause)
+        {
+            CanPause = canPause;
+        }
+
+        private void TimerSession_OnTimerSetForInitialized(object? sender, TimeSpan timerSetFor)
+        {
+            InitializeTimerProgress(timerSetFor);
+        }
+
+        private void TimerSession_OnCurrentSessionStateChanged(object? sender, TimerSessionState currSessionState)
+        {
+            CurrentTimerSession = currSessionState;
+        }
+
+        private void TimerSession_OnRemainingTimeChanged(object? sender, RemainingTimeChangedEventArgs args)
         {
             _timeElapsed++;
 
-            UpdateRemainingTime(message.RemainingTime);
-            SessionProgress = CalculateProgress(message.TimerSetFor, message.RemainingTime);
+            UpdateRemainingTime(args.RemainingTime);
+            SessionProgress = CalculateProgress(args.TimerSetFor, args.RemainingTime);
 
-            if (message.RemainingTime.TotalSeconds <= 0)
+            if (args.RemainingTime.TotalSeconds <= 0)
             {
-                CurrentTimerSession.Finish();
+                _timerSession.Finish();
             }
 
         }
@@ -213,7 +230,7 @@ namespace ExtendedPomodoro.ViewModels
         /// <param name="message"></param>
         public void Receive(SettingsUpdateInfoMessage message)
         {
-            if (SessionProgress <= 0.0) CurrentTimerSession.Initialize();
+            if (SessionProgress <= 0.0) _timerSession.Initialize();
             AssignFromSettings();
         }
 
@@ -229,15 +246,15 @@ namespace ExtendedPomodoro.ViewModels
         /// Give information to the listeners that session has finished. 
         /// View will handle its logic (display notification, alarm, etc).
         /// </summary>
-        public async Task OnFinishSession(TimerSessionState finishedSession, TimerSessionState nextSession)
+        public async void TimerSession_OnSessionFinish(object? sender, PrevNextSessionsEventArgs args)
         {
             if (!_appSettingsProvider.AppSettings.IsAutostart)
             {
-                _timerViewService.OpenSessionFinishDialog(finishedSession, nextSession);
+                _timerViewService.OpenSessionFinishDialog(args.FinishedSession, args.NextSession);
 
                 if (_appSettingsProvider.AppSettings.PushNotificationEnabled)
                 {
-                    _timerViewService.ShowSessionFinishBalloonTips(finishedSession, nextSession, 15000);
+                    _timerViewService.ShowSessionFinishBalloonTips(args.FinishedSession, args.NextSession, 15000);
                 }
 
                 _timerViewService.PlayAlarmSound();
@@ -250,11 +267,11 @@ namespace ExtendedPomodoro.ViewModels
             }
           
             var today = DateOnly.FromDateTime(DateTime.Now);
-            await StoreSessionFinishInfo(today, finishedSession);
+            await StoreSessionFinishInfo(today, args.FinishedSession);
 
             PomodoroCompletedToday = await GetPomodoroCompletedToday();
 
-            if (finishedSession is PomodoroSessionState && SelectedTask != null)
+            if (args.FinishedSession is PomodoroSessionState && SelectedTask != null)
             {
                 await UpdateTaskActPomodoro(SelectedTask.Id, 1);
             }
@@ -271,17 +288,18 @@ namespace ExtendedPomodoro.ViewModels
 
         #region View Spesific
         
-        public void InitializeTimerProgress(TimeSpan timerSetFor)
-        {
-            UpdateRemainingTime(timerSetFor);
-            SessionProgress = CalculateProgress(timerSetFor, timerSetFor); // should always return 100
-        }
-        public void UpdateRemainingTime(TimeSpan remainingTime)
+        private void UpdateRemainingTime(TimeSpan remainingTime)
         {
             _remainingTime = remainingTime;
             FormatRemainingTime();
         }
-        
+
+        private void InitializeTimerProgress(TimeSpan timerSetFor)
+        {
+            UpdateRemainingTime(timerSetFor);
+            SessionProgress = CalculateProgress(timerSetFor, timerSetFor); // should always return 100
+        }
+
         private void FormatRemainingTime()
         {
             RemainingTimeFormatted = _remainingTime.ToString(@"mm\:ss");
@@ -368,238 +386,11 @@ namespace ExtendedPomodoro.ViewModels
         ~TimerViewModel()
         {
             _messenger.UnregisterAll(this);
-        }
-    }
-
-    public class TimerSessionState
-    {
-        public virtual string Name => string.Empty;
-        public virtual string SessionMessage => string.Empty;
-
-        private static bool _isRunning;
-        private static bool _isPaused;
-        private static TimerViewModel _context = null!;
-        private static IMessenger _messenger = null!;
-
-        protected static IAppSettingsProvider Configuration = null!;
-        protected static ExtendedTimer Timer = null!;
-        protected static readonly PomodoroSessionState PomodoroSessionState = new();
-        protected static readonly ShortBreakSessionState ShortBreakSessionState = new();
-        protected static readonly LongBreakSessionState LongBreakSessionState = new();
-
-        // Need to be called before anything else
-        public void InitialSetup(
-            TimerViewModel context, 
-            IAppSettingsProvider configuration,
-            IMessenger messenger,
-            ExtendedTimer timer
-            )
-        {
-            _context = context;
-            Configuration = configuration;
-            _messenger = messenger;
-            Timer = timer;
-            _context.CurrentTimerSession = PomodoroSessionState;
-            _context.CurrentTimerSession.Initialize();
-            
-            Timer.RemainingTimeChanged += TimerOnRemainingTimeChanged;
-        }
-
-        private void TimerOnRemainingTimeChanged(object? sender, RemainingTimeChangedEventArgs e)
-        {
-            _messenger.Send(new TimerTimeChangeInfoMessage(e.TimerSetFor, e.RemainingTime));
-        }
-
-        public void Start()
-        {
-            if (AlreadyStarting()) return;
-
-            _isPaused = false;
-
-            if (_isRunning)
-            {
-                Timer.Resume();
-                OnCanPauseChange();
-                return;
-            }
-
-            _isRunning = true;
-            Timer.Start();
-            OnCanPauseChange();
-        }
-
-        public void Pause()
-        {
-            if (_isPaused) return;
-
-            if (!_isRunning) return;
-            _isPaused = true;
-            Timer.Pause();
-
-            OnCanPauseChange();
-        }
-
-        public void Reset()
-        {
-            StopFromRunning();
-            Initialize();
-            OnCanPauseChange();
-        }
-
-        public virtual void Initialize() { }
-
-        public virtual void Skip()
-        {
-            StopFromRunning();
-            OnCanPauseChange();
-        }
-
-        public virtual void Finish()
-        {
-            StopFromRunning();
-            OnCanPauseChange();
-        }
-
-        protected void AfterFinish()
-        {
-            if (Configuration.AppSettings.IsAutostart) _context.CurrentTimerSession.Start();
-        }
-
-        private void StopFromRunning()
-        {
-            Timer.Stop();
-            _isRunning = false;
-        }
-        
-        protected void InitializeTo(TimeSpan timerSetFor)
-        {
-            Timer.Initialize(timerSetFor);
-            _context.InitializeTimerProgress(timerSetFor);
-        }
-
-        protected async void FinishTo(TimerSessionState nextSession)
-        {
-            await _context.OnFinishSession(_context.CurrentTimerSession, nextSession);
-            SwitchTo(nextSession);
-        }
-
-        protected void SkipTo(TimerSessionState nextSession)
-        {
-            SwitchTo(nextSession);
-        }
-
-        private void SwitchTo(TimerSessionState session)
-        {
-            _context.CurrentTimerSession = session;
-            _context.CurrentTimerSession.Initialize();
-        }
-        
-        private bool AlreadyStarting()
-        {
-            return !_isPaused && _isRunning;
-        }
-
-        private void OnCanPauseChange()
-        {
-            _context.CanPause = !_isPaused && _isRunning;
-        }
-    }
-
-    public class PomodoroSessionState : TimerSessionState
-    {
-        public override string Name => "Pomodoro";
-        public override string SessionMessage => "Stay Focus";
-
-        private static int _totalPomodoroCompletedSkipIncluded  = 0;
-
-        public override void Initialize()
-        {
-            base.Initialize();
-            var timerSetFor = Configuration.AppSettings.PomodoroDuration;
-            InitializeTo(timerSetFor);
-        }
-
-        public override void Finish()
-        {
-            base.Finish();
-            _totalPomodoroCompletedSkipIncluded++;
-
-            if(IsSwitchToLongBreak())
-            {
-                FinishTo(LongBreakSessionState);
-            }
-          
-            else
-            {
-                FinishTo(ShortBreakSessionState);
-            }
-
-            base.AfterFinish();
-        }
-
-        public override void Skip()
-        {
-            base.Skip();
-            _totalPomodoroCompletedSkipIncluded++;
-            if (IsSwitchToLongBreak()) SkipTo(LongBreakSessionState);
-            else SkipTo(ShortBreakSessionState);
-        }
-
-        private bool IsSwitchToLongBreak()
-        {
-            return _totalPomodoroCompletedSkipIncluded %
-                Configuration.AppSettings.LongBreakInterval == 0;
-        }
-    }
-
-    public class ShortBreakSessionState : TimerSessionState
-    {
-        public override string Name => "Short Break";
-        public override string SessionMessage => "Short Break";
-
-        public override void Initialize()
-        {
-            base.Initialize();
-            var timerSetFor = Configuration.AppSettings.ShortBreakDuration;
-            InitializeTo(timerSetFor);
-        }
-
-        public override void Finish()
-        {
-            base.Finish();
-            FinishTo(PomodoroSessionState);
-            base.AfterFinish();
-        }
-
-        public override void Skip()
-        {
-            base.Skip();
-            SkipTo(PomodoroSessionState);
-        }
-    }
-
-    public class LongBreakSessionState : TimerSessionState
-    {
-        public override string Name => "Long Break";
-        public override string SessionMessage => "Long Break";
-
-        public override void Initialize()
-        {
-            var timerSetFor = Configuration.AppSettings.LongBreakDuration;
-            InitializeTo(timerSetFor);
-        }
-
-        public override void Finish()
-        {
-            base.Finish();
-            FinishTo(PomodoroSessionState);
-            base.AfterFinish();
-        }
-
-        public override void Skip()
-        {
-            base.Skip();
-            SkipTo(PomodoroSessionState);
+            _timerSession.SessionFinish -= TimerSession_OnSessionFinish;
+            _timerSession.CanPausedChanged -= TimerSession_OnCanPausedChanged;
+            _timerSession.CurrentSessionStateChanged -= TimerSession_OnCurrentSessionStateChanged;
+            _timerSession.RemainingTimeChanged -= TimerSession_OnRemainingTimeChanged;
+            _timerSession.TimerSetForInitialized -= TimerSession_OnTimerSetForInitialized;
         }
     }
 }
