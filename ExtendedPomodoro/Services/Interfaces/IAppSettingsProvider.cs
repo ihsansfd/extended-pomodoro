@@ -10,7 +10,7 @@ namespace ExtendedPomodoro.Services.Interfaces
 {
     public interface IAppSettingsProvider
     {
-        AppSettings AppSettings { get; set; }
+        AppSettings AppSettings { get; }
         Task Initialize();
         Task<AppSettings> LoadSettings();
     }

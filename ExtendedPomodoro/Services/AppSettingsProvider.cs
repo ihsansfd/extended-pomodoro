@@ -16,7 +16,7 @@ namespace ExtendedPomodoro.Proxies
 
     public class AppSettingsProvider : IAppSettingsProvider
     {
-        public AppSettings AppSettings { get; set; }
+        public AppSettings AppSettings { get; private set; }
 
         private readonly ISettingsService _settingsService;
         private readonly IMessenger _messenger;
