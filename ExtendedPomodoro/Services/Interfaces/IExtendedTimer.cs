@@ -12,7 +12,6 @@ namespace ExtendedPomodoro.Services.Interfaces
         TimeSpan Interval { get; set; }
         void Initialize(TimeSpan timerSetFor);
         void Start();
-        void Resume();
         void Pause();
         void Stop();
     }

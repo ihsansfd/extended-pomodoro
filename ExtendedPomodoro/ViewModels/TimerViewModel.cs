@@ -211,7 +211,6 @@ namespace ExtendedPomodoro.ViewModels
             {
                 _timerSession.Finish();
             }
-
         }
 
         public void Receive(StartHotkeyTriggeredMessage message)

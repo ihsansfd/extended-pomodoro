@@ -39,7 +39,7 @@ public class TimerSession : ITimerSession
     public IAppSettingsProvider Configuration { get; }
     public IExtendedTimer Timer { get; }
 
-    public event EventHandler<RemainingTimeChangedEventArgs> RemainingTimeChanged
+    public event EventHandler<RemainingTimeChangedEventArgs>? RemainingTimeChanged
     {
         add => Timer.RemainingTimeChanged += value;
         remove => Timer.RemainingTimeChanged -= value;
@@ -60,7 +60,6 @@ public class TimerSession : ITimerSession
         PomodoroSessionState = new PomodoroSessionState(this);
         ShortBreakSessionState = new ShortBreakSessionState(this);
         LongBreakSessionState = new LongBreakSessionState(this);
-
         _currentSessionState = PomodoroSessionState;
     }
 
@@ -69,14 +68,6 @@ public class TimerSession : ITimerSession
         if (AlreadyStarting()) return;
 
         _isPaused = false;
-
-        if (_isRunning)
-        {
-            Timer.Resume();
-            OnCanPauseChange();
-            return;
-        }
-
         _isRunning = true;
         Timer.Start();
         OnCanPauseChange();
@@ -84,9 +75,8 @@ public class TimerSession : ITimerSession
 
     public void Pause()
     {
-        if (_isPaused) return;
+        if (_isPaused || !_isRunning) return;
 
-        if (!_isRunning) return;
         _isPaused = true;
         Timer.Pause();
 
@@ -100,10 +90,7 @@ public class TimerSession : ITimerSession
         OnCanPauseChange();
     }
 
-    public void Initialize()
-    {
-        CurrentSessionState.Initialize();
-    }
+    public void Initialize() => CurrentSessionState.Initialize();
 
     public virtual void Skip()
     {
@@ -148,10 +135,7 @@ public class TimerSession : ITimerSession
         CurrentSessionState.Initialize();
     }
 
-    private bool AlreadyStarting()
-    {
-        return !_isPaused && _isRunning;
-    }
+    private bool AlreadyStarting() => !_isPaused && _isRunning;
 
     private void OnCanPauseChange()
     {

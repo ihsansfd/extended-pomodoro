@@ -38,24 +38,11 @@ namespace ExtendedPomodoro.Services
             _remainingTime = timerSetFor;
         }
 
-        public void Start()
-        {
-            _timer.Start();
-        }
+        public void Start() => _timer.Start();
 
-        public void Resume()
-        {
-            _timer.Start();
-        }
+        public void Pause() => _timer.Stop();
 
-        public void Pause()
-        {
-            _timer.Stop();
-        }
-        public void Stop()
-        {
-            _timer.Stop();
-        }
+        public void Stop() => _timer.Stop();
 
         private void OnTimeChanged(object? sender, EventArgs e)
         {
