@@ -45,7 +45,7 @@ namespace ExtendedPomodoro
             await InitializeAppSettings();
             RegisterHotkeys();
             SwitchThemeToCurrentSettings();
-            await InitializeMainWindow();
+            InitializeMainWindow();
         }
 
         private async Task InitializeAppSettings()
@@ -63,12 +63,12 @@ namespace ExtendedPomodoro
                 settingsProvider.AppSettings.DarkModeEnabled ? AppTheme.Dark : AppTheme.Light);
         }
 
-        private async Task InitializeMainWindow()
+        private void InitializeMainWindow()
         {
             var mainWindow = MainWindowFactory.MainWindow;
             mainWindow.ShowInTaskbar = true;
             var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
-            await mainWindowViewModel.Initialize();
+            mainWindowViewModel.Initialize();
             mainWindow.DataContext = mainWindowViewModel;
 
             mainWindow.Show();
@@ -144,7 +144,7 @@ namespace ExtendedPomodoro
             services.AddSingleton<AppThemeService>();
             services.AddSingleton<DialogWindowService>();
             services.AddSingleton<IStatsViewService, StatsViewService>();
-            services.AddSingleton<TimerViewService>();
+            services.AddSingleton<ITimerViewService, TimerViewService>();
             services.AddSingleton<ISettingsViewService, SettingsViewService>();
             services.AddSingleton<IAppSettingsProvider, AppSettingsProvider>();
             services.AddTransient<ISoundService, SoundService>();

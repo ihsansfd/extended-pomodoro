@@ -6,14 +6,14 @@ using Hardcodet.Wpf.TaskbarNotification;
 using System;
 using System.Windows;
 using CommunityToolkit.Mvvm.Messaging;
+using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.ViewModels.Components;
+using ExtendedPomodoro.ViewServices.Interfaces;
 
 namespace ExtendedPomodoro.ViewServices
 {
-    public class TimerViewService
+    public class TimerViewService : ITimerViewService
     {
-        public bool AutoCloseDialogAndSound { get; set; }
-
         public AlarmSound AlarmSound
         {
             set => _alarmSoundService.AlarmSound = value;
@@ -55,12 +55,13 @@ namespace ExtendedPomodoro.ViewServices
             _messenger = messenger;
         }
 
-        public void PlayMouseClickEffectSound()
-        {
-            _mouseClickSoundService.Play();
-        }
+        public void PlayMouseClickEffectSound() => _mouseClickSoundService.Play();
 
-        public void OpenSessionFinishDialog(TimerSessionState finishedSession,
+        public void PlayAlarmSound() => _alarmSoundService.Play();
+
+        public void StopAlarmSound() => _alarmSoundService.Stop();
+
+        public void ShowSessionFinishDialog(TimerSessionState finishedSession,
             TimerSessionState nextSession)
         {
             var userControl = new ModalContentSessionFinishUserControl()
@@ -103,11 +104,6 @@ namespace ExtendedPomodoro.ViewServices
 
             _taskbarIcon.ShowCustomBalloon(sessionFinishBalloon,
                 System.Windows.Controls.Primitives.PopupAnimation.Slide, 15000);
-        }
-
-        public void PlayAlarmSound()
-        {
-            _alarmSoundService.Play();
         }
 
         public void ShowTimerStartedBalloonTips(TimerSessionState currentSession, 
@@ -155,15 +151,19 @@ namespace ExtendedPomodoro.ViewServices
                 System.Windows.Controls.Primitives.PopupAnimation.Slide, autoCloseAfterInMillSeconds);
         }
 
+        public void CloseCurrentSessionFinishDialog()
+        {
+            _currentSessionFinishDialog?.Close();
+
+        }
+
+        public void CloseCurrentSessionFinishBalloon()
+        {
+            CloseSessionFinishBalloon();
+        }
 
         private void OnCloseSessionFinishBalloon(object? sender, EventArgs? args)
         {
-            if (AutoCloseDialogAndSound)
-            {
-                _alarmSoundService.Stop();
-                _currentSessionFinishDialog?.Close();
-            }
-
             if (_currentSessionFinishBalloonViewModel != null)
             {
                 _currentSessionFinishBalloonViewModel.Closed -= OnCloseSessionFinishBalloon;
@@ -172,27 +172,34 @@ namespace ExtendedPomodoro.ViewServices
 
         private void OnCloseSessionFinishDialog(object sender, System.Windows.RoutedEventArgs e)
         {
-            CloseSessionFinishBalloon();
-            _alarmSoundService.Stop();
+            _messenger.Send(new FinishDialogCloseClickedMessage());
 
             if (_currentSessionFinishDialog != null)
             {
                 _currentSessionFinishDialog.Unloaded -= OnCloseSessionFinishDialog;
+                _currentSessionFinishDialog = null;
             }
         }
 
         private void CloseSessionFinishBalloon()
         {
-            if (_currentSessionFinishBalloonViewModel != null) 
+            if (_currentSessionFinishBalloonViewModel != null)
+            {
                 _currentSessionFinishBalloonViewModel.CloseRequested = true;
+                _currentSessionFinishBalloonViewModel = null;
+            }
+
             _taskbarIcon.CloseBalloon();
         }
 
         private void CloseAllBalloons()
         {
-            if (_currentBalloonViewModel != null) _currentBalloonViewModel.CloseRequested = true;
+            if (_currentBalloonViewModel != null)
+            {
+                _currentBalloonViewModel.CloseRequested = true;
+                _currentBalloonViewModel = null;
+            }
             _taskbarIcon.CloseBalloon();
         }
-
     }
 }

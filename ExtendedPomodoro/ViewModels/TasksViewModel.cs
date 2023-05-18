@@ -13,11 +13,10 @@ using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.Services.Interfaces;
-using ExtendedPomodoro.ViewModels.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
-    public class TasksViewModel : ObservableObject, INavigableViewModel
+    public partial class TasksViewModel : ObservableObject
     {
         public ReadTasksViewModel ReadTasksViewModel { get;}
 
@@ -38,13 +37,12 @@ namespace ExtendedPomodoro.ViewModels
             DeleteTaskViewModel = deleteTaskViewModel;
         }
 
-        public async Task Load()
+        [RelayCommand]
+        private async Task Load()
         {
             await ReadTasksViewModel.LoadTasks();
         }
-
     }
-
 
     public partial class ReadTasksViewModel : ObservableObject, 
         IRecipient<TaskDeletionInfoMessage>, 
@@ -52,8 +50,7 @@ namespace ExtendedPomodoro.ViewModels
         IRecipient<TaskUpdateStateInfoMessage>,
         IRecipient<TaskUpdateInfoMessage>
     {
-       private readonly ITasksService _repository;
-       private readonly TasksHelper _helper;
+       private readonly ITasksService _service;
        private readonly IMessageBoxService _messageBox;
        private readonly IMessenger _messenger;
 
@@ -69,13 +66,11 @@ namespace ExtendedPomodoro.ViewModels
         private bool _areThereMoreTasks;
 
         public ReadTasksViewModel(
-            ITasksService repository,
-            TasksHelper helper,
+            ITasksService service,
             IMessageBoxService messageBoxService,
             IMessenger messenger)
         {
-            _repository = repository;
-            _helper = helper;
+            _service = service;
             _messageBox = messageBoxService;
             _messenger = messenger;
 
@@ -83,21 +78,21 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         [RelayCommand]
-        public async Task DisplayInProgressTasks()
+        private async Task DisplayInProgressTasks()
         {
             IsDisplayingCompletedTasks = false;
             await LoadTasks();
         }
 
         [RelayCommand]
-        public async Task DisplayCompletedTasks()
+        private async Task DisplayCompletedTasks()
         {
             IsDisplayingCompletedTasks = true;
             await LoadTasks();
         }
 
         [RelayCommand]
-        public async Task DisplayMoreTasks()
+        private async Task DisplayMoreTasks()
         {
             _currentPage++;
             OnAreThereMoreTasksChanged();
@@ -114,10 +109,10 @@ namespace ExtendedPomodoro.ViewModels
             {
                 if (instantiateNew)
                 {
-                    _totalPages = await _repository.GetTotalPages(taskState);
+                    _totalPages = await _service.GetTotalPages(taskState);
                     OnAreThereMoreTasksChanged();
                 }
-                await foreach (var record in _repository.GetTasks(taskState: taskState, page: page, limit: 20))
+                await foreach (var record in _service.GetTasks(taskState: taskState, page: page, limit: 20))
                 {
                     Tasks.Add(new(
                         record.Id,
@@ -126,7 +121,7 @@ namespace ExtendedPomodoro.ViewModels
                         record.EstPomodoro,
                         record.ActPomodoro,
                         DateOnly.FromDateTime(record.CreatedAt).ToString("MMMM dd, yyyy"),
-                        _helper.ConvertTaskStateToInteger(record.TaskState),
+                        TasksHelper.ConvertTaskStateToInteger(record.TaskState),
                         record.TimeSpent.TotalMinutes
                         )) ;
                 }
@@ -137,17 +132,6 @@ namespace ExtendedPomodoro.ViewModels
             {
                 _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        public void ClearTasks()
-        {
-            Tasks.Clear();
-            _currentPage = 1;
-        }
-
-        internal async Task OnTaskDeleted(TaskDomainViewModel deletedTask)
-        {
-            await LoadTasks();
         }
 
         public async void Receive(TaskDeletionInfoMessage taskDeletionInfo)
@@ -168,6 +152,12 @@ namespace ExtendedPomodoro.ViewModels
         public async void Receive(TaskUpdateInfoMessage taskUpdateInfo)
         {
             if (taskUpdateInfo.IsTaskUpdateSuccess) await LoadTasks();
+        }
+
+        private void ClearTasks()
+        {
+            Tasks.Clear();
+            _currentPage = 1;
         }
 
         private void OnAreThereMoreTasksChanged()
@@ -213,13 +203,13 @@ namespace ExtendedPomodoro.ViewModels
         private bool _isModalShown = false;
 
         [RelayCommand]
-        public void OpenModal() => IsModalShown = true;
+        private void OpenModal() => IsModalShown = true;
 
         [RelayCommand]
-        public void CloseModal() => IsModalShown = false;
+        private void CloseModal() => IsModalShown = false;
 
         [RelayCommand]
-        public async Task CreateTask()
+        private async Task CreateTask()
         {
             ValidateAllProperties();
 
@@ -254,7 +244,6 @@ namespace ExtendedPomodoro.ViewModels
     public partial class UpdateTaskViewModel : ObservableValidator
     {
         private readonly ITasksService _repository;
-        private readonly TasksHelper _helper;
         private readonly IMessageBoxService _messageBox;
         private readonly IMessenger _messenger;
 
@@ -287,18 +276,16 @@ namespace ExtendedPomodoro.ViewModels
 
         public UpdateTaskViewModel(
             ITasksService repository, 
-            TasksHelper helper,
             IMessageBoxService messageBoxService,
             IMessenger messenger)
         {
             _repository = repository;
-            _helper = helper;
             _messageBox = messageBoxService;
             _messenger = messenger;
         }
 
         [RelayCommand]
-        public async Task UpdateTask()
+        private async Task UpdateTask()
         {
             ValidateAllProperties();
 
@@ -314,7 +301,7 @@ namespace ExtendedPomodoro.ViewModels
                         Name = Name,
                         Description = Description,
                         EstPomodoro = estPomodoro,
-                        Taskstate = _helper.ConvertIntegerToTaskState(TaskStatus)
+                        Taskstate = TasksHelper.ConvertIntegerToTaskState(TaskStatus)
                     }
                     );
                 CloseModal();
@@ -330,17 +317,17 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         [RelayCommand]
-        public async Task UpdateTaskState(UpdateTaskStateDomainViewModel args)
+        private async Task UpdateTaskState(UpdateTaskStateDomainViewModel args)
         {
-            var confirmationRes = _messageBox.Show(string.Format("Are you sure you want to mark this task as {0}", 
-                _helper.ConvertIntegerToTaskStateString(args.IntendedTaskState)),
+            var confirmationRes = _messageBox.Show(string.Format("Are you sure you want to mark this task as {0}",
+                TasksHelper.ConvertIntegerToTaskStateString(args.IntendedTaskState)),
                 "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (confirmationRes != MessageBoxResult.Yes) return;
 
             try
             {
-                await _repository.UpdateTaskState(args.TaskId, _helper.ConvertIntegerToTaskState(args.IntendedTaskState));
+                await _repository.UpdateTaskState(args.TaskId, TasksHelper.ConvertIntegerToTaskState(args.IntendedTaskState));
                 _messenger.Send(new TaskUpdateStateInfoMessage(true));
             }
 
@@ -352,7 +339,7 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         [RelayCommand]
-        public void LoadTaskDetail(TaskDomainViewModel args)
+        private void LoadTaskDetail(TaskDomainViewModel args)
         {
             Id = args.Id;
             Name = args.Name;
@@ -366,7 +353,7 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         [RelayCommand]
-        public void CloseModal() => IsModalShown = false;
+        private void CloseModal() => IsModalShown = false;
 
     }
 
@@ -387,7 +374,7 @@ namespace ExtendedPomodoro.ViewModels
         }        
 
         [RelayCommand]
-        public async void DeleteTask(int taskId)
+        private async void DeleteTask(int taskId)
         {
             try
             {

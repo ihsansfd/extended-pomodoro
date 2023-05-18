@@ -10,6 +10,11 @@
       d:DesignHeight="650" d:DesignWidth="600"
       d:DataContext="{d:DesignInstance Type=vms:SettingsViewModel}"
       Title="SettingsView">
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding LoadCommand}"/>
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Grid.IsSharedSizeScope="True" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>

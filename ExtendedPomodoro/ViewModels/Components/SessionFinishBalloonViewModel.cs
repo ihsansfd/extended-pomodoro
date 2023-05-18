@@ -32,13 +32,14 @@ namespace ExtendedPomodoro.ViewModels.Components
         {
             base.Close();
             Closed?.Invoke(this, EventArgs.Empty);
+            _messenger.Send(new FinishBalloonCloseClickedMessage());
         }
 
         [RelayCommand]
         private void StartNextSession()
         {
-            _messenger.Send(new StartSessionInfoMessage());
-            Close();
+            _messenger.Send(new FinishBalloonStartNextSessionClickedMessage());
+            base.Close();
         }
     }
 }

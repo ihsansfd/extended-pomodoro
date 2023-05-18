@@ -4,23 +4,21 @@ using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.Services.Interfaces;
-using ExtendedPomodoro.Proxies;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Services.Interfaces;
-using ExtendedPomodoro.ViewServices;
-using NHotkey;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ExtendedPomodoro.ViewModels.Interfaces;
+using ExtendedPomodoro.ViewServices.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
     public partial class TimerViewModel : 
         ObservableObject, 
-        INavigableViewModel,
         IRecipient<SettingsUpdateInfoMessage>,
-        IRecipient<StartSessionInfoMessage>,
+        IRecipient<FinishBalloonStartNextSessionClickedMessage>,
+        IRecipient<FinishBalloonCloseClickedMessage>,
+        IRecipient<FinishDialogCloseClickedMessage>,
         IRecipient<StartHotkeyTriggeredMessage>,
         IRecipient<PauseHotkeyTriggeredMessage>,
         IRecipient<MainWindowIsClosingMessage>
@@ -29,7 +27,7 @@ namespace ExtendedPomodoro.ViewModels
         private readonly IDailySessionsService _sessionsRepository;
         private readonly ITasksService _tasksRepository;
         private readonly IMessenger _messenger;
-        private readonly TimerViewService _timerViewService;
+        private readonly ITimerViewService _timerViewService;
         private readonly ITimerSession _timerSession;
 
         private int _timeElapsed = 0;
@@ -38,7 +36,7 @@ namespace ExtendedPomodoro.ViewModels
             ReadTasksViewModel readTasksViewModel,
             CreateTaskViewModel createTaskViewModel,
             ITimerSession timerSession,
-            TimerViewService timerViewService,
+            ITimerViewService timerViewService,
             IAppSettingsProvider appSettingsProvider,
             IDailySessionsService sessionsRepository,
             ITasksService tasksRepository,
@@ -78,6 +76,14 @@ namespace ExtendedPomodoro.ViewModels
 
         [ObservableProperty]
         private bool _isTasksDropdownOpen;
+
+        [RelayCommand]
+        private async Task Load()
+        {
+            PomodoroCompletedToday = await GetPomodoroCompletedToday();
+            AssignFromSettings();
+            await ReadTasksViewModel.DisplayInProgressTasksCommand.ExecuteAsync(null);
+        }
 
         [RelayCommand]
         private void AddNewTaskModal()
@@ -171,19 +177,7 @@ namespace ExtendedPomodoro.ViewModels
 
         #endregion
 
-        #region bootstrap
-
-        public async Task Load()
-        {
-            await ReadTasksViewModel.DisplayInProgressTasks();
-            PomodoroCompletedToday = await GetPomodoroCompletedToday();
-            AssignFromSettings();
-        }
-
-        #endregion
-
         #region messages and events
-
 
         private void TimerSession_OnCanPausedChanged(object? sender, bool canPause)
         {
@@ -249,7 +243,7 @@ namespace ExtendedPomodoro.ViewModels
         {
             if (!_appSettingsProvider.AppSettings.IsAutostart)
             {
-                _timerViewService.OpenSessionFinishDialog(args.FinishedSession, args.NextSession);
+                _timerViewService.ShowSessionFinishDialog(args.FinishedSession, args.NextSession);
 
                 if (_appSettingsProvider.AppSettings.PushNotificationEnabled)
                 {
@@ -257,8 +251,6 @@ namespace ExtendedPomodoro.ViewModels
                 }
 
                 _timerViewService.PlayAlarmSound();
-                _timerViewService.AutoCloseDialogAndSound = 
-                    !_appSettingsProvider.AppSettings.IsRepeatForever;
             }
             else
             {
@@ -278,15 +270,30 @@ namespace ExtendedPomodoro.ViewModels
             await StoreAndResetTimeElapsed(today, SelectedTask);
         }
 
-        public void Receive(StartSessionInfoMessage message)
+        public void Receive(FinishBalloonStartNextSessionClickedMessage message)
         {
-            if (message.IsStartSession) StartSession();
+            _timerViewService.StopAlarmSound();
+            _timerViewService.CloseCurrentSessionFinishDialog();
+            StartSession();
+        }
+
+        public void Receive(FinishBalloonCloseClickedMessage message)
+        {
+            if (_appSettingsProvider.AppSettings.IsRepeatForever) return;
+            _timerViewService.StopAlarmSound();
+            _timerViewService.CloseCurrentSessionFinishDialog();
+        }
+
+        public void Receive(FinishDialogCloseClickedMessage message)
+        {
+           _timerViewService.StopAlarmSound();
+           _timerViewService.CloseCurrentSessionFinishBalloon();
         }
 
         #endregion
 
         #region View Spesific
-        
+
         private void UpdateRemainingTime(TimeSpan remainingTime)
         {
             _remainingTime = remainingTime;

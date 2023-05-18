@@ -14,6 +14,11 @@
       d:DataContext="{d:DesignInstance Type=vms:StatsViewModel}"
       Unloaded="Page_Unloaded"
       Title="StatsView">
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding LoadCommand}"/>
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
         <conv:InvertBooleanToVisibilityConverter x:Key="InvertBoolToVisibilityConv"/>

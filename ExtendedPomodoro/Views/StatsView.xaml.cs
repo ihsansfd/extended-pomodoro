@@ -18,7 +18,6 @@ namespace ExtendedPomodoro.Views
             InitializeComponent(); 
             DataContext = _viewModel = StatsViewModelFactory.GetSingleton();
             _viewModel.NewChartData += OnNewChartData;
-            ScatterPlotService.GenerateChartFrom(StatsPlotView, _viewModel.ChartData);
             ScatterPlotService.FormatChart(StatsPlotView);
         }
 

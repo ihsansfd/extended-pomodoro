@@ -8,11 +8,16 @@
       xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
       xmlns:services="clr-namespace:ExtendedPomodoro.Services"
       xmlns:converters="clr-namespace:ExtendedPomodoro.Converters"
+      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" 
       d:DataContext="{d:DesignInstance Type=vms:TasksViewModel}"
       d:DesignHeight="450" d:DesignWidth="400"
       Title="TasksView">
-
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction Command="{Binding LoadCommand}"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <Page.Resources>
         <converters:InvertBooleanConverter x:Key="InvertBoolConv"/>
         <converters:InvertBooleanToVisibilityConverter x:Key="InvertBoolToVisibilityConv"/>

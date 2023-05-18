@@ -9,12 +9,11 @@ using ExtendedPomodoro.Helpers;
 using System.Windows;
 using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Services.Interfaces;
-using ExtendedPomodoro.ViewModels.Interfaces;
 using ExtendedPomodoro.ViewServices.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
-    public partial class SettingsViewModel : ObservableValidator, INavigableViewModel
+    public partial class SettingsViewModel : ObservableValidator
     {
         private readonly ISettingsService _settingsService;
         private readonly IMessageBoxService _messageBox;
@@ -85,6 +84,19 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private Hotkey? _pauseHotkey;
 
+        public SettingsViewModel(
+            ISettingsService settingsService,
+            IMessageBoxService messageBoxService,
+            ISettingsViewService settingsViewService,
+            IAppSettingsProvider appSettingsProvider
+        )
+        {
+            _settingsService = settingsService;
+            _messageBox = messageBoxService;
+            _settingsViewService = settingsViewService;
+            _appSettingsProvider = appSettingsProvider;
+        }
+
         [RelayCommand]
         private async Task ResetToDefaultSettings()
         {
@@ -106,20 +118,8 @@ namespace ExtendedPomodoro.ViewModels
             _settingsViewService.PlaySound((AlarmSound)AlarmSound, Volume, TimeSpan.FromSeconds(3));
         }
 
-        public SettingsViewModel(
-            ISettingsService settingsService, 
-            IMessageBoxService messageBoxService,
-            ISettingsViewService settingsViewService,
-            IAppSettingsProvider appSettingsProvider
-            )
-        {
-            _settingsService = settingsService;
-            _messageBox = messageBoxService;
-            _settingsViewService = settingsViewService;
-            _appSettingsProvider = appSettingsProvider;
-        }
-
-        public async Task Load()
+        [RelayCommand]
+        private async Task Load()
         {
             SettingsDomain settingsDomain = await _settingsService.GetSettings();
             PomodoroDurationInMinutes = settingsDomain.PomodoroDuration.TotalMinutes;

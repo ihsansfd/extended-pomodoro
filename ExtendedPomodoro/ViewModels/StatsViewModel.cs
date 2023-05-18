@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using ExtendedPomodoro.Models.Domains;
 using ExtendedPomodoro.Models.Services.Interfaces;
-using ExtendedPomodoro.ViewModels.Interfaces;
 using ExtendedPomodoro.ViewServices;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ namespace ExtendedPomodoro.ViewModels
 
     public record ChartDataDomainViewModel(double[] XAxis, double[] YAxis, bool DisplayAsPercentage = false);
 
-    public partial class StatsViewModel : ObservableObject, INavigableViewModel
+    public partial class StatsViewModel : ObservableObject
     {
         private readonly IDailySessionsService _sessionsService;
         private readonly IStatsViewService _statsViewService;
@@ -73,6 +72,16 @@ namespace ExtendedPomodoro.ViewModels
         private int _statsValueToDisplay = (int)StatsValue.POMODORO_COMPLETED;
 
         [RelayCommand]
+        private async Task Load()
+        {
+            FromDate = DateTime.Today.ToMinTime().AddDays(-7);
+            ToDate = DateTime.Today.ToMaxTime();
+
+            await LoadDateRange();
+            LoadStats();
+        }
+
+        [RelayCommand]
         private void GenerateStats() => LoadStats();
 
         [RelayCommand]
@@ -89,15 +98,6 @@ namespace ExtendedPomodoro.ViewModels
         {
             _sessionsService = sessionsService;
             _statsViewService = statsViewService;
-        }
-
-        public async Task Load()
-        {
-            FromDate = DateTime.Today.ToMinTime().AddDays(-7);
-            ToDate = DateTime.Today.ToMaxTime();
-
-            await LoadDateRange();
-            LoadStats();
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)

@@ -105,7 +105,6 @@ public class TimerSession : ITimerSession
         OnCanPauseChange();
         CurrentSessionState.Finish();
         if (Configuration.AppSettings.IsAutostart) Start();
-
     }
 
     public void InitializeTo(TimeSpan timerSetFor)
@@ -127,7 +126,6 @@ public class TimerSession : ITimerSession
         Timer.Stop();
         _isRunning = false;
     }
-
 
     private void SwitchTo(TimerSessionState session)
     {

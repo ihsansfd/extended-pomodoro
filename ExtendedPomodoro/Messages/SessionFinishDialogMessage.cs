@@ -4,10 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExtendedPomodoro.ViewModels.Interfaces
+namespace ExtendedPomodoro.Messages
 {
-    public interface IReadTasksViewModel
-    {
-
-    }
+    public class FinishDialogCloseClickedMessage {}
 }

@@ -3,26 +3,25 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Threading.Tasks;
 using ExtendedPomodoro.Messages;
-using ExtendedPomodoro.ViewModels.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
     public partial class MainWindowViewModel : ObservableObject
     {
-        private readonly INavigableViewModel _timerViewModel;
-        private readonly INavigableViewModel _statsViewModel;
-        private readonly INavigableViewModel _tasksViewModel;
-        private readonly INavigableViewModel _settingsViewModel;
+        private readonly object _timerViewModel;
+        private readonly object _statsViewModel;
+        private readonly object _tasksViewModel;
+        private readonly object _settingsViewModel;
         private readonly IMessenger _messenger;
 
         [ObservableProperty]
-        private INavigableViewModel _currentViewModel;
+        private object _currentViewModel;
 
         public MainWindowViewModel(
-            INavigableViewModel timerViewModel,
-            INavigableViewModel tasksViewModel,
-            INavigableViewModel statsViewModel,
-            INavigableViewModel settingsViewModel,       
+            object timerViewModel,
+            object tasksViewModel,
+            object statsViewModel,
+            object settingsViewModel,       
             IMessenger messenger
             )
         {
@@ -33,36 +32,32 @@ namespace ExtendedPomodoro.ViewModels
             _messenger = messenger;
         }
 
-        public async Task Initialize()
+        public void Initialize()
         {
-            await NavigateToTimer();
+            NavigateToTimer();
         }
 
         [RelayCommand]
-        private async Task NavigateToTimer()
+        private void NavigateToTimer()
         {
             CurrentViewModel = _timerViewModel;
-            await CurrentViewModel.Load();
         }
 
         [RelayCommand]
-        private async Task NavigateToStats()
+        private void NavigateToStats()
         {
             CurrentViewModel = _statsViewModel;
-            await CurrentViewModel.Load();
         }
 
         [RelayCommand]
-        private async Task NavigateToSettings() {
+        private void NavigateToSettings() {
             CurrentViewModel = _settingsViewModel;
-             await CurrentViewModel.Load();
          }
 
         [RelayCommand]
-        private async Task NavigateToTasks()
+        private void NavigateToTasks()
         {
             CurrentViewModel = _tasksViewModel;
-            await CurrentViewModel.Load();
         }
 
         [RelayCommand]
