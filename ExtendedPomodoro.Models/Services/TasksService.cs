@@ -140,17 +140,18 @@ namespace ExtendedPomodoro.Models.Services
 
         private static TaskDomain ConvertToTaskDomain(TaskDTO dto)
         {
-            return new(
-                    dto.Id,
-                    dto.Name,
-                    dto.Description,
-                    dto.EstPomodoro,
-                    dto.ActPomodoro,
-                    dto.CreatedAt,
-                    dto.UpdatedAt,
-                    dto.IsTaskCompleted == 1 ? TaskState.COMPLETED : TaskState.IN_PROGRESS,
-                    TimeSpan.FromSeconds(dto.TimeSpentInSeconds)
-                );
+            return new TaskDomain()
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Description = dto.Description,
+                EstPomodoro = dto.EstPomodoro,
+                ActPomodoro = dto.ActPomodoro,
+                TaskState = dto.IsTaskCompleted == 1 ? TaskState.COMPLETED : TaskState.IN_PROGRESS,
+                TimeSpent = TimeSpan.FromSeconds(dto.TimeSpentInSeconds),
+                CreatedAt = dto.CreatedAt,
+                UpdatedAt = dto.UpdatedAt,
+            };
         }
 
         private static int ConvertTaskStateToInt(TaskState taskState)

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.ViewModels;
-using ExtendedPomodoro.ViewModels.Interfaces;
 using Moq;
 using Moq.AutoMock;
 
@@ -15,19 +14,19 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
     public class MainWindowViewModelTests
     {
         private readonly AutoMocker _mocker = new AutoMocker();
-        private readonly Mock<INavigableViewModel> _timerViewModelMock;
-        private readonly Mock<INavigableViewModel> _tasksViewModelMock;
-        private readonly Mock<INavigableViewModel> _statsViewModelMock;
-        private readonly Mock<INavigableViewModel> _settingsViewModelMock;
+        private readonly Mock<object> _timerViewModelMock;
+        private readonly Mock<object> _tasksViewModelMock;
+        private readonly Mock<object> _statsViewModelMock;
+        private readonly Mock<object> _settingsViewModelMock;
         private readonly Mock<IMessenger> _messengerMock;
         private readonly MainWindowViewModel _sut;
 
         public MainWindowViewModelTests()
         {
-            _timerViewModelMock = new Mock<INavigableViewModel>();
-            _tasksViewModelMock = new Mock<INavigableViewModel>();
-            _settingsViewModelMock = new Mock<INavigableViewModel>();
-            _statsViewModelMock = new Mock<INavigableViewModel>();
+            _timerViewModelMock = new Mock<object>();
+            _tasksViewModelMock = new Mock<object>();
+            _settingsViewModelMock = new Mock<object>();
+            _statsViewModelMock = new Mock<object>();
             _messengerMock = new Mock<IMessenger>();
             _sut = new MainWindowViewModel(
                 _timerViewModelMock.Object,

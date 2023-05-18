@@ -9,13 +9,13 @@
         COMPLETED = 1
     }
 
-    public record class CreateTaskDomain(
+    public record CreateTaskDomain(
         string Name,
         string? Description = null,
         int? EstPomodoro = null
         );
 
-    public record class UpdateTaskDomain
+    public record UpdateTaskDomain
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -23,16 +23,17 @@
         public int? EstPomodoro { get; set; }
         public TaskState Taskstate { get; set; }
     }
-       
-    public record class TaskDomain(
-        int Id,
-        string Name, 
-        string? Description,
-        int? EstPomodoro,
-        int ActPomodoro,
-        DateTime CreatedAt,
-        DateTime UpdatedAt,
-        TaskState TaskState,
-        TimeSpan TimeSpent
-        );
+
+    public record TaskDomain
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? Description { get; set; }
+        public int? EstPomodoro { get; set; }
+        public int ActPomodoro { get; set; }
+        public TaskState TaskState { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set;}
+        public TimeSpan TimeSpent { get; set; }
+    }
 }

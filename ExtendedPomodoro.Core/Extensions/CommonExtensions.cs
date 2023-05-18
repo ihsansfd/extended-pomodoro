@@ -15,10 +15,5 @@ namespace ExtendedPomodoro.FrameworkExtensions.Extensions
 
             return null;
         }
-
-        public static double SecondsToMinutes(this double value)
-        {
-            return value / 60;
-        }
     }
 }

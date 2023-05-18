@@ -117,7 +117,7 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
                 }
             });
 
-            await _sut.Load();
+            await _sut.LoadCommand.ExecuteAsync(null);
 
             Assert.Equal(DateTime.Today.AddDays(-7).ToMinTime(), _sut.FromDate);
             Assert.Equal(DateTime.Today.ToMaxTime(), _sut.ToDate);

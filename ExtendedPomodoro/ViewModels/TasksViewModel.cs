@@ -51,7 +51,6 @@ namespace ExtendedPomodoro.ViewModels
         IRecipient<TaskUpdateInfoMessage>
     {
        private readonly ITasksService _service;
-       private readonly IMessageBoxService _messageBox;
        private readonly IMessenger _messenger;
 
        private int _currentPage = 1;
@@ -67,11 +66,9 @@ namespace ExtendedPomodoro.ViewModels
 
         public ReadTasksViewModel(
             ITasksService service,
-            IMessageBoxService messageBoxService,
             IMessenger messenger)
         {
             _service = service;
-            _messageBox = messageBoxService;
             _messenger = messenger;
 
             messenger.RegisterAll(this);
@@ -105,32 +102,26 @@ namespace ExtendedPomodoro.ViewModels
             if(instantiateNew) ClearTasks();
 
             TaskState taskState = IsDisplayingCompletedTasks ? TaskState.COMPLETED : TaskState.IN_PROGRESS;
-            try
-            {
-                if (instantiateNew)
-                {
-                    _totalPages = await _service.GetTotalPages(taskState);
-                    OnAreThereMoreTasksChanged();
-                }
-                await foreach (var record in _service.GetTasks(taskState: taskState, page: page, limit: 20))
-                {
-                    Tasks.Add(new(
-                        record.Id,
-                        record.Name,
-                        record.Description,
-                        record.EstPomodoro,
-                        record.ActPomodoro,
-                        DateOnly.FromDateTime(record.CreatedAt).ToString("MMMM dd, yyyy"),
-                        TasksHelper.ConvertTaskStateToInteger(record.TaskState),
-                        record.TimeSpent.TotalMinutes
-                        )) ;
-                }
 
+            if (instantiateNew)
+            {
+                _totalPages = await _service.GetTotalPages(taskState);
+                OnAreThereMoreTasksChanged();
             }
-
-            catch(Exception ex)
+            await foreach (var record in _service.GetTasks(taskState: taskState, page: page, limit: 20))
             {
-                _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Tasks.Add(new TaskDomainViewModel()
+                    {
+                        Id = record.Id,
+                        Name = record.Name,
+                        Description = record.Description,
+                        EstPomodoro = record.EstPomodoro,
+                        ActPomodoro = record.ActPomodoro,
+                        CreatedAt = DateOnly.FromDateTime(record.CreatedAt).ToString("MMMM dd, yyyy"),
+                        TaskStatus = TasksHelper.ConvertTaskStateToInteger(record.TaskState),
+                        TimeSpentInMinutes = record.TimeSpent.TotalMinutes
+                    }
+                ) ;
             }
         }
 
@@ -189,7 +180,7 @@ namespace ExtendedPomodoro.ViewModels
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Task name is required")]
+        [Required(ErrorMessage = "Task name is required", AllowEmptyStrings = false)]
         private string? _name;
 
         [ObservableProperty]
@@ -219,7 +210,7 @@ namespace ExtendedPomodoro.ViewModels
 
             try
             {
-                await _repository.CreateTask(new(Name, Description, estPomodoro));
+                await _repository.CreateTask(new CreateTaskDomain(Name, Description, estPomodoro));
                 ClearAll();
                 CloseModal();
 
@@ -230,7 +221,6 @@ namespace ExtendedPomodoro.ViewModels
                 _messenger.Send(new TaskCreationInfoMessage(false));
                 _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
 
         private void ClearAll()
@@ -243,7 +233,7 @@ namespace ExtendedPomodoro.ViewModels
 
     public partial class UpdateTaskViewModel : ObservableValidator
     {
-        private readonly ITasksService _repository;
+        private readonly ITasksService _service;
         private readonly IMessageBoxService _messageBox;
         private readonly IMessenger _messenger;
 
@@ -252,14 +242,15 @@ namespace ExtendedPomodoro.ViewModels
         private int _id;
 
         [NotifyDataErrorInfo]
-        [Required(ErrorMessage = "Task name is required")]
+        [Required(ErrorMessage = "Task name is required", AllowEmptyStrings = false)]
         [ObservableProperty]
-        private string _name = null!;
+        private string? _name;
 
         [ObservableProperty]
         private string? _description;
 
         [ObservableProperty]
+        [CustomValidation(typeof(TasksHelper), nameof(TasksHelper.ValidateEstPomodoro))]
         private string? _estPomodoro;
 
         [ObservableProperty]
@@ -279,7 +270,7 @@ namespace ExtendedPomodoro.ViewModels
             IMessageBoxService messageBoxService,
             IMessenger messenger)
         {
-            _repository = repository;
+            _service = repository;
             _messageBox = messageBoxService;
             _messenger = messenger;
         }
@@ -295,7 +286,7 @@ namespace ExtendedPomodoro.ViewModels
 
             try
             {
-                await _repository.UpdateTask(
+                await _service.UpdateTask(
                     new() {
                         Id = Id,
                         Name = Name,
@@ -317,7 +308,7 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         [RelayCommand]
-        private async Task UpdateTaskState(UpdateTaskStateDomainViewModel args)
+        private async Task UpdateTaskState(IUpdateTaskStateDomainViewModel args)
         {
             var confirmationRes = _messageBox.Show(string.Format("Are you sure you want to mark this task as {0}",
                 TasksHelper.ConvertIntegerToTaskStateString(args.IntendedTaskState)),
@@ -327,7 +318,7 @@ namespace ExtendedPomodoro.ViewModels
 
             try
             {
-                await _repository.UpdateTaskState(args.TaskId, TasksHelper.ConvertIntegerToTaskState(args.IntendedTaskState));
+                await _service.UpdateTaskState(args.TaskId, TasksHelper.ConvertIntegerToTaskState(args.IntendedTaskState));
                 _messenger.Send(new TaskUpdateStateInfoMessage(true));
             }
 
@@ -374,7 +365,7 @@ namespace ExtendedPomodoro.ViewModels
         }        
 
         [RelayCommand]
-        private async void DeleteTask(int taskId)
+        private async Task DeleteTask(int taskId)
         {
             try
             {
@@ -397,7 +388,13 @@ namespace ExtendedPomodoro.ViewModels
         }
     }
 
-    public class UpdateTaskStateDomainViewModel : DependencyObject
+    public interface IUpdateTaskStateDomainViewModel
+    {
+        int TaskId { get; set; }
+        int IntendedTaskState { get; set; }
+    }
+
+    public class UpdateTaskStateDomainViewModel : DependencyObject, IUpdateTaskStateDomainViewModel
     {
         public int TaskId
         {
