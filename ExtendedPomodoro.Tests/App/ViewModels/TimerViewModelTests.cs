@@ -616,19 +616,149 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
             _timerSessionMock.Verify((x) => x.Finish(), Times.Never);
         }
 
-        // TODO
         [Fact]
-        public void SessionFinishRaised_()
+        public void SessionFinishRaised_StoredAndRefreshedCorrectly()
         {
+            // Arrange
+            SetupSettingsProvider();
+
+            var returnedPomodoroCompletedToday = 5;
+
+            _dailySessionsServiceMock.Setup((x) =>
+                x.GetTotalPomodoroCompleted(It.IsAny<DateOnly>())).ReturnsAsync(returnedPomodoroCompletedToday);
+
+            _tasksServiceMock.Setup((x) =>
+                x.UpdateTimeSpent(It.IsAny<int>(), It.IsAny<TimeSpan>()));
+            _dailySessionsServiceMock.Setup((x) =>
+                x.UpsertTimeSpent(It.IsAny<DateOnly>(), It.IsAny<TimeSpan>()));
+
+            // Act
+            _sut.SelectedTask = new TaskDomainViewModel();
+            _timerSessionMock.Raise((x) => x.SessionFinish += null, 
+                new PrevNextSessionsEventArgs(
+                    _timerSession.PomodoroSessionState, _timerSession.ShortBreakSessionState));
+
+            // Assert
+            Assert.Equal(5, _sut.PomodoroCompletedToday);
+            _dailySessionsServiceMock.Verify((x) => 
+                x.UpsertDailySession(It.IsAny<UpsertDailySessionDomain>()), Times.Once);
+            _tasksServiceMock.Verify((x) =>
+                x.UpdateTimeSpent(It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Once);
+            _dailySessionsServiceMock.Verify((x) =>
+                x.UpsertTimeSpent(It.IsAny<DateOnly>(), It.IsAny<TimeSpan>()), Times.Once);
+        }
+
+        [Fact]
+        public void SessionFinishRaised_WhenPomodoroSessionState_UpdateTaskAct()
+        {
+            // Arrange
+            SetupSettingsProvider();
+            _tasksServiceMock.Setup((x) =>
+                x.UpdateActPomodoro(It.IsAny<int>(), It.IsAny<int>()));
+
+            // Act
+            _sut.SelectedTask = new TaskDomainViewModel();
+            _timerSessionMock.Raise((x) => x.SessionFinish += null,
+                new PrevNextSessionsEventArgs(
+                    _timerSession.PomodoroSessionState, _timerSession.ShortBreakSessionState));
+
+            // Assert
+            _tasksServiceMock.Verify((x) =>
+                x.UpdateActPomodoro(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+        }
+
+        [Fact]
+        public void SessionFinishRaised_WhenNotAutoStart_PlayAlarmSound()
+        {
+            // Arrange
+            SetupSettingsProvider(isAutostart: false);
+            _timerViewServiceMock.Setup((x) => x.PlayAlarmSound());
+
+            // Act
+            _timerSessionMock.Raise((x) => x.SessionFinish += null,
+                new PrevNextSessionsEventArgs(
+                    _timerSession.PomodoroSessionState, _timerSession.ShortBreakSessionState));
+
+            // Assert
+            _timerViewServiceMock.Verify((x) => x.PlayAlarmSound(), Times.Once);
+
+        }
+
+        [Fact]
+        public void SessionFinishRaised_WhenNotAutoStartAndPushNotificationDisabled_DisplayFinishDialog()
+        {
+            // Arrange
+            SetupSettingsProvider(isAutostart: false, pushNotificationEnabled: false);
+            _timerViewServiceMock.Setup((x) =>
+                x.ShowSessionFinishDialog(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>()));
+            _timerViewServiceMock.Setup((x) =>
+                x.ShowSessionFinishBalloonTips(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>(), It.IsAny<int>()));
+            // Act
+            _timerSessionMock.Raise((x) => x.SessionFinish += null,
+                new PrevNextSessionsEventArgs(
+                    _timerSession.PomodoroSessionState, _timerSession.ShortBreakSessionState));
+
+            // Assert
+            _timerViewServiceMock.Verify((x) =>
+                x.ShowSessionFinishDialog(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>()), Times.Once);
+            _timerViewServiceMock.Verify((x) =>
+                x.ShowSessionFinishBalloonTips(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>(), It.IsAny<int>()),
+                    Times.Never);
+
+        }
+
+        [Fact]
+        public void SessionFinishRaised_WhenNotAutoStartAndPushNotificationEnabled_DisplayFinishDialogAndBallon()
+        {
+            // Arrange
+            SetupSettingsProvider(isAutostart: false, pushNotificationEnabled: true);
+            _timerViewServiceMock.Setup((x) =>
+                x.ShowSessionFinishDialog(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>()));
+            _timerViewServiceMock.Setup((x) =>
+                x.ShowSessionFinishBalloonTips(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>(), It.IsAny<int>()));
+            // Act
+            _timerSessionMock.Raise((x) => x.SessionFinish += null,
+                new PrevNextSessionsEventArgs(
+                    _timerSession.PomodoroSessionState, _timerSession.ShortBreakSessionState));
+
+            // Assert
+            _timerViewServiceMock.Verify((x) =>
+                x.ShowSessionFinishDialog(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>()), Times.Once);
+            _timerViewServiceMock.Verify((x) =>
+                    x.ShowSessionFinishBalloonTips(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>(), It.IsAny<int>()),
+                Times.Once);
+
+        }
+
+        [Fact]
+        public void SessionFinishRaised_WhenIsAutoStart_StartSessionDirectly()
+        {
+            // Arrange
+            SetupSettingsProvider(isAutostart: true, pushNotificationEnabled: true);
+            _timerViewServiceMock.Setup((x) =>
+                x.ShowSessionFinishDialog(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>()));
+            _timerViewServiceMock.Setup((x) =>
+                x.ShowSessionFinishBalloonTips(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>(), It.IsAny<int>()));
+            _timerSessionMock.Setup((x) => x.Start());
+            _timerViewServiceMock.Setup((x) => x.PlayMouseClickEffectSound());
+            
+            // Act
+            _timerSessionMock.Raise((x) => x.SessionFinish += null,
+                new PrevNextSessionsEventArgs(
+                    _timerSession.PomodoroSessionState, _timerSession.ShortBreakSessionState));
+
+            // Assert
+            _timerViewServiceMock.Verify((x) =>
+                x.ShowSessionFinishDialog(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>()), Times.Never);
+            _timerViewServiceMock.Verify((x) =>
+                    x.ShowSessionFinishBalloonTips(It.IsAny<TimerSessionState>(), It.IsAny<TimerSessionState>(), It.IsAny<int>()),
+                Times.Never);
+            _timerSessionMock.Verify((x) => x.Start(), Times.Once);
+            _timerViewServiceMock.Verify((x) => x.PlayMouseClickEffectSound(), Times.Once);
 
         }
 
         #region Helpers
-
-        //private void SetupSessionsService()
-        //{
-
-        //}
 
         private void SetupSettingsProvider(
             int pomodoroDurationInMinutes = 25,
