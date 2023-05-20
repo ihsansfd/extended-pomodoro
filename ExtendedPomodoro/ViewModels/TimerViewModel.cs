@@ -7,6 +7,7 @@ using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Services.Interfaces;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using ExtendedPomodoro.ViewServices.Interfaces;
@@ -24,8 +25,8 @@ namespace ExtendedPomodoro.ViewModels
         IRecipient<MainWindowIsClosingMessage>
     {
         private readonly IAppSettingsProvider _appSettingsProvider;
-        private readonly IDailySessionsService _sessionsRepository;
-        private readonly ITasksService _tasksRepository;
+        private readonly IDailySessionsService _sessionsService;
+        private readonly ITasksService _tasksService;
         private readonly IMessenger _messenger;
         private readonly ITimerViewService _timerViewService;
         private readonly ITimerSession _timerSession;
@@ -49,8 +50,8 @@ namespace ExtendedPomodoro.ViewModels
             _timerSession = timerSession;
             _appSettingsProvider = appSettingsProvider;
             _timerViewService = timerViewService;
-            _sessionsRepository = sessionsRepository;
-            _tasksRepository = tasksRepository;
+            _sessionsService = sessionsRepository;
+            _tasksService = tasksRepository;
             _messenger = messenger;
             _messenger.RegisterAll(this);
 
@@ -59,7 +60,7 @@ namespace ExtendedPomodoro.ViewModels
             _timerSession.TimerSetForInitialized += TimerSession_OnTimerSetForInitialized;
             _timerSession.CanPausedChanged += TimerSession_OnCanPausedChanged;
             _timerSession.RemainingTimeChanged += TimerSession_OnRemainingTimeChanged;
-            CurrentTimerSession = _timerSession.CurrentSessionState;
+            CurrentSessionState = _timerSession.CurrentSessionState;
             _timerSession.Initialize();
         }
 
@@ -86,7 +87,7 @@ namespace ExtendedPomodoro.ViewModels
         }
 
         [RelayCommand]
-        private void AddNewTaskModal()
+        private void OpenAddNewTaskModal()
         {
             CreateTaskViewModel.IsModalShown = true;
             IsTasksDropdownOpen = false;
@@ -95,7 +96,12 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         private async Task CompleteTask()
         {
-            if (SelectedTask == null) return;
+            if (SelectedTask == null)
+            {
+                Debug.Fail("Selected task cannot be null");
+                return;
+            }
+
             var today = DateOnly.FromDateTime(DateTime.Now);
 
             await UpdateTaskStateToComplete(SelectedTask.Id);
@@ -124,7 +130,7 @@ namespace ExtendedPomodoro.ViewModels
         private double _sessionProgress = 0.0;
 
         [ObservableProperty]
-        private TimerSessionState _currentTimerSession = null!;
+        private TimerSessionState _currentSessionState;
 
         [ObservableProperty]
         private bool _canPause;
@@ -154,59 +160,27 @@ namespace ExtendedPomodoro.ViewModels
         [RelayCommand]
         private void ResetSession() => _timerSession.Reset();
 
-        public void StartSessionFromHotkey()
+        private void StartSessionFromHotkey()
         {
-            _timerSession.Start();
-            _timerViewService.PlayMouseClickEffectSound();
-            if(_appSettingsProvider.AppSettings.PushNotificationEnabled)
+           StartSession();
+           if(_appSettingsProvider.AppSettings.PushNotificationEnabled)
             {
-                _timerViewService.ShowTimerStartedBalloonTips(CurrentTimerSession);
+                _timerViewService.ShowTimerStartedBalloonTips(CurrentSessionState);
             }
         }
 
-        public void PauseSessionFromHotkey()
+        private void PauseSessionFromHotkey()
         {
-            _timerSession.Pause();
-            _timerViewService.PlayMouseClickEffectSound();
-
-            if(_appSettingsProvider.AppSettings.PushNotificationEnabled)
+           PauseSession();
+           if(_appSettingsProvider.AppSettings.PushNotificationEnabled)
             {
-                _timerViewService.ShowTimerPausedBalloonTips(CurrentTimerSession);
+                _timerViewService.ShowTimerPausedBalloonTips(CurrentSessionState);
             }
         }
 
         #endregion
 
         #region messages and events
-
-        private void TimerSession_OnCanPausedChanged(object? sender, bool canPause)
-        {
-            CanPause = canPause;
-        }
-
-        private void TimerSession_OnTimerSetForInitialized(object? sender, TimeSpan timerSetFor)
-        {
-            InitializeTimerProgress(timerSetFor);
-        }
-
-        private void TimerSession_OnCurrentSessionStateChanged(object? sender, TimerSessionState currSessionState)
-        {
-            CurrentTimerSession = currSessionState;
-        }
-
-        private void TimerSession_OnRemainingTimeChanged(object? sender, RemainingTimeChangedEventArgs args)
-        {
-            _timeElapsed++;
-
-            UpdateRemainingTime(args.RemainingTime);
-            SessionProgress = CalculateProgress(args.TimerSetFor, args.RemainingTime);
-
-            if (args.RemainingTime.TotalSeconds <= 0)
-            {
-                _timerSession.Finish();
-            }
-        }
-
         public void Receive(StartHotkeyTriggeredMessage message)
         {
             StartSessionFromHotkey();
@@ -234,12 +208,61 @@ namespace ExtendedPomodoro.ViewModels
             await StoreAndResetTimeElapsed(today, SelectedTask);
         }
 
+
+        public void Receive(FinishBalloonStartNextSessionClickedMessage message)
+        {
+            _timerViewService.StopAlarmSound();
+            _timerViewService.CloseCurrentSessionFinishDialog();
+            StartSession();
+        }
+
+        public void Receive(FinishBalloonCloseClickedMessage message)
+        {
+            if (_appSettingsProvider.AppSettings.IsRepeatForever) return;
+            _timerViewService.StopAlarmSound();
+            _timerViewService.CloseCurrentSessionFinishDialog();
+        }
+
+        public void Receive(FinishDialogCloseClickedMessage message)
+        {
+            _timerViewService.StopAlarmSound();
+            _timerViewService.CloseCurrentSessionFinishBalloon();
+        }
+
+        private void TimerSession_OnCanPausedChanged(object? sender, bool canPause)
+        {
+            CanPause = canPause;
+        }
+
+        private void TimerSession_OnTimerSetForInitialized(object? sender, TimeSpan timerSetFor)
+        {
+            InitializeTimerProgress(timerSetFor);
+        }
+
+        private void TimerSession_OnCurrentSessionStateChanged(object? sender, TimerSessionState currentSessionState)
+        {
+            CurrentSessionState = currentSessionState;
+        }
+
+        private void TimerSession_OnRemainingTimeChanged(object? sender, RemainingTimeChangedEventArgs args)
+        {
+            _timeElapsed++;
+
+            UpdateRemainingTime(args.RemainingTime);
+            SessionProgress = CalculateProgress(args.TimerSetFor, args.RemainingTime);
+
+            if (args.RemainingTime.TotalSeconds <= 0)
+            {
+                _timerSession.Finish();
+            }
+        }
+
         /// <summary>
         /// Do Finish logic.
         /// Give information to the listeners that session has finished. 
         /// View will handle its logic (display notification, alarm, etc).
         /// </summary>
-        public async void TimerSession_OnSessionFinish(object? sender, PrevNextSessionsEventArgs args)
+        private async void TimerSession_OnSessionFinish(object? sender, PrevNextSessionsEventArgs args)
         {
             if (!_appSettingsProvider.AppSettings.IsAutostart)
             {
@@ -270,26 +293,6 @@ namespace ExtendedPomodoro.ViewModels
             await StoreAndResetTimeElapsed(today, SelectedTask);
         }
 
-        public void Receive(FinishBalloonStartNextSessionClickedMessage message)
-        {
-            _timerViewService.StopAlarmSound();
-            _timerViewService.CloseCurrentSessionFinishDialog();
-            StartSession();
-        }
-
-        public void Receive(FinishBalloonCloseClickedMessage message)
-        {
-            if (_appSettingsProvider.AppSettings.IsRepeatForever) return;
-            _timerViewService.StopAlarmSound();
-            _timerViewService.CloseCurrentSessionFinishDialog();
-        }
-
-        public void Receive(FinishDialogCloseClickedMessage message)
-        {
-           _timerViewService.StopAlarmSound();
-           _timerViewService.CloseCurrentSessionFinishBalloon();
-        }
-
         #endregion
 
         #region View Spesific
@@ -303,7 +306,8 @@ namespace ExtendedPomodoro.ViewModels
         private void InitializeTimerProgress(TimeSpan timerSetFor)
         {
             UpdateRemainingTime(timerSetFor);
-            SessionProgress = CalculateProgress(timerSetFor, timerSetFor); // should always return 100
+            SessionProgress = CalculateProgress(timerSetFor, timerSetFor);
+            Debug.Assert(SessionProgress == 0);
         }
 
         private void FormatRemainingTime()
@@ -334,12 +338,12 @@ namespace ExtendedPomodoro.ViewModels
                 DailyPomodoroTarget = _appSettingsProvider.AppSettings.DailyPomodoroTarget
             };
 
-            await _sessionsRepository.UpsertDailySession(domain);
+            await _sessionsService.UpsertDailySession(domain);
         }
 
         private async Task StoreDailySessionTimeSpentInfo(DateOnly sessionDate, int timeSpent)
         {
-            await _sessionsRepository.UpsertTimeSpent(
+            await _sessionsService.UpsertTimeSpent(
                 DateOnly.FromDateTime(DateTime.Now), TimeSpan.FromSeconds(timeSpent));
         }
 
@@ -356,27 +360,27 @@ namespace ExtendedPomodoro.ViewModels
 
         private async Task StoreDailySessionTotalTasksCompleted(DateOnly sessionDate, int totaltasksCompleted)
         {
-            await _sessionsRepository.UpsertTotalTasksCompleted(sessionDate, totaltasksCompleted);
+            await _sessionsService.UpsertTotalTasksCompleted(sessionDate, totaltasksCompleted);
         }
 
         private async Task<int> GetPomodoroCompletedToday()
         {
-            return await _sessionsRepository.GetTotalPomodoroCompleted(DateOnly.FromDateTime(DateTime.Now));
+            return await _sessionsService.GetTotalPomodoroCompleted(DateOnly.FromDateTime(DateTime.Now));
         }
 
         private async Task UpdateTaskTimeSpent(int taskId, int timeEllapsed)
         {
-            await _tasksRepository.UpdateTimeSpent(taskId, TimeSpan.FromSeconds(timeEllapsed));
+            await _tasksService.UpdateTimeSpent(taskId, TimeSpan.FromSeconds(timeEllapsed));
         }
 
         private async Task UpdateTaskStateToComplete(int taskId)
         {
-            await _tasksRepository.UpdateTaskState(taskId, TaskState.COMPLETED);
+            await _tasksService.UpdateTaskState(taskId, TaskState.COMPLETED);
         }
 
         private async Task UpdateTaskActPomodoro(int taskId, int totalPomodoroCompleted)
         {
-            await _tasksRepository.UpdateActPomodoro(taskId, totalPomodoroCompleted);
+            await _tasksService.UpdateActPomodoro(taskId, totalPomodoroCompleted);
         }
 
         #endregion

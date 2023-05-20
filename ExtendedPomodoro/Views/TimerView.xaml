@@ -23,7 +23,7 @@
         <conv:TimerSessionStateToColorConverter x:Key="TimerSessionStateToColorConv"/>
         <conv:PercentageToCountdownPercentageConverter x:Key="PercentageToCountdownPercentageConv"/>
         <conv:InvertBooleanToVisibilityConverter x:Key="InvertBoolToVisibilityConv"/>
-        <SolidColorBrush x:Key="SessionBackground" Color="{Binding CurrentTimerSession, 
+        <SolidColorBrush x:Key="SessionBackground" Color="{Binding CurrentSessionState, 
             Converter={StaticResource TimerSessionStateToColorConv}}"/>
     </Page.Resources>
     <Grid>
@@ -43,7 +43,7 @@
             Style="{StaticResource TasksComboBoxStyle}"
             LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"
             IsLoadMoreButtonShown="{Binding ReadTasksViewModel.AreThereMoreTasks}"
-            AddNewTaskCommand="{Binding AddNewTaskModalCommand}"
+            AddNewTaskCommand="{Binding OpenAddNewTaskModalCommand}"
             CompleteTaskCommand="{Binding CompleteTaskCommand}"
             CancelTaskCommand="{Binding CancelTaskCommand}"
             IsDropDownOpen="{Binding IsTasksDropdownOpen}"
@@ -97,7 +97,7 @@
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         Margin="0 10 0 0"
-                        Text="{Binding CurrentTimerSession.SessionMessage, Mode=OneWay}"/>
+                        Text="{Binding CurrentSessionState.SessionMessage, Mode=OneWay}"/>
                     </StackPanel>
 
                     <WrapPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0 15 0 0">
