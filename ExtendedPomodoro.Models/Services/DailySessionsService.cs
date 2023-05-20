@@ -76,6 +76,20 @@ namespace ExtendedPomodoro.Models.Services
             return await _repository.GetTotalPomodoroCompleted(SessionDate.ToString());
         }
 
+        public static ComparedSumDailySessionsDomain CompareEachSum(SumDailySessionsDomain prev, SumDailySessionsDomain current)
+        {
+            var res = new ComparedSumDailySessionsDomain
+            {
+                TotalPomodoroCompleted = (double)current.TotalPomodoroCompleted / (double)prev.TotalPomodoroCompleted - 1,
+                TotalShortBreaksCompleted = (double)current.TotalShortBreaksCompleted / (double)prev.TotalShortBreaksCompleted - 1,
+                TotalLongBreaksCompleted = (double)current.TotalLongBreaksCompleted / (double)prev.TotalLongBreaksCompleted - 1,
+                TotalTasksCompleted = (double)current.TotalTasksCompleted / (double)prev.TotalTasksCompleted - 1,
+                TotalTimeSpent = current.TotalTimeSpent / prev.TotalTimeSpent - 1
+            };
+
+            return res;
+        }
+
         private static UpsertTotalTasksCompletedDTO ConvertToUpsertTotalTasksCompletedDTO(
             DateOnly sessionDate, int totalTasksCompleted, DateTime now)
         {

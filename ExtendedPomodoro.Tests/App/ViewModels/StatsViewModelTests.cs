@@ -77,7 +77,7 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
         }
 
         [Fact]
-        async Task Load_Successfully()
+        async Task LoadCommand_Successfully()
         {
             // Assert
             GenerateSetupFrom(new[]

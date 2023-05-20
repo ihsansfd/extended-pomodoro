@@ -149,7 +149,7 @@
                     <TextBlock 
                         Grid.Row="5"
                         Grid.Column="1"
-                        Text="{Binding SumDailyPomodoroTarget.SuccessRate}"
+                        Text="{Binding SumDailyPomodoroTarget.SuccessRateFormatted}"
                         Style="{StaticResource TextBlockFormValueStyle}" 
                         HorizontalAlignment="Right">
                     </TextBlock>

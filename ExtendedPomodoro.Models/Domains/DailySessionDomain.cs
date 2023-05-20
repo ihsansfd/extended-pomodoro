@@ -5,7 +5,7 @@
         public int TotalActual { get; set; }
         public int TotalTarget { get; set; }
 
-        public string SuccessRate => (TotalTarget == 0 ? 1
+        public string SuccessRateFormatted => (TotalTarget == 0 ? 1
             : Math.Min((double)TotalActual / (double)TotalTarget, 1)).ToString("P");
     }
 
@@ -38,13 +38,22 @@
         public int TotalShortBreaksCompleted { get; set; }
         public int TotalLongBreaksCompleted { get; set; }
         public int TotalTasksCompleted { get; set; }
-        public SumDailyPomodoroTargetDomain SumDailyPomodoroTarget { get; set; } =
-            new();
+        public SumDailyPomodoroTargetDomain SumDailyPomodoroTarget { get; set; } = new();
     };
+
+    public record ComparedSumDailySessionsDomain
+    {
+        public double? TotalTimeSpent { get; set; }
+        public double? TotalPomodoroCompleted { get; set; }
+        public double? TotalShortBreaksCompleted { get; set; }
+        public double? TotalLongBreaksCompleted { get; set; }
+        public double? TotalTasksCompleted { get; set; }
+    }
 
     public record DateRangeDailySessionsDomain(
         DateTime MinDate,
         DateTime MaxDate
         );
+
 
 }

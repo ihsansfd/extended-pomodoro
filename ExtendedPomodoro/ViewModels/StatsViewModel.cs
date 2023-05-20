@@ -54,16 +54,31 @@ namespace ExtendedPomodoro.ViewModels
         private int _totalPomodoroCompleted;
 
         [ObservableProperty]
+        private double? _totalPomodoroCompletedComparedPercentage;
+
+        [ObservableProperty]
         private int _totalShortBreaksCompleted;
+
+        [ObservableProperty]
+        private double? _totalShortBreaksCompletedComparedPercentage;
 
         [ObservableProperty]
         private int _totalLongBreaksCompleted;
 
         [ObservableProperty]
+        private double? _totalLongBreaksCompletedComparedPercentage;
+
+        [ObservableProperty]
         private int _totalTimeSpentInMinutes;
 
         [ObservableProperty]
+        private double? _totalTimeSpentInMinutesComparedPercentage;
+
+        [ObservableProperty]
         private int _totalTasksCompleted;
+
+        [ObservableProperty]
+        private double? _totalTasksCompletedComparedPercentage;
 
         [ObservableProperty]
         private SumDailyPomodoroTargetDomain _sumDailyPomodoroTarget;
@@ -78,11 +93,11 @@ namespace ExtendedPomodoro.ViewModels
             ToDate = DateTime.Today.ToMaxTime();
 
             await LoadDateRange();
-            LoadStats();
+            await LoadStats();
         }
 
         [RelayCommand]
-        private void GenerateStats() => LoadStats();
+        private async Task GenerateStats() => await LoadStats();
 
         [RelayCommand]
         private void ViewStatsInFullScreen()
@@ -117,12 +132,17 @@ namespace ExtendedPomodoro.ViewModels
             MaxDate = dateRange.MaxDate;
         }
 
-        private void LoadStats() {
+        private async Task LoadStats() {
 
             _dailySessions = _sessionsService.GetDailySessions(
                 FromDate.ToMinTime(), ToDate.ToMaxTime()).ToBlockingEnumerable();
 
-            LoadSumProperties();
+            var dailySessionsSum = _dailySessions.SumEach();
+            var dailySessionsSumPrev = await _sessionsService.GetSumDailySessions(
+                FromDate.AddDays(-FromDate.Day).ToMinTime(), ToDate.AddDays(-ToDate.Day).ToMaxTime()); 
+
+            LoadSumProperties(dailySessionsSum);
+            LoadSumComparedProperties(DailySessionsService.CompareEachSum(dailySessionsSumPrev, dailySessionsSum));
             LoadChartData();
         }
 
@@ -162,10 +182,8 @@ namespace ExtendedPomodoro.ViewModels
                 NewChartData?.Invoke(this, ChartData);
         }
 
-        private void LoadSumProperties()
+        private void LoadSumProperties(SumDailySessionsDomain properties)
         {
-            var properties = _dailySessions.SumEach();
-
             TotalPomodoroCompleted = properties.TotalPomodoroCompleted;
             TotalShortBreaksCompleted = properties.TotalShortBreaksCompleted;
             TotalLongBreaksCompleted = properties.TotalLongBreaksCompleted;
