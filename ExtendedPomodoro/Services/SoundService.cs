@@ -1,10 +1,10 @@
 ﻿using ExtendedPomodoro.Models.Domains;
 using System;
+using System.IO;
 using System.Threading;
 using System.Windows.Media;
 using ExtendedPomodoro.Core.Timeout;
 using ExtendedPomodoro.Services.Interfaces;
-using static System.IO.Path;
 using static System.AppDomain;
 
 namespace ExtendedPomodoro.Services
@@ -121,18 +121,15 @@ namespace ExtendedPomodoro.Services
 
         private string GetFilePath(AlarmSound alarmSound)
         {
-            return string.Format("{0}" + DirectorySeparatorChar + "Assets" +
-                          DirectorySeparatorChar + "AlarmSounds" + DirectorySeparatorChar +
-                          "{1}.mp3", CurrentDomain.BaseDirectory, alarmSound.ToString());
+            return Path.Combine(CurrentDomain.BaseDirectory, "Assets", "AlarmSounds",
+                alarmSound.ToString() + ".mp3");
         }
     }
 
     public class MouseClickSoundService
     {
         private static readonly string MouseClickSoundFilePath =
-            string.Format("{0}" + DirectorySeparatorChar + "Assets" + DirectorySeparatorChar +
-                          "SoundEffects" + DirectorySeparatorChar + "{1}.mp3",
-                CurrentDomain.BaseDirectory, "MouseClick");
+            Path.Combine(CurrentDomain.BaseDirectory, "Assets", "SoundEffects", "MouseClick.mp3");
 
         private readonly ISoundService _soundService;
 

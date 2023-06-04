@@ -6,6 +6,7 @@ using Hardcodet.Wpf.TaskbarNotification;
 using System;
 using System.Windows;
 using CommunityToolkit.Mvvm.Messaging;
+using ExtendedPomodoro.Factories;
 using ExtendedPomodoro.Messages;
 using ExtendedPomodoro.ViewModels.Components;
 using ExtendedPomodoro.ViewServices.Interfaces;
@@ -74,8 +75,6 @@ namespace ExtendedPomodoro.ViewServices
                 new(320, 260, "Session Has Finished", userControl));
             _currentSessionFinishDialog = dialog;
             dialog.Show();
-            dialog.Focus();
-            dialog.Activate();
             dialog.Unloaded += OnCloseSessionFinishDialog;
         }
 

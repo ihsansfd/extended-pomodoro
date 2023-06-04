@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using System;
+using CommunityToolkit.Mvvm.Messaging;
 using ExtendedPomodoro.Factories;
 using ExtendedPomodoro.Helpers;
 using ExtendedPomodoro.Models.DbConfigs;
@@ -16,6 +17,7 @@ using ExtendedPomodoro.ViewServices;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,6 +35,7 @@ namespace ExtendedPomodoro
 
         static App()
         {
+            SetupDataDirectory();
             Services = ConfigureServices();
         }
 
@@ -57,7 +60,6 @@ namespace ExtendedPomodoro
         private void SwitchThemeToCurrentSettings()
         {
             var settingsProvider = Services.GetRequiredService<IAppSettingsProvider>();
-
             var appThemeService = Services.GetRequiredService<AppThemeService>();
             appThemeService.SwitchThemeTo(
                 settingsProvider.AppSettings.DarkModeEnabled ? AppTheme.Dark : AppTheme.Light);
@@ -66,7 +68,6 @@ namespace ExtendedPomodoro
         private void InitializeMainWindow()
         {
             var mainWindow = MainWindowFactory.MainWindow;
-            mainWindow.ShowInTaskbar = true;
             var mainWindowViewModel = Services.GetRequiredService<MainWindowViewModel>();
             mainWindowViewModel.Initialize();
             mainWindow.DataContext = mainWindowViewModel;
@@ -87,8 +88,7 @@ namespace ExtendedPomodoro
             IDatabaseSetup dbSetup = Services.GetRequiredService<IDatabaseSetup>();
             await dbSetup.Setup();
         }
-
-        // TODO: place this into the Core.
+        
         private static void EnsureOnlyOneInstanceIsRunning()
         {
             var proc = Process.GetCurrentProcess();
@@ -101,12 +101,23 @@ namespace ExtendedPomodoro
             }
         }
 
+        private static void SetupDataDirectory()
+        {
+           var path = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData,
+                    Environment.SpecialFolderOption.Create),
+                "Extended Pomodoro");
+
+           Directory.CreateDirectory(path);
+
+            AppDomain.CurrentDomain.SetData("DataDirectory", path);
+        }
+
         private static ServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
-            services.AddSingleton<DbConfig>(
-                (_) => new(ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString)
-                );
+            services.AddSingleton<DbConfig>((_) => 
+                new(ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString));
             services.AddSingleton<TasksHelper>();
             services.AddTransient<ReadTasksViewModel>();
             services.AddTransient<CreateTaskViewModel>();

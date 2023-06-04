@@ -7,6 +7,7 @@ using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Services;
 using ExtendedPomodoro.Services.Interfaces;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -69,6 +70,10 @@ namespace ExtendedPomodoro.ViewModels
         public ReadTasksViewModel ReadTasksViewModel { get; }
         public CreateTaskViewModel CreateTaskViewModel { get; }
 
+        private bool _selectedTaskFirstLoad = true;
+
+        private TaskDomainViewModel? _lastSelectedTask = null;
+
         [ObservableProperty]
         private TaskDomainViewModel? _selectedTask;
 
@@ -84,6 +89,7 @@ namespace ExtendedPomodoro.ViewModels
             PomodoroCompletedToday = await GetPomodoroCompletedToday();
             AssignFromSettings();
             await ReadTasksViewModel.DisplayInProgressTasksCommand.ExecuteAsync(null);
+            SelectedTask = _lastSelectedTask;
         }
 
         [RelayCommand]
@@ -109,7 +115,7 @@ namespace ExtendedPomodoro.ViewModels
             await StoreDailySessionTotalTasksCompleted(today, 1);
             await ReadTasksViewModel.LoadTasks();
 
-            SelectedTask = null;
+            _lastSelectedTask = SelectedTask = null;
         }
 
         [RelayCommand]
@@ -117,7 +123,17 @@ namespace ExtendedPomodoro.ViewModels
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
             await StoreAndResetTimeElapsed(today, SelectedTask);
-            SelectedTask = null;
+            _lastSelectedTask = SelectedTask = null;
+        }
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            if (e.PropertyName == nameof(SelectedTask) && SelectedTask != null)
+            {
+                _lastSelectedTask = SelectedTask;
+            }
         }
 
         #endregion

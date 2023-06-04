@@ -35,7 +35,7 @@
     </Page.Resources>
 
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid Width="400">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -67,6 +67,7 @@
 
                 <!--Showing tasks-->
                 <controls:TasksListView 
+                    x:Name="TasksListView"
                     ItemsSource="{Binding Source={StaticResource TasksCollectionViewSource}, Mode=OneWay}" 
                     Background="Transparent"
                     BorderThickness="0"
@@ -75,7 +76,11 @@
                     LoadMoreButtonStyle="{StaticResource ButtonStyle}"
                     LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"
                     IsLoadMoreButtonShown="{Binding ReadTasksViewModel.AreThereMoreTasks}"
-                    FocusVisualStyle="{x:Null}">
+                    FocusVisualStyle="{x:Null}"
+                    Visibility="{Binding HasItems, 
+                              RelativeSource={RelativeSource Self}, 
+                              Converter={StaticResource BoolToVisibilityConv}}"
+                    >
                     <controls:TasksListView.ItemTemplate>
                         <DataTemplate>
                             <Border 
@@ -84,7 +89,7 @@
                                 Height="30"
                                 Margin="0 0 0 10"
                                 Background="{DynamicResource FormBackground}"
-                                BorderBrush="{DynamicResource FormBorderBrush}">
+                                BorderBrush="{DynamicResource GeneralBorderBrush}">
                                 <Border.Resources>
                                     <services:BindingProxy x:Key="CurrentDataContext" Data="{Binding}"/>
                                 </Border.Resources>
@@ -216,7 +221,40 @@
                         </Style>
                     </controls:TasksListView.Resources>
                 </controls:TasksListView>
-
+                <StackPanel
+                    Grid.Row="1" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding HasItems, ElementName=TasksListView, 
+                              Converter={StaticResource InvertBoolToVisibilityConv}}"
+                    >
+                    <Viewbox Width="150" Height="147" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                        <Canvas Height="147" Width="150">
+                            <Path Data="M95.2266 32.8695H54.8082C53.8871 32.8706 53.0041 33.2364 52.3528 33.8865C51.7015 34.5366 51.3351 35.418 51.334 36.3374V126.005L50.8708 126.146L40.9555 129.177C40.4855 129.32 39.978 129.271 39.5442 129.041C39.1104 128.811 38.7858 128.419 38.6417 127.95L9.14823 31.7852C9.0047 31.3162 9.05362 30.8094 9.28424 30.3763C9.51486 29.9432 9.9083 29.6193 10.3781 29.4756L25.6576 24.8055L69.9533 11.2715L85.2326 6.60143C85.4651 6.52999 85.7095 6.50503 85.9517 6.52797C86.1939 6.55091 86.4292 6.6213 86.6441 6.73511C86.859 6.84892 87.0494 7.00392 87.2042 7.19124C87.359 7.37855 87.4753 7.59451 87.5465 7.82675L95.0854 32.4071L95.2266 32.8695Z" Fill="#F2F2F2" />
+                            <Path Data="M104.046 32.4072L94.9595 2.7822C94.8083 2.28859 94.5612 1.82955 94.2322 1.43132C93.9032 1.03308 93.4989 0.703455 93.0422 0.461271C92.5856 0.219087 92.0856 0.06909 91.5709 0.0198579C91.0562 -0.0293743 90.5367 0.0231227 90.0423 0.174344L68.5604 6.7379L24.2671 20.2742L2.78509 26.8401C1.78715 27.146 0.951567 27.8346 0.461741 28.7548C-0.0280852 29.675 -0.132131 30.7516 0.172446 31.7483L31.2269 132.994C31.4744 133.799 31.9736 134.503 32.6514 135.004C33.3292 135.504 34.1499 135.775 34.993 135.776C35.3832 135.776 35.7712 135.717 36.144 135.602L50.8699 131.103L51.3331 130.96V130.477L50.8699 130.618L36.0074 135.161C35.1266 135.429 34.1752 135.337 33.3619 134.906C32.5487 134.475 31.94 133.739 31.6693 132.86L0.617235 31.6119C0.483152 31.1766 0.436421 30.7191 0.479715 30.2657C0.523009 29.8123 0.655475 29.3718 0.869535 28.9696C1.08359 28.5674 1.37504 28.2112 1.72719 27.9216C2.07933 27.632 2.48525 27.4145 2.9217 27.2817L24.4037 20.7158L68.6971 7.18179L90.1791 0.615926C90.5101 0.515079 90.8543 0.46366 91.2004 0.463338C91.9432 0.465003 92.666 0.704046 93.2628 1.14545C93.8597 1.58686 94.2992 2.20744 94.5172 2.91629L103.562 32.4072L103.705 32.8696H104.187L104.046 32.4072Z" Fill="#3F3D56" />
+                            <Path Data="M28.4148 29.5512C27.9684 29.5509 27.5338 29.4078 27.1749 29.1429C26.8159 28.878 26.5515 28.5052 26.4203 28.0793L23.4371 18.3526C23.3569 18.0913 23.3291 17.8168 23.3552 17.5448C23.3813 17.2728 23.4609 17.0086 23.5893 16.7673C23.7177 16.526 23.8925 16.3123 24.1037 16.1384C24.3149 15.9645 24.5583 15.8339 24.8201 15.7539L65.5696 3.30104C66.0982 3.14002 66.6692 3.19494 67.1573 3.45373C67.6454 3.71253 68.0107 4.15406 68.1731 4.68142L71.1563 14.4082C71.3175 14.9359 71.2624 15.5058 71.0032 15.993C70.7439 16.4802 70.3017 16.8449 69.7734 17.007L29.0238 29.4599C28.8265 29.5203 28.6212 29.5511 28.4148 29.5512Z" Fill="#FF6363" />
+                            <Path Data="M44.0414 10.3932C46.5997 10.3932 48.6736 8.32301 48.6736 5.76933C48.6736 3.21565 46.5997 1.14548 44.0414 1.14548C41.4831 1.14548 39.4092 3.21565 39.4092 5.76933C39.4092 8.32301 41.4831 10.3932 44.0414 10.3932Z" Fill="#FF6363" />
+                            <Path Data="M44.0417 8.69729C45.6617 8.69729 46.9749 7.3864 46.9749 5.76933C46.9749 4.15226 45.6617 2.84136 44.0417 2.84136C42.4217 2.84136 41.1084 4.15226 41.1084 5.76933C41.1084 7.3864 42.4217 8.69729 44.0417 8.69729Z" Fill="white" />
+                            <Path Data="M139.578 134.594H61.2929C60.771 134.594 60.2706 134.386 59.9015 134.018C59.5324 133.65 59.3248 133.15 59.3242 132.629V38.9961C59.3248 38.4751 59.5324 37.9756 59.9015 37.6072C60.2706 37.2388 60.771 37.0316 61.2929 37.031H139.578C140.1 37.0316 140.6 37.2388 140.969 37.6072C141.338 37.9756 141.546 38.4751 141.546 38.9961V132.629C141.546 133.15 141.338 133.65 140.969 134.018C140.6 134.386 140.1 134.594 139.578 134.594Z" Fill="#E6E6E6" />
+                            <Path Data="M103.562 32.4071H54.8075C53.7637 32.4086 52.7631 32.8232 52.025 33.5599C51.2869 34.2967 50.8716 35.2955 50.8701 36.3374V130.618L51.3333 130.477V36.3374C51.3345 35.418 51.7008 34.5366 52.3521 33.8865C53.0034 33.2364 53.8864 32.8706 54.8075 32.8695H103.705L103.562 32.4071ZM146.062 32.4071H54.8075C53.7637 32.4086 52.7631 32.8232 52.025 33.5599C51.2869 34.2967 50.8716 35.2955 50.8701 36.3374V142.224C50.8716 143.266 51.2869 144.264 52.025 145.001C52.7631 145.738 53.7637 146.152 54.8075 146.154H146.062C147.106 146.152 148.107 145.738 148.845 145.001C149.583 144.264 149.998 143.266 150 142.224V36.3374C149.998 35.2955 149.583 34.2967 148.845 33.5599C148.107 32.8232 147.106 32.4086 146.062 32.4071ZM149.537 142.224C149.535 143.143 149.169 144.024 148.518 144.675C147.867 145.325 146.983 145.69 146.062 145.691H54.8075C53.8864 145.69 53.0034 145.325 52.3521 144.675C51.7008 144.024 51.3345 143.143 51.3333 142.224V36.3374C51.3345 35.418 51.7008 34.5366 52.3521 33.8865C53.0034 33.2364 53.8864 32.8706 54.8075 32.8695H146.062C146.983 32.8706 147.867 33.2364 148.518 33.8865C149.169 34.5366 149.535 35.418 149.537 36.3374V142.224Z" Fill="#3F3D56" />
+                            <Path Data="M121.743 42.5796H79.1265C78.5738 42.579 78.044 42.3596 77.6532 41.9695C77.2624 41.5794 77.0426 41.0505 77.042 40.4989V30.3264C77.0426 29.7748 77.2624 29.2459 77.6532 28.8558C78.044 28.4657 78.5738 28.2463 79.1265 28.2457H121.743C122.296 28.2463 122.825 28.4657 123.216 28.8558C123.607 29.2459 123.827 29.7748 123.828 30.3264V40.4989C123.827 41.0505 123.607 41.5794 123.216 41.9695C122.826 42.3596 122.296 42.579 121.743 42.5796Z" Fill="#FF6363" />
+                            <Path Data="M100.435 28.9393C102.993 28.9393 105.067 26.8691 105.067 24.3154C105.067 21.7617 102.993 19.6916 100.435 19.6916C97.8767 19.6916 95.8027 21.7617 95.8027 24.3154C95.8027 26.8691 97.8767 28.9393 100.435 28.9393Z" Fill="#FF6363" />
+                            <Path Data="M100.435 27.1318C101.993 27.1318 103.256 25.8708 103.256 24.3154C103.256 22.76 101.993 21.499 100.435 21.499C98.8765 21.499 97.6133 22.76 97.6133 24.3154C97.6133 25.8708 98.8765 27.1318 100.435 27.1318Z" Fill="white" />
+                        </Canvas>
+                    </Viewbox>
+                    <TextBlock FontSize="{StaticResource FSSmall}" 
+                               FontFamily="{StaticResource FWRegular}" 
+                               Foreground="{DynamicResource TextForeground}"
+                               Visibility="{Binding .ReadTasksViewModel.IsDisplayingCompletedTasks, Converter={StaticResource InvertBoolToVisibilityConv}}"
+                               HorizontalAlignment="Center"
+                               Margin="0 20 0 0">No in-progress task left! Maybe add a new one?</TextBlock>
+                    <TextBlock FontSize="{StaticResource FSSmall}" 
+                               FontFamily="{StaticResource FWRegular}" 
+                               Foreground="{DynamicResource TextForeground}"
+                               Visibility="{Binding .ReadTasksViewModel.IsDisplayingCompletedTasks, Converter={StaticResource BoolToVisibilityConv}}"
+                               HorizontalAlignment="Center"
+                               Margin="0 20 0 0">No task has been completed.</TextBlock>
+                </StackPanel>
             </Grid>
         </ScrollViewer>
 
@@ -229,44 +267,47 @@
         <!--Modal edit task/view task detail popup-->
         <controls:Modal 
             x:Name="ModalViewTaskDetail"
-            Width="340" 
-            Height="300"
+            Width="400" 
+            Height="280"
             IsShown="{Binding UpdateTaskViewModel.IsModalShown}"
             Style="{StaticResource DefaultModalStyle}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid Grid.IsSharedSizeScope="True">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock 
+                <ScrollViewer Height="200">
+                    <Grid Grid.IsSharedSizeScope="True" Margin="20 0 20 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" SharedSizeGroup="Label"/>
+                                <ColumnDefinition Width="auto" SharedSizeGroup="Value"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock 
                         Visibility="Collapsed" 
                         x:Name="IdTaskDetail"
                         Text="{Binding UpdateTaskViewModel.Id, Mode=TwoWay}"/>
-                    <TextBlock 
+                            <TextBlock 
                         Text="Title"
                         Margin="0 0 20 15"
                         VerticalAlignment="Center"
                         Style="{StaticResource TextBlockFormLabelStyle}"/>
-                    <TextBox 
+                            <TextBox 
                         Grid.Column="1"
                         Width="175"
                         Margin="0 0 0 15"
                         Text="{Binding UpdateTaskViewModel.Name, Mode=TwoWay}"
                         Style="{StaticResource TextBoxStyle}"/>
-                    <TextBlock 
+                            <TextBlock 
                         Grid.Row="1"
                         Text="Description"
                         Margin="0 0 20 15"
                         Style="{StaticResource TextBlockFormLabelStyle}"/>
-                    <TextBox 
+                            <TextBox 
                         Grid.Column="1"
                         Grid.Row="1"
                         Height="65"
@@ -275,36 +316,36 @@
                         VerticalContentAlignment="Top"
                         Text="{Binding UpdateTaskViewModel.Description, Mode=TwoWay}"
                         Style="{StaticResource TextBoxStyle}"/>
-                    <TextBlock 
+                            <TextBlock 
                         Text="Est. / Act. Pomodoro"
                         Margin="0 0 20 15"
                         Grid.Row="2"
                         VerticalAlignment="Center"
                         Style="{StaticResource TextBlockFormLabelStyle}"/>
-                    <WrapPanel Grid.Column="1" Grid.Row="2" Margin="0 0 0 15">
-                        <TextBox 
+                            <WrapPanel Grid.Column="1" Grid.Row="2" Margin="0 0 15 15">
+                                <TextBox 
                         Width="60"
                         HorizontalAlignment="Left"
                         Text="{Binding UpdateTaskViewModel.EstPomodoro, Mode=TwoWay}"
                         Style="{StaticResource TextBoxStyle}"
                         Margin="0 0 7 0"/>
-                        <TextBlock 
+                                <TextBlock 
                             Text="/" 
                             Margin="0 0 7 0" 
                             VerticalAlignment="Center" 
                             Style="{StaticResource TextBlockFormValueStyle}"/>
-                        <TextBlock 
+                                <TextBlock 
                             Text="{Binding UpdateTaskViewModel.ActPomodoro}"
                             VerticalAlignment="Center"
                             Style="{StaticResource TextBlockFormValueStyle}"/>
-                    </WrapPanel>
-                    <TextBlock 
+                            </WrapPanel>
+                            <TextBlock 
                         Grid.Row="3"
                         Text="Status"
                         Margin="0 0 20 15"
                         VerticalAlignment="Center"
                         Style="{StaticResource TextBlockFormLabelStyle}"/>
-                    <ComboBox 
+                            <ComboBox 
                         Grid.Row="3"
                         Grid.Column="1"
                         Style="{StaticResource ComboBoxStyle}"
@@ -315,23 +356,49 @@
                         Margin="0 0 0 15"
                         SelectedValuePath="Tag"
                         SelectedValue="{Binding UpdateTaskViewModel.TaskStatus, Mode=TwoWay}">
-                        <ComboBox.Items>
-                            <ComboBoxItem Tag="0">In Progress</ComboBoxItem>
-                            <ComboBoxItem Tag="1">Completed</ComboBoxItem>
-                        </ComboBox.Items>
-                    </ComboBox>
-                    <TextBlock 
+                                <ComboBox.Items>
+                                    <ComboBoxItem Tag="0">In Progress</ComboBoxItem>
+                                    <ComboBoxItem Tag="1">Completed</ComboBoxItem>
+                                </ComboBox.Items>
+                            </ComboBox>
+                            <TextBlock 
                         Grid.Row="4"
                         Text="Time Spent"
-                        Margin="0 0 20 0"
+                        Margin="0 0 20 15"
                         Style="{StaticResource TextBlockFormLabelStyle}"/>
-                    <TextBlock 
+                            <TextBlock 
                         Grid.Column="1"
                         Grid.Row="4"
                         x:Name="TimeSpentTaskDetail"
+                        Margin="0 0 0 15"
                         Text="{Binding UpdateTaskViewModel.TimeSpentInMinutes, StringFormat={}{0} minutes, Mode=TwoWay}"
                         Style="{StaticResource TextBlockFormValueStyle}"/>
-                </Grid>
+                            <TextBlock 
+                        Grid.Row="5"
+                        Text="Created At"
+                        Margin="0 0 20 15"
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
+                            <TextBlock 
+                        Grid.Column="1"
+                        Grid.Row="5"
+                        x:Name="CreatedAtTaskDetail"
+                        Margin="0 0 0 15"
+                        Text="{Binding UpdateTaskViewModel.CreatedAt}"
+                        Style="{StaticResource TextBlockFormValueStyle}"/>
+                            <TextBlock 
+                        Grid.Row="6"
+                        Text="Completed At"
+                        Margin="0 0 20 0"
+                        Style="{StaticResource TextBlockFormLabelStyle}"/>
+                            <TextBlock 
+                        Grid.Column="1"
+                        Grid.Row="6"
+                        Margin="0 0 0 0"
+                        x:Name="CompletedAtTaskDetail"
+                        Text="{Binding UpdateTaskViewModel.CompletedAt}"
+                        Style="{StaticResource TextBlockFormValueStyle}"/>
+                        </Grid>
+                </ScrollViewer>
                 <WrapPanel HorizontalAlignment="Right" Margin="0 20 0 0">
                     <Button Style="{StaticResource ButtonStyle}" 
                         Content="Close" 

@@ -37,4 +37,7 @@
         <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>
     </Style>
 
+    <Style TargetType="TextBlock" x:Key="HeadingTextBlock" BasedOn="{StaticResource TextBlockFormLabelLargeStyle}">
+    </Style>
+
 </ResourceDictionary>

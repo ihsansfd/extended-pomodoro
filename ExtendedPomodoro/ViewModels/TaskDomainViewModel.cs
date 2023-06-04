@@ -8,6 +8,7 @@
         public int? EstPomodoro { get; set; }
         public int ActPomodoro { get; set; }
         public string CreatedAt { get; set; } = null!;
+        public string? CompletedAt { get; set; }
         public int TaskStatus { get; set; }
         public double TimeSpentInMinutes { get; set; }
     }

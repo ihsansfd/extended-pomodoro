@@ -118,6 +118,8 @@ namespace ExtendedPomodoro.ViewModels
                         EstPomodoro = record.EstPomodoro,
                         ActPomodoro = record.ActPomodoro,
                         CreatedAt = DateOnly.FromDateTime(record.CreatedAt).ToString("MMMM dd, yyyy"),
+                        CompletedAt = record.CompletedAt != null ? 
+                            DateOnly.FromDateTime((DateTime)record.CompletedAt).ToString("MMMM dd, yyyy") : null,
                         TaskStatus = TasksHelper.ConvertTaskStateToInteger(record.TaskState),
                         TimeSpentInMinutes = record.TimeSpent.TotalMinutes
                     }
@@ -188,6 +190,7 @@ namespace ExtendedPomodoro.ViewModels
 
         [ObservableProperty]
         [CustomValidation(typeof(TasksHelper), nameof(TasksHelper.ValidateEstPomodoro))]
+        [Range(1, int.MaxValue, ErrorMessage = "Please specify value >= 1")]
         private string? _estPomodoro;
 
         [ObservableProperty]
@@ -261,6 +264,12 @@ namespace ExtendedPomodoro.ViewModels
 
         [ObservableProperty]
         private int _timeSpentInMinutes;
+
+        [ObservableProperty] 
+        private string _createdAt;
+
+        [ObservableProperty]
+        private string? _completedAt;
 
         [ObservableProperty]
         private bool _isModalShown = false;
@@ -339,6 +348,8 @@ namespace ExtendedPomodoro.ViewModels
             ActPomodoro = args.ActPomodoro;
             TaskStatus = args.TaskStatus;
             TimeSpentInMinutes = (int)args.TimeSpentInMinutes;
+            CompletedAt = args.CompletedAt;
+            CreatedAt = args.CreatedAt;
 
             IsModalShown = true;
         }

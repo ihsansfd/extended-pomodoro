@@ -22,6 +22,13 @@ namespace ExtendedPomodoro.Models.Services
             var data = ConvertToGetTaskDTO(taskState, page, limit);
             var records = await _repository.GetTasks(data);
             foreach (var record in records) yield return ConvertToTaskDomain(record);
+
+        }
+
+        public async IAsyncEnumerable<TaskDomain> GetTasks(DateTime from, DateTime to)
+        {
+            var records = await _repository.GetTasks(from, to);
+            foreach(var record in records) yield return ConvertToTaskDomain(record);
         }
 
         public async Task<int> GetTotalPages(TaskState taskState = TaskState.IN_PROGRESS, int limit = 20)
@@ -45,7 +52,9 @@ namespace ExtendedPomodoro.Models.Services
         {
             var now = DateTime.Now;
 
-            var data = ConvertToUpdateTaskStateDTO(taskId, taskState, now);
+            DateTime? completedAt = taskState == TaskState.COMPLETED ? now : null;
+
+            var data = ConvertToUpdateTaskStateDTO(taskId, taskState, now, completedAt);
 
             await _repository.UpdateTaskState(data);
         }
@@ -61,7 +70,10 @@ namespace ExtendedPomodoro.Models.Services
 
         public async Task UpdateTask(UpdateTaskDomain domain)
         {
-            var data = ConvertToSqliteUpdateTaskDTO(domain);
+            var now = DateTime.Now;
+            DateTime? completedAt = domain.Taskstate == TaskState.COMPLETED ? now : null;
+
+            var data = ConvertToSqliteUpdateTaskDTO(domain, now, completedAt);
 
             await _repository.UpdateTask(data);
         }
@@ -93,12 +105,13 @@ namespace ExtendedPomodoro.Models.Services
             };
         }
 
-        private UpdateTaskStateDTO ConvertToUpdateTaskStateDTO(int taskId, TaskState taskState, DateTime now)
+        private UpdateTaskStateDTO ConvertToUpdateTaskStateDTO(int taskId, TaskState taskState, DateTime now, DateTime? completedAt)
         {
             return new()
             {
                 Id = taskId,
                 IsTaskCompleted = ConvertTaskStateToInt(taskState),
+                CompletedAt = completedAt,
                 UpdatedAt = now
             };
         }
@@ -125,7 +138,7 @@ namespace ExtendedPomodoro.Models.Services
             };
         }
 
-        private static UpdateTaskDTO ConvertToSqliteUpdateTaskDTO(UpdateTaskDomain domain)
+        private static UpdateTaskDTO ConvertToSqliteUpdateTaskDTO(UpdateTaskDomain domain, DateTime updatedAt, DateTime? completedAt)
         {
             return new UpdateTaskDTO()
             {
@@ -134,7 +147,8 @@ namespace ExtendedPomodoro.Models.Services
                 Description = domain.Description,
                 EstPomodoro = domain.EstPomodoro,
                 IsTaskCompleted = ConvertTaskStateToInt(domain.Taskstate),
-                UpdatedAt = DateTime.Now,
+                UpdatedAt = updatedAt,
+                CompletedAt = completedAt
             };
         }
 
@@ -151,6 +165,7 @@ namespace ExtendedPomodoro.Models.Services
                 TimeSpent = TimeSpan.FromSeconds(dto.TimeSpentInSeconds),
                 CreatedAt = dto.CreatedAt,
                 UpdatedAt = dto.UpdatedAt,
+                CompletedAt = dto.CompletedAt
             };
         }
 

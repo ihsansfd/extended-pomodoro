@@ -16,7 +16,8 @@ namespace ExtendedPomodoro.Models.DbSetup
                 IsTaskCompleted INT(1) DEFAULT 0 NOT NULL,
                 TimeSpentInSeconds INT DEFAULT 0 NOT NULL,
                 CreatedAt TEXT,
-                UpdatedAt TEXT
+                UpdatedAt TEXT,
+                CompletedAt TEXT
             );";
 
         private const string CREATE_SETTINGS_TABLE_QUERY =

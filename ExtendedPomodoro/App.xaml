@@ -30,6 +30,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/ComboBoxes.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/Modals.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/Windows.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Styles/Borders.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Styles/Others.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

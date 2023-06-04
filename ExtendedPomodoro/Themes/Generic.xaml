@@ -375,6 +375,7 @@
                             <controls:IconOnlyButton 
                                 Grid.Column="0"
                                 Kind="CheckCircle"
+                                ToolTip="Mark as completed"
                                 Cursor="Hand"
                                 Command="{TemplateBinding CompleteTaskCommand}"
                                 Foreground="{TemplateBinding CompleteTaskButtonForeground}"
@@ -388,9 +389,11 @@
                             <controls:IconOnlyButton
                                 Grid.Column="2"
                                 Kind="X"
+                                ToolTip="Cancel task"
                                 Cursor="Hand"
                                 Command="{TemplateBinding CancelTaskCommand}"
                                 Foreground="{TemplateBinding PlaceholderForeground}"
+                                HoverColor="{DynamicResource DimmedIconOnlyButtonFillHover}"
                                 Visibility="{TemplateBinding SelectedItem, Converter={StaticResource NullToVisibilityConv}}"
                                 Width="10"
                                 Height="10"

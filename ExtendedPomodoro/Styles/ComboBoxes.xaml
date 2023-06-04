@@ -103,7 +103,7 @@
 
     <Style x:Key="BaseComboboxStyle" TargetType="{x:Type ComboBox}">
         <Setter Property="Background" Value="{DynamicResource FormBackground}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource FormBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource GeneralBorderBrush}"/>
         <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
         <Setter Property="FontFamily" Value="{StaticResource FWRegular}"/>
         <Setter Property="Foreground" Value="{DynamicResource TextForeground}"/>

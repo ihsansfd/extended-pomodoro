@@ -24,17 +24,18 @@
     <SolidColorBrush x:Key="DimmedIconOnlyButtonFill" Color="{StaticResource White-50Color}"/>
     <SolidColorBrush x:Key="DimmedIconOnlyButtonFillHover" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="FormBackground" Color="{StaticResource LighterBlack}"/>
-    <SolidColorBrush x:Key="FormBorderBrush" Color="Transparent"/>
-    <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource DarkerBlack}"/>
+    <SolidColorBrush x:Key="FormBorderBrush" Color="{StaticResource DarkerBlack}"/>
+    <SolidColorBrush x:Key="GeneralBorderBrush" Color="Transparent"/>
+    <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource LighterBlack}"/>
     <SolidColorBrush x:Key="ButtonBackgroundHover" Color="{StaticResource VeryDarkBlackColor}"/>
     <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource PureBlackColor}"/>
     <SolidColorBrush x:Key="MenuBackground" Color="{StaticResource DarkerBlack}"/>
     <SolidColorBrush x:Key="ChromeTitleBar" Color="{StaticResource DarkerBlack}"/>
     <SolidColorBrush x:Key="GripFill" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="GripBorder" Color="{StaticResource VeryDarkBlackColor}"/>
-    <SolidColorBrush x:Key="TrackBackground" Color="{StaticResource DarkerBlack}"/>
-    <SolidColorBrush x:Key="TrackSrollBackground" Color="{StaticResource LighterBlack}"/>
-    <SolidColorBrush x:Key="ScrollbarThumbFill" Color="{StaticResource DarkerBlack}"/>
+    <SolidColorBrush x:Key="TrackBackground" Color="{StaticResource LighterBlack}"/>
+    <SolidColorBrush x:Key="TrackSrollBackground" Color="{StaticResource DarkerBlack}"/>
+    <SolidColorBrush x:Key="ScrollbarThumbFill" Color="{StaticResource LighterBlack}"/>
 
     <!--Unmodified-->
     <SolidColorBrush x:Key="Info">#6EA8FE</SolidColorBrush>

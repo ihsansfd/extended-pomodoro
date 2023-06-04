@@ -1,8 +1,6 @@
 ﻿namespace ExtendedPomodoro.Models.Domains
 {
 
-    // TODO: Refactor for too long parameter list, make properties
-
     public enum TaskState
     {
         IN_PROGRESS = 0,
@@ -34,6 +32,15 @@
         public TaskState TaskState { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set;}
+        public DateTime? CompletedAt { get; set; }
         public TimeSpan TimeSpent { get; set; }
     }
+
+    //public record TaskCompletionCountDomain
+    //{
+    //    public DateTime FromDate { get; set; }
+    //    public DateTime ToDate { get; set; }
+    //    public int CompletedTasksCount { get; set; }
+    //    public int UncompletedTasksCount { get; set; }
+    //}
 }

@@ -14,6 +14,7 @@ namespace ExtendedPomodoro.Models.DTOs
         public int TimeSpentInSeconds { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
     }
 
     public class GetTaskDTO
@@ -40,6 +41,7 @@ namespace ExtendedPomodoro.Models.DTOs
         public int? EstPomodoro { get; set; }
         public int IsTaskCompleted { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
     }
 
     public class UpdateActPomodoroDTO
@@ -54,6 +56,7 @@ namespace ExtendedPomodoro.Models.DTOs
         public int Id { get; set; }
         public int IsTaskCompleted { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
     }
 
     public class UpdateTimeSpentDTO
@@ -61,5 +64,11 @@ namespace ExtendedPomodoro.Models.DTOs
         public int Id { get; set; }
         public int TimeSpentInSecondsIncrementBy { get; set; }
         public DateTime UpdatedAt { get; set; }
+    }
+
+    public record TaskStateCountDTO
+    {
+        public int IsTaskCompleted { get; set; }
+        public int Count { get; set; }
     }
 }

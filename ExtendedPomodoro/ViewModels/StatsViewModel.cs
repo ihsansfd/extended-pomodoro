@@ -5,12 +5,15 @@ using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.ViewServices;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using ExtendedPomodoro.Core.Extensions;
 using ExtendedPomodoro.Models.Services;
+using ExtendedPomodoro.Services.Entities;
 using ExtendedPomodoro.ViewServices.Interfaces;
+using ExtendedPomodoro.Services;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -29,6 +32,7 @@ namespace ExtendedPomodoro.ViewModels
     public partial class StatsViewModel : ObservableObject
     {
         private readonly IDailySessionsService _sessionsService;
+        private readonly ITasksService _tasksService;
         private readonly IStatsViewService _statsViewService;
 
         private IEnumerable<DailySessionDomain> _dailySessions = Array.Empty<DailySessionDomain>();
@@ -71,6 +75,45 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private int _statsValueToDisplay = (int)StatsValue.POMODORO_COMPLETED;
 
+        #region Assessments
+
+        [ObservableProperty]
+        private ObservableCollection<AssessmentMessage> _assessmentMessages = new();
+
+        [ObservableProperty]
+        private bool _isAssessmentDetailModalOpen = false;
+
+        [ObservableProperty] 
+        private AssessmentResult _assessmentResult;
+
+        [ObservableProperty] 
+        private string _assessmentShortMessage;
+
+        [ObservableProperty] 
+        private string _assessmentDescription;
+
+        [ObservableProperty] 
+        private string? _assessmentSuggestion;
+
+        [RelayCommand]
+        private void ViewAssessmentDetail(AssessmentMessage args)
+        {
+            AssessmentResult = args.Result;
+            AssessmentShortMessage = args.ShortMessage;
+            AssessmentDescription = args.Description;
+            AssessmentSuggestion = args.Suggestion;
+
+            IsAssessmentDetailModalOpen = true;
+        }
+
+        [RelayCommand]
+        private void CloseAssessmentDetail()
+        {
+            IsAssessmentDetailModalOpen = false;
+        }
+        #endregion
+
+
         [RelayCommand]
         private async Task Load()
         {
@@ -93,10 +136,12 @@ namespace ExtendedPomodoro.ViewModels
         public event EventHandler<ChartDataDomainViewModel> NewChartData;
 
         public StatsViewModel(IDailySessionsService sessionsService, 
+            ITasksService tasksService,
             IStatsViewService statsViewService
             )
         {
             _sessionsService = sessionsService;
+            _tasksService = tasksService;
             _statsViewService = statsViewService;
         }
 
@@ -122,8 +167,11 @@ namespace ExtendedPomodoro.ViewModels
             _dailySessions = _sessionsService.GetDailySessions(
                 FromDate.ToMinTime(), ToDate.ToMaxTime()).ToBlockingEnumerable();
 
+            var tasks = _tasksService.GetTasks(FromDate.ToMinTime(), ToDate.ToMaxTime()).ToBlockingEnumerable();
+
             LoadSumProperties();
             LoadChartData();
+            LoadAssessments(_dailySessions, tasks);
         }
 
         private void LoadChartData()
@@ -174,5 +222,51 @@ namespace ExtendedPomodoro.ViewModels
             SumDailyPomodoroTarget = properties.SumDailyPomodoroTarget;
         }
 
+        private void LoadAssessments(IEnumerable<DailySessionDomain> dailySessions, IEnumerable<TaskDomain> tasks)
+        {
+            AssessmentMessages.Clear();
+
+            var messages = AssessmentMessagesService.GenerateMessages(tasks, _dailySessions);
+
+            foreach (var message in messages)
+            {
+                AssessmentMessages.Add(message);
+            }
+        }
+
+        //private void LoadAssessments(IEnumerable<DailySessionDomain> dailySessions, IEnumerable<TaskDomain> tasks)
+        //{
+        //    AssessmentMessages.Clear();
+
+        //    AssessmentMessages.Add(
+        //        new AssessmentMessage()
+        //        {
+        //            Result = AssessmentResult.WARNING,
+        //            Description = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.",
+        //            ShortMessage = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet",
+        //            Suggestion = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet"
+        //        }
+        //    );
+
+
+        //    AssessmentMessages.Add(
+        //        new AssessmentMessage()
+        //        {
+        //            Result = AssessmentResult.SUCCESS,
+        //            Description = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.",
+        //            ShortMessage = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet",
+        //            Suggestion = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet"
+        //        }
+        //    );
+
+        //    AssessmentMessages.Add(
+        //        new AssessmentMessage()
+        //        {
+        //            Result = AssessmentResult.FAILURE,
+        //            Description = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.",
+        //            ShortMessage = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet",
+        //            Suggestion = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet"
+        //        });
+        //}
     }
 }

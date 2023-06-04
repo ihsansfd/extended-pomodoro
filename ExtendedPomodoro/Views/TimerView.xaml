@@ -38,7 +38,8 @@
             x:Name="TasksComboBox"
             ItemsSource="{Binding ReadTasksViewModel.Tasks}"
             DisplayMemberPath="Name"
-            SelectedValue="{Binding SelectedTask}"
+            SelectedValue="{Binding SelectedTask, Mode=TwoWay}"
+            IsSynchronizedWithCurrentItem="True"
             ButtonStyle="{StaticResource IconizedButtonStyle}"
             Style="{StaticResource TasksComboBoxStyle}"
             LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"
@@ -104,11 +105,13 @@
                         <controls:IconOnlyButton 
                         Kind="StopFill"
                         Command="{Binding ResetSessionCommand}"
+                        ToolTip="Reset"
                         Width="20"
                         Height="20"
                         Foreground="{DynamicResource MainBrush}"/>
                         <controls:IconOnlyButton 
                         Kind="PlayCircle"
+                        ToolTip="Play"
                         Visibility="{Binding CanPause, Converter={StaticResource InvertBoolToVisibilityConv}}"
                         Command="{Binding StartSessionCommand}"
                         Width="50"
@@ -117,6 +120,7 @@
                         Foreground="{DynamicResource MainBrush}"/>
                         <controls:IconOnlyButton 
                         Kind="PauseCircle"
+                        ToolTip="Pause"
                         Visibility="{Binding CanPause, Converter={StaticResource BoolToVisibilityConv}}"
                         Command="{Binding PauseSessionCommand}"
                         Width="50"
@@ -125,6 +129,7 @@
                         Foreground="{DynamicResource MainBrush}"/>
                         <controls:IconOnlyButton 
                         Kind="SkipEndFill"
+                        ToolTip="Skip to next session"
                         Command="{Binding SkipSessionCommand}"
                         Width="20"
                         Height="20"

@@ -9,6 +9,8 @@
       xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:vms="clr-namespace:ExtendedPomodoro.ViewModels"
       xmlns:conv="clr-namespace:ExtendedPomodoro.Converters"
+      xmlns:services="clr-namespace:ExtendedPomodoro.Services"
+      xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       d:DataContext="{d:DesignInstance Type=vms:StatsViewModel}"
@@ -22,51 +24,74 @@
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
         <conv:InvertBooleanToVisibilityConverter x:Key="InvertBoolToVisibilityConv"/>
+        <conv:EnumToIntegerConverter x:Key="EnumToIntConv"/>
+        <conv:AssessmentResultToBrushConverter x:Key="AssessmentResToBrushConv"/>
+        <conv:AssessmentResultToStringMessageConverter x:Key="AssessmentResToStringMsgConv"/>
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConv"/>
+        <CollectionViewSource 
+            x:Key="AssessmentsCollectionViewSource" 
+            Source="{Binding AssessmentMessages}" 
+            IsLiveGroupingRequested="True">
+            <!--<CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Result"/>
+            </CollectionViewSource.GroupDescriptions>-->
+            <CollectionViewSource.SortDescriptions>
+                <componentModel:SortDescription PropertyName="Result" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </Page.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Width="400">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <WrapPanel HorizontalAlignment="Center" Margin="0 0 0 20">
-                <DatePicker 
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid Width="400">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <WrapPanel HorizontalAlignment="Center" Margin="0 0 0 25">
+                    <DatePicker 
                 x:Name="FromDate"
                 Style="{StaticResource LeftArrowDatePickerStyle}" 
                 SelectedDate="{Binding FromDate, Mode=TwoWay}"
                 DisplayDateStart="{Binding MinDate}"
                 DisplayDateEnd="{Binding MaxDate}">
-                    <behaviors:Interaction.Triggers>
-                        <behaviors:EventTrigger EventName="SelectedDateChanged">
-                            <behaviors:InvokeCommandAction Command="{Binding GenerateStatsCommand}"/>
-                        </behaviors:EventTrigger>
-                    </behaviors:Interaction.Triggers>
-                </DatePicker>
-                <Label Background="{StaticResource Primary}"
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="SelectedDateChanged">
+                                <behaviors:InvokeCommandAction Command="{Binding GenerateStatsCommand}"/>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                    </DatePicker>
+                    <Label Background="{StaticResource Primary}"
                    HorizontalContentAlignment="Center"  
                    VerticalContentAlignment="Center" Padding="20 0 20 0">
-                    <TextBlock Foreground="{StaticResource White}" Style="{StaticResource TextBlockFormValueStyle}">
+                        <TextBlock Foreground="{StaticResource White}" Style="{StaticResource TextBlockFormValueStyle}">
                     <Run Text="{Binding ElementName=FromDate, Path=SelectedDate, StringFormat='MMMM dd, yyyy'}"/>
                     <Run Text="—"/>
                     <Run Text="{Binding ElementName=ToDate, Path=SelectedDate, StringFormat='MMMM dd, yyyy'}"/>
-                    </TextBlock>
-                </Label>
-                <DatePicker 
+                        </TextBlock>
+                    </Label>
+                    <DatePicker 
                 x:Name="ToDate" 
                 Style="{StaticResource RightArrowDatePickerStyle}" 
                 SelectedDate="{Binding ToDate}"
                 DisplayDateStart="{Binding MinDate}"
                 DisplayDateEnd="{Binding MaxDate}"
                     >
-                    <behaviors:Interaction.Triggers>
-                        <behaviors:EventTrigger EventName="SelectedDateChanged">
-                            <behaviors:InvokeCommandAction Command="{Binding GenerateStatsCommand}"/>
-                        </behaviors:EventTrigger>
-                    </behaviors:Interaction.Triggers>
-                </DatePicker>
-            </WrapPanel>
-                <Grid  Grid.Row="1" HorizontalAlignment="Center">
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="SelectedDateChanged">
+                                <behaviors:InvokeCommandAction Command="{Binding GenerateStatsCommand}"/>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                    </DatePicker>
+                </WrapPanel>
+                <Border Grid.Row="1" Style="{StaticResource HeadingBorder}" Margin="0 0 0 15">
+                    <TextBlock Text="Stats" Style="{StaticResource HeadingTextBlock}"/>
+                </Border>
+                <Grid  Grid.Row="2" HorizontalAlignment="Center" Margin="0 0 0 25">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
@@ -122,26 +147,26 @@
                     Grid.Row="3"
                     Margin="0 0 20 10"
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
-                        <TextBlock 
+                    <TextBlock 
                     Text="{Binding TotalTimeSpentInMinutes, StringFormat={}{0} minutes}"
                     Grid.Row="3"
                     Grid.Column="1"
                     Style="{StaticResource TextBlockFormValueStyle}" 
                     HorizontalAlignment="Right"/>
-                        <TextBlock 
+                    <TextBlock 
                     Text="Tasks Completed"
                     Grid.Row="4"
                     Grid.Column="0"
                     Margin="0 0 20 10"
                     Style="{StaticResource TextBlockFormLabelStyle}"/>
-                        <TextBlock 
+                    <TextBlock 
                     Text="{Binding TotalTasksCompleted}"
                     Grid.Row="4"
                     Grid.Column="1"
                     Style="{StaticResource TextBlockFormValueStyle}" 
                     HorizontalAlignment="Right"/>
                     <TextBlock 
-                        Text="Pomodoro Target Success Rate"
+                        Text="Daily Pomodoro Target Reached"
                         Grid.Row="5"
                         Grid.Column="0"
                         Margin="0 0 20 0"
@@ -154,38 +179,41 @@
                         HorizontalAlignment="Right">
                     </TextBlock>
                 </Grid>
-            <Border CornerRadius="5" Grid.Row="2" Margin="0 30 0 0">
+                <Border Grid.Row="3" Style="{StaticResource HeadingBorder}" Margin="0 0 0 15">
+                    <TextBlock Text="Chart" Style="{StaticResource HeadingTextBlock}"/>
+                </Border>
+                <Border CornerRadius="5" Grid.Row="4" Margin="0 0 0 0">
 
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <WrapPanel 
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <WrapPanel 
                         Grid.Row="0"
                          HorizontalAlignment="Center" 
                          VerticalAlignment="Top"
                         >
-                        <TextBlock VerticalAlignment="Center" Style="{StaticResource TextBlockFormLabelStyle}" Margin="0 0 10 0">Display: </TextBlock>
-                        <ComboBox
+                            <TextBlock VerticalAlignment="Center" Style="{StaticResource TextBlockFormLabelStyle}" Margin="0 0 10 0">Display:</TextBlock>
+                            <ComboBox
                             VerticalAlignment="Center"
                             Width="180"
                             Height="25"
                             Style="{StaticResource ComboBoxStyle}"
                             SelectedValuePath="Tag"
                             SelectedValue="{Binding StatsValueToDisplay, Mode=TwoWay}">
-                            <ComboBox.Items>
-                            <ComboBoxItem Tag="0" Content="Pomodoro Completed"/>
-                            <ComboBoxItem Tag="1" Content="Short Breaks Completed"/>
-                            <ComboBoxItem Tag="2" Content="Long Breaks Completed"/>
-                            <ComboBoxItem Tag="3" Content="Tasks Completed"/>
-                            <ComboBoxItem Tag="4" Content="Time Spent"/>
-                            <ComboBoxItem Tag="5" Content="Daily Pomodoro Target"/>
-                        </ComboBox.Items>
-                    </ComboBox>
-                    </WrapPanel>
+                                <ComboBox.Items>
+                                    <ComboBoxItem Tag="0" Content="Pomodoro Completed"/>
+                                    <ComboBoxItem Tag="1" Content="Short Breaks Completed"/>
+                                    <ComboBoxItem Tag="2" Content="Long Breaks Completed"/>
+                                    <ComboBoxItem Tag="3" Content="Tasks Completed"/>
+                                    <ComboBoxItem Tag="4" Content="Time Spent"/>
+                                    <ComboBoxItem Tag="5" Content="Daily Pomodoro Target"/>
+                                </ComboBox.Items>
+                            </ComboBox>
+                        </WrapPanel>
 
-                    <plot:WpfPlot 
+                        <plot:WpfPlot 
                         x:Name="StatsPlotView"
                         Grid.Row="1" 
                         Width="450" 
@@ -197,7 +225,7 @@
                         HorizontalContentAlignment="Center"
                         />
 
-                    <controls:IconOnlyButton 
+                        <controls:IconOnlyButton 
                         Grid.Row="1"
                         Kind="ArrowsFullscreen" 
                         ToolTip="View Fullscreen"
@@ -212,7 +240,7 @@
                         HorizontalAlignment="Right"
                         />
 
-                    <Label
+                        <Label
                            HorizontalAlignment="Center"
                            HorizontalContentAlignment="Center"
                            VerticalContentAlignment="Center"
@@ -222,10 +250,168 @@
                            Visibility="{Binding DisplayChart,
                             Converter={StaticResource InvertBoolToVisibilityConv}}"
                            Grid.Row="1">
-                        <TextBlock Style="{StaticResource TextBlockFormValueStyle}">No data to display.</TextBlock>
-                    </Label>
-                </Grid>
-            </Border>
-        </Grid>
-    </ScrollViewer>
+                            <TextBlock Style="{StaticResource TextBlockFormValueStyle}">No data to display.</TextBlock>
+                        </Label>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="5" Style="{StaticResource HeadingBorder}" Margin="0 0 0 15">
+                    <TextBlock Text="Assessment" Style="{StaticResource HeadingTextBlock}"/>
+                </Border>
+                <ListView 
+                Grid.Row="6"
+                Background="Transparent"
+                BorderThickness="0"
+                ItemsSource="{Binding Source={StaticResource AssessmentsCollectionViewSource}, Mode=OneWay}"
+                >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border 
+                            CornerRadius="15"
+                            BorderThickness="1" 
+                            Height="30"
+                            Margin="0 0 0 10"
+                            Background="{DynamicResource FormBackground}"
+                            BorderBrush="{DynamicResource GeneralBorderBrush}">
+                                <Border.Resources>
+                                    <services:BindingProxy x:Key="CurrentDataContext" Data="{Binding}"/>
+                                </Border.Resources>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Ellipse 
+                                    Width="10"
+                                    Height="10"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="10 0 0 0"
+                                    Fill="{Binding Result, Converter={StaticResource AssessmentResToBrushConv}}"/>
+
+                                    <TextBlock
+                                    Grid.Column="1"
+                                    MaxWidth="320"
+                                    TextTrimming="CharacterEllipsis"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    Margin="10 0 0 0"
+                                    Text="{Binding ShortMessage}"
+                                    FontSize="{StaticResource FSSmall}" 
+                                    FontFamily="{StaticResource FWRegular}"
+                                    Foreground="{DynamicResource TextForeground}"
+                                />
+
+                                    <controls:IconOnlyButton
+                                    Grid.Column="2"
+                                    Cursor="Hand"
+                                    Margin="0 0 10 0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right"
+                                    Kind="InfoCircle"
+                                    ToolTip="View detail"
+                                    Foreground="{StaticResource Info}"
+                                    HoverColor="{StaticResource InfoDarker}"
+                                    Command="{Binding Path =DataContext.ViewAssessmentDetailCommand, RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
+                                    CommandParameter="{Binding Path=Data, Source={StaticResource CurrentDataContext}}"
+                                    Width="16"
+                                    Height="16"
+                                    />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+        </ScrollViewer>
+        <controls:Modal
+            Width="380"
+            Height="280"
+            IsShown="{Binding IsAssessmentDetailModalOpen}"
+            Style="{StaticResource DefaultModalStyle}"
+            >
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                              HorizontalScrollBarVisibility="Disabled" 
+                              Height="200" 
+                              Width="350" 
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Center"
+                              >
+                    <Grid Margin="20 0 20 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="Label" Width="Auto"/>
+                            <ColumnDefinition SharedSizeGroup="Value"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock 
+                            Text="Result"
+                            Margin="0 0 20 15"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource TextBlockFormLabelStyle}"/>
+                        <WrapPanel Grid.Row="0" Grid.Column="1" Margin="0 0 0 15">
+                            <Ellipse 
+                                Width="10"
+                                Height="10"
+                                VerticalAlignment="Center"
+                                Fill="{Binding AssessmentResult, Converter={StaticResource AssessmentResToBrushConv}}"/>
+                            <TextBlock 
+                                Margin="10 0 0 0"
+                                TextWrapping="Wrap"
+                                Text="{Binding AssessmentResult, Mode=TwoWay, Converter={StaticResource AssessmentResToStringMsgConv}}"
+                                Style="{StaticResource TextBlockFormValueStyle}"/>
+                        </WrapPanel>
+                        <TextBlock 
+                            Text="Description"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0 0 20 15"
+                            Style="{StaticResource TextBlockFormLabelStyle}"/>
+                        <TextBlock 
+                            TextWrapping="Wrap"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0 0 0 15"
+                            Text="{Binding AssessmentDescription, Mode=TwoWay}"
+                            Style="{StaticResource TextBlockFormValueStyle}"/>
+                        <TextBlock 
+                            Text="Suggestion"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="0 0 20 0"
+                            Style="{StaticResource TextBlockFormLabelStyle}"/>
+                        <TextBlock 
+                            Visibility="{Binding AssessmentSuggestion, Converter={StaticResource NullToVisibilityConv}}"
+                            TextWrapping="Wrap"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Text="{Binding AssessmentSuggestion, Mode=TwoWay}"
+                            Style="{StaticResource TextBlockFormValueStyle}"/>
+                    </Grid>
+                </ScrollViewer>
+                <Button Style="{StaticResource ButtonInfoStyle}" 
+                        Command="{Binding CloseAssessmentDetailCommand}"
+                        Margin="0 20 0 0"
+                        HorizontalAlignment="Right"
+                        Content="OK"/>
+            </StackPanel>
+        </controls:Modal>
+    </Grid>
 </Page>

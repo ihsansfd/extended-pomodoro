@@ -24,8 +24,12 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             @"UPDATE 
                 tblTasks 
               SET 
-                Name = @Name, Description = @Description, EstPomodoro = @EstPomodoro, 
-                IsTaskCompleted = @IsTaskCompleted, UpdatedAt = @UpdatedAt
+                Name = @Name, 
+                Description = @Description, 
+                EstPomodoro = @EstPomodoro, 
+                IsTaskCompleted = @IsTaskCompleted, 
+                UpdatedAt = @UpdatedAt,
+                CompletedAt = @CompletedAt
               WHERE 
                 Id = @Id";
 
@@ -34,7 +38,8 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
                     tblTasks 
                 SET 
                     IsTaskCompleted = @IsTaskCompleted, 
-                    UpdatedAt = @UpdatedAt
+                    UpdatedAt = @UpdatedAt,
+                    CompletedAt = @CompletedAt
                 WHERE 
                     Id = @Id";
 
@@ -65,6 +70,23 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
 
         private const string DELETE_TASK_QUERY =
             @"DELETE FROM tblTasks WHERE Id = @Id";
+
+        private const string GET_TASK_STATES_COUNT_QUERY =
+            @"SELECT 
+                  IsTaskCompleted, COUNT(*) AS Count 
+              FROM 
+                  tblTasks 
+             WHERE
+                CreatedAt >= @FromDate AND CreatedAt <= @ToDate
+              GROUP BY 
+                  IsTaskCompleted;";
+
+        private const string GET_TASKS_RANGE_QUERY =
+            @"SELECT * FROM tblTasks 
+               WHERE
+                 CreatedAt >= @FromDate AND CreatedAt <= @ToDate
+              ORDER BY 
+                 datetime(CreatedAt) DESC;";
 
         private readonly IDbConnectionFactory _connectionFactory;
 
@@ -140,6 +162,34 @@ namespace ExtendedPomodoro.Models.Repositories.Sqlite
             using (var db = _connectionFactory.Connect())
             {
                 await db.ExecuteAsync(DELETE_TASK_QUERY, new { Id = taskId });
+            }
+        }
+
+        //public async Task<IEnumerable<TaskStateCountDTO>> GetTaskStatesCount(DateTime from, DateTime to)
+        //{
+        //    using (var db = _connectionFactory.Connect())
+        //    {
+        //        object data = new
+        //        {
+        //            FromDate = from,
+        //            ToDate = to,
+        //        };
+
+        //        return await db.QueryAsync<TaskStateCountDTO>(GET_TASK_STATES_COUNT_QUERY, data);
+        //    }
+        //}
+
+        public async Task<IEnumerable<TaskDTO>> GetTasks(DateTime from, DateTime to)
+        {
+            using (var db = _connectionFactory.Connect())
+            {
+                object data = new
+                {
+                    FromDate = from,
+                    ToDate = to,
+                };
+
+                return await db.QueryAsync<TaskDTO>(GET_TASKS_RANGE_QUERY, data);
             }
         }
     }

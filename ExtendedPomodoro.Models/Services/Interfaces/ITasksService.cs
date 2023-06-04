@@ -10,6 +10,7 @@ namespace ExtendedPomodoro.Models.Services.Interfaces
         Task UpdateTimeSpent(int taskId, TimeSpan timeSpent);
         Task UpdateActPomodoro(int taskId, int ActPomodoroIncrementBy);
         IAsyncEnumerable<TaskDomain> GetTasks(TaskState taskState = TaskState.IN_PROGRESS, int page = 1, int limit = 20);
+        IAsyncEnumerable<TaskDomain> GetTasks(DateTime from, DateTime to);
         Task DeleteTask(int taskId);
         Task<int> GetTotalPages(TaskState taskState = TaskState.IN_PROGRESS, int limit = 20);
     }
