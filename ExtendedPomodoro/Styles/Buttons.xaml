@@ -52,6 +52,38 @@
         </Setter>
     </Style>
 
+    <Style TargetType="Button" x:Key="CircleButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="Transparent"
+                            BorderThickness="1" 
+                            BorderBrush="{TemplateBinding Foreground}"
+                            CornerRadius="100"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="true">
+                        <ContentControl 
+                            Content="{TemplateBinding Content}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Foreground="{TemplateBinding Foreground}"
+                        />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Button" x:Key="CircleInfoButton" BasedOn="{StaticResource CircleButton}">
+        <Setter Property="Foreground" Value="{StaticResource Info}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource InfoDarker}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!--Used in stats view-->
     <Style TargetType="Button" x:Key="LeftCornerRadiusButtonStyle" BasedOn="{StaticResource BaseCustomButtonStyle}">
         <Setter Property="Template">
@@ -94,7 +126,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 
     <!--End Used in stats view-->
     

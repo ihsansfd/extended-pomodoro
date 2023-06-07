@@ -233,40 +233,5 @@ namespace ExtendedPomodoro.ViewModels
                 AssessmentMessages.Add(message);
             }
         }
-
-        //private void LoadAssessments(IEnumerable<DailySessionDomain> dailySessions, IEnumerable<TaskDomain> tasks)
-        //{
-        //    AssessmentMessages.Clear();
-
-        //    AssessmentMessages.Add(
-        //        new AssessmentMessage()
-        //        {
-        //            Result = AssessmentResult.WARNING,
-        //            Description = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.",
-        //            ShortMessage = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet",
-        //            Suggestion = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet"
-        //        }
-        //    );
-
-
-        //    AssessmentMessages.Add(
-        //        new AssessmentMessage()
-        //        {
-        //            Result = AssessmentResult.SUCCESS,
-        //            Description = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.",
-        //            ShortMessage = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet",
-        //            Suggestion = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet"
-        //        }
-        //    );
-
-        //    AssessmentMessages.Add(
-        //        new AssessmentMessage()
-        //        {
-        //            Result = AssessmentResult.FAILURE,
-        //            Description = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.",
-        //            ShortMessage = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet",
-        //            Suggestion = "Lorem ipsum dolor sit amet Lorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit ametLorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet"
-        //        });
-        //}
     }
 }

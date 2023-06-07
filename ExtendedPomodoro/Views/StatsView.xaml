@@ -32,9 +32,6 @@
             x:Key="AssessmentsCollectionViewSource" 
             Source="{Binding AssessmentMessages}" 
             IsLiveGroupingRequested="True">
-            <!--<CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Result"/>
-            </CollectionViewSource.GroupDescriptions>-->
             <CollectionViewSource.SortDescriptions>
                 <componentModel:SortDescription PropertyName="Result" Direction="Ascending"/>
             </CollectionViewSource.SortDescriptions>
@@ -392,6 +389,7 @@
                             Text="{Binding AssessmentDescription, Mode=TwoWay}"
                             Style="{StaticResource TextBlockFormValueStyle}"/>
                         <TextBlock 
+                            Visibility="{Binding AssessmentSuggestion, Converter={StaticResource NullToVisibilityConv}}"
                             Text="Suggestion"
                             Grid.Row="2"
                             Grid.Column="0"

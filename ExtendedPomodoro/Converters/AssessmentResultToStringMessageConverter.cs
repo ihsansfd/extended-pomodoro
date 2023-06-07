@@ -17,7 +17,7 @@ namespace ExtendedPomodoro.Converters
             {
                 if (val == AssessmentResult.SUCCESS) return "Passed";
                 if (val == AssessmentResult.WARNING) return "OK";
-                if (val == AssessmentResult.FAILURE) return "Needs Improvement";
+                if (val == AssessmentResult.FAILURE) return "Improvement needed";
             }
 
             return "Passed";

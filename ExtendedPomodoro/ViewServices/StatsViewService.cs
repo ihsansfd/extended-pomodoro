@@ -30,7 +30,7 @@ namespace ExtendedPomodoro.ViewServices
             userControl.Load();
 
             var dialog = _dialogWindowService.GenerateMaximizableDialogWindow(
-                new(800, 450, "Fullscreen Stats", userControl));
+                new(500, 400, "Fullscreen Stats", userControl));
             dialog.Show();
             dialog.Focus();
             dialog.Activate();

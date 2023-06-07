@@ -125,7 +125,7 @@
                         Visibility="{TemplateBinding IsShown, Converter={StaticResource BoolToVisibilityConv}}"
                         Panel.ZIndex="999999999">
                             <Border.Effect>
-                                <DropShadowEffect ShadowDepth="5"  Opacity="0.4" />
+                                <DropShadowEffect ShadowDepth="5"  Opacity="0.4" Direction="280"/>
                             </Border.Effect>
 
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">

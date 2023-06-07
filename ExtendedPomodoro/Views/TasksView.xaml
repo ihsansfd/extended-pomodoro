@@ -9,6 +9,7 @@
       xmlns:services="clr-namespace:ExtendedPomodoro.Services"
       xmlns:converters="clr-namespace:ExtendedPomodoro.Converters"
       xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
       d:DataContext="{d:DesignInstance Type=vms:TasksViewModel}"
       d:DesignHeight="450" d:DesignWidth="400"
@@ -114,7 +115,7 @@
                                             Text="{Binding Name}"/>
                                     </Grid>
 
-                                    <controls:IconOnlyButton 
+                                    <!--<controls:IconOnlyButton 
                                         Command="{Binding DataContext.UpdateTaskViewModel.LoadTaskDetailCommand, 
                                         RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
                                         CommandParameter="{Binding Data, Source={StaticResource CurrentDataContext}}"
@@ -125,7 +126,25 @@
                                         Foreground="{StaticResource Info}"
                                         HoverColor="{StaticResource InfoDarker}"
                                         Width="16"
-                                        Height="16"/>
+                                        Height="16"/>-->
+                                    <Button 
+                                        Grid.Column="1"
+                                        Height="16"
+                                        Width="16"
+                                        ToolTip="Edit/view detail"
+                                        Cursor="Hand"
+                                        Style="{StaticResource CircleInfoButton}"
+                                        Command="{Binding DataContext.UpdateTaskViewModel.LoadTaskDetailCommand, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type Page}}}"
+                                        CommandParameter="{Binding Data, Source={StaticResource CurrentDataContext}}">
+                                        <iconPacks:PackIconBootstrapIcons
+                                            Height="8"
+                                            Width="8"
+                                            Kind="PencilFill"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            />
+                                    </Button>
 
                                     <controls:IconOnlyButton 
                                         Grid.Column="2"
