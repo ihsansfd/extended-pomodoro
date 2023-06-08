@@ -21,6 +21,8 @@ namespace ExtendedPomodoro.ViewModels
         private readonly ISettingsViewService _settingsViewService;
         private readonly IAppSettingsProvider _appSettingsProvider;
 
+        private int _saveChangesWaitTimeoutCount = 0;
+
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required(ErrorMessage = "Value cannot be empty", AllowEmptyStrings = false)]
@@ -167,9 +169,7 @@ namespace ExtendedPomodoro.ViewModels
                     PauseHotkeyDomain = PauseHotkey.ConvertToHotkeyDomain()
                 });
 
-                IsSuccessChangingNotificationOpen = true;
-
-                WaitTimeoutProvider.RegisterWaitTimeout(() => IsSuccessChangingNotificationOpen = false, TimeSpan.FromSeconds(3));
+                OpenSuccessChangingNotification();
             }
             catch (Exception ex)
             {
@@ -177,6 +177,23 @@ namespace ExtendedPomodoro.ViewModels
             }
 
             await _appSettingsProvider.LoadSettings();
+        }
+
+        private void OpenSuccessChangingNotification()
+        {
+            IsSuccessChangingNotificationOpen = true;
+
+            _saveChangesWaitTimeoutCount++;
+
+            WaitTimeoutProvider.RegisterWaitTimeout(() =>
+            {
+                _saveChangesWaitTimeoutCount--;
+                if (_saveChangesWaitTimeoutCount <= 0)
+                {
+                    IsSuccessChangingNotificationOpen = false;
+                }
+
+            }, TimeSpan.FromSeconds(3));
         }
 
     }
