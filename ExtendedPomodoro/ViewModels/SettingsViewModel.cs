@@ -10,6 +10,7 @@ using System.Windows;
 using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Services.Interfaces;
 using ExtendedPomodoro.ViewServices.Interfaces;
+using ExtendedPomodoro.Core.Timeout;
 
 namespace ExtendedPomodoro.ViewModels
 {
@@ -84,6 +85,9 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private Hotkey? _pauseHotkey;
 
+        [ObservableProperty] 
+        private bool _isSuccessChangingNotificationOpen;
+
         public SettingsViewModel(
             ISettingsService settingsService,
             IMessageBoxService messageBoxService,
@@ -144,22 +148,33 @@ namespace ExtendedPomodoro.ViewModels
 
             if(HasErrors) return;
 
-        await _settingsService.UpdateSettings(new SettingsDomain()
-        {
-            PomodoroDuration = TimeSpan.FromMinutes(PomodoroDurationInMinutes),
-            ShortBreakDuration = TimeSpan.FromMinutes(ShortBreakDurationInMinutes),
-            LongBreakDuration = TimeSpan.FromMinutes(LongBreakDurationInMinutes),
-            LongBreakInterval = LongBreakInterval,
-            DailyPomodoroTarget = DailyPomodoroTarget,
-            IsAutostart = IsAutostart,
-            AlarmSound = (AlarmSound) AlarmSound,
-            Volume = Volume,
-            IsRepeatForever = IsRepeatForever,
-            PushNotificationEnabled = PushNotificationEnabled,
-            DarkModeEnabled = DarkModeEnabled,
-            StartHotkeyDomain = StartHotkey.ConvertToHotkeyDomain(),
-            PauseHotkeyDomain = PauseHotkey.ConvertToHotkeyDomain()
-        });
+            try
+            {
+                await _settingsService.UpdateSettings(new SettingsDomain()
+                {
+                    PomodoroDuration = TimeSpan.FromMinutes(PomodoroDurationInMinutes),
+                    ShortBreakDuration = TimeSpan.FromMinutes(ShortBreakDurationInMinutes),
+                    LongBreakDuration = TimeSpan.FromMinutes(LongBreakDurationInMinutes),
+                    LongBreakInterval = LongBreakInterval,
+                    DailyPomodoroTarget = DailyPomodoroTarget,
+                    IsAutostart = IsAutostart,
+                    AlarmSound = (AlarmSound)AlarmSound,
+                    Volume = Volume,
+                    IsRepeatForever = IsRepeatForever,
+                    PushNotificationEnabled = PushNotificationEnabled,
+                    DarkModeEnabled = DarkModeEnabled,
+                    StartHotkeyDomain = StartHotkey.ConvertToHotkeyDomain(),
+                    PauseHotkeyDomain = PauseHotkey.ConvertToHotkeyDomain()
+                });
+
+                IsSuccessChangingNotificationOpen = true;
+
+                WaitTimeoutProvider.RegisterWaitTimeout(() => IsSuccessChangingNotificationOpen = false, TimeSpan.FromSeconds(3));
+            }
+            catch (Exception ex)
+            {
+                // ignored
+            }
 
             await _appSettingsProvider.LoadSettings();
         }

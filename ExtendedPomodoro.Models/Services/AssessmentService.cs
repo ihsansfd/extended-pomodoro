@@ -22,9 +22,9 @@ namespace ExtendedPomodoro.Models.Services
 
         public EstPomodoroAssessmentDomain GenerateEstPomodoroAssessment()
         {
-            int correctEstimationCount = 0;
-            int overEstimationCount = 0;
-            int underEstimationCount = 0;
+            var correctEstimationCount = 0;
+            var overEstimationCount = 0;
+            var underEstimationCount = 0;
 
              foreach (var record in _taskDomains)
              { 
@@ -56,8 +56,8 @@ namespace ExtendedPomodoro.Models.Services
 
         public TaskCompletionAssessmentDomain GenerateTaskCompletionAssessment()
         {
-            int completedTasksCount = 0;
-            int uncompletedTasksCount = 0;
+            var completedTasksCount = 0;
+            var uncompletedTasksCount = 0;
 
             foreach (var record in _taskDomains)
             {
@@ -74,8 +74,8 @@ namespace ExtendedPomodoro.Models.Services
 
         public TaskPunctualityAssessmentDomain GenerateTaskPunctualityAssessment()
         {
-            int tasksCompletedOnTimeCount = 0;
-            int tasksCompletedLateCount = 0;
+            var tasksCompletedOnTimeCount = 0;
+            var tasksCompletedLateCount = 0;
 
             foreach (var record in _taskDomains)
             {
@@ -102,8 +102,8 @@ namespace ExtendedPomodoro.Models.Services
 
         public DailyPomodoroTargetAssessmentDomain GenerateDailyPomodoroTargetAssessment()
         {
-            int dailyPomodoroTargetReachedCount = 0;
-            int dailyPomodoroTargetUnreachedCount = 0;
+            var dailyPomodoroTargetReachedCount = 0;
+            var dailyPomodoroTargetUnreachedCount = 0;
 
             foreach (var record in _sessionDomains)
             {
