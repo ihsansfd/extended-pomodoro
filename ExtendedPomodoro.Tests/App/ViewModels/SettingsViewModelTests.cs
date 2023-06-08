@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using ExtendedPomodoro.Core.Timeout;
 using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Helpers;
 using ExtendedPomodoro.Models.Domains;
@@ -25,6 +26,7 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
         private readonly Mock<IMessageBoxService> _messageBoxMock;
         private readonly Mock<ISettingsViewService> _settingsViewServiceMock;
         private readonly Mock<IAppSettingsProvider> _appSettingsProviderMock;
+        private readonly Mock<RegisterWaitTimeoutCallback> _registerWaitTimeoutCallbackMock;
         private readonly SettingsViewModel _sut;
 
         public SettingsViewModelTests()
@@ -33,6 +35,7 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
             _messageBoxMock = _mocker.GetMock<IMessageBoxService>();
             _settingsViewServiceMock = _mocker.GetMock<ISettingsViewService>();
             _appSettingsProviderMock = _mocker.GetMock<IAppSettingsProvider>();
+            _registerWaitTimeoutCallbackMock = _mocker.GetMock<RegisterWaitTimeoutCallback>();
             _sut = _mocker.CreateInstance<SettingsViewModel>();
         }
 
@@ -136,10 +139,17 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
             _sut.StartHotkey = new Hotkey(Key.A, ModifierKeys.Alt);
             _sut.PauseHotkey = new Hotkey(Key.B, ModifierKeys.Control);
 
+            bool? isOpenNotificationBeforeClosing = null;
+
             _settingsServiceMock.Setup((x) => 
                     x.UpdateSettings(It.IsAny<SettingsDomain>()));
             _appSettingsProviderMock.Setup((x) => x.LoadSettings());
-
+            _registerWaitTimeoutCallbackMock.
+                Setup((x) => x.Invoke(It.IsAny<Action>(), It.IsAny<TimeSpan>()))
+                .Callback((Action action, TimeSpan _) => {
+                    isOpenNotificationBeforeClosing = _sut.IsSuccessChangingNotificationOpen;
+                    action.Invoke();
+                });
 
             // Act
             _sut.PomodoroDurationInMinutes = 55;
@@ -162,6 +172,11 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
                 x.UpdateSettings(It.IsAny<SettingsDomain>()), Times.Once);
 
             _appSettingsProviderMock.Verify((x) => x.LoadSettings(), Times.Once);
+            Assert.True(isOpenNotificationBeforeClosing);
+            Assert.False(_sut.IsSuccessChangingNotificationOpen);
+            _registerWaitTimeoutCallbackMock.Verify(
+                (x) => x.Invoke(It.IsAny<Action>(),
+                    It.IsAny<TimeSpan>()), Times.Once);
         }
 
         [Fact]

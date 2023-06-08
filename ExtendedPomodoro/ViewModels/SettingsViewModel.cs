@@ -20,6 +20,7 @@ namespace ExtendedPomodoro.ViewModels
         private readonly IMessageBoxService _messageBox;
         private readonly ISettingsViewService _settingsViewService;
         private readonly IAppSettingsProvider _appSettingsProvider;
+        private readonly RegisterWaitTimeoutCallback _registerWaitTimeoutCallback;
 
         private int _saveChangesWaitTimeoutCount = 0;
 
@@ -94,13 +95,15 @@ namespace ExtendedPomodoro.ViewModels
             ISettingsService settingsService,
             IMessageBoxService messageBoxService,
             ISettingsViewService settingsViewService,
-            IAppSettingsProvider appSettingsProvider
+            IAppSettingsProvider appSettingsProvider,
+            RegisterWaitTimeoutCallback registerWaitTimeoutCallback
         )
         {
             _settingsService = settingsService;
             _messageBox = messageBoxService;
             _settingsViewService = settingsViewService;
             _appSettingsProvider = appSettingsProvider;
+            _registerWaitTimeoutCallback = registerWaitTimeoutCallback;
         }
 
         [RelayCommand]
@@ -185,7 +188,7 @@ namespace ExtendedPomodoro.ViewModels
 
             _saveChangesWaitTimeoutCount++;
 
-            WaitTimeoutProvider.RegisterWaitTimeout(() =>
+            _registerWaitTimeoutCallback.Invoke(() =>
             {
                 _saveChangesWaitTimeoutCount--;
                 if (_saveChangesWaitTimeoutCount <= 0)
