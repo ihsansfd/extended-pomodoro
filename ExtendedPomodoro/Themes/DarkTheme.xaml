@@ -27,6 +27,7 @@
     <SolidColorBrush x:Key="FormBorderBrush" Color="{StaticResource DarkerBlack}"/>
     <SolidColorBrush x:Key="GeneralBorderBrush" Color="Transparent"/>
     <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource LighterBlack}"/>
+    <SolidColorBrush x:Key="ComboBoxButtonBackground" Color="{StaticResource LightBlack}"/>
     <SolidColorBrush x:Key="ButtonBackgroundHover" Color="{StaticResource VeryDarkBlackColor}"/>
     <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource PureBlackColor}"/>
     <SolidColorBrush x:Key="MenuBackground" Color="{StaticResource DarkerBlack}"/>

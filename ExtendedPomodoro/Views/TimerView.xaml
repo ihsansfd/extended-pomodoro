@@ -41,7 +41,7 @@
             DisplayMemberPath="Name"
             SelectedValue="{Binding SelectedTask, Mode=TwoWay}"
             IsSynchronizedWithCurrentItem="True"
-            ButtonStyle="{StaticResource IconizedButtonStyle}"
+            ButtonStyle="{StaticResource ComboBoxIconizedButtonStyle}"
             Style="{StaticResource TasksComboBoxStyle}"
             LoadMoreTasksCommand="{Binding ReadTasksViewModel.DisplayMoreTasksCommand}"
             IsLoadMoreButtonShown="{Binding ReadTasksViewModel.AreThereMoreTasks}"

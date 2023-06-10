@@ -176,6 +176,10 @@
         </Setter>
     </Style>
 
+    <Style TargetType="Button" x:Key="ComboBoxIconizedButtonStyle" BasedOn="{StaticResource IconizedButtonStyle}">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxButtonBackground}"></Setter>
+    </Style>
+
     <Style TargetType="Button" x:Key="TagActiveButtonWithBaseCustomStyle" BasedOn="{StaticResource BaseCustomButtonStyle}">
         <Style.Triggers>
             <!--Tag here determining whether it's active or not-->
