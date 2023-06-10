@@ -1,4 +1,4 @@
 ﻿namespace ExtendedPomodoro.Messages
 {
-    public record class TaskUpdateInfoMessage(bool IsTaskUpdateSuccess);
+    public record TaskUpdateInfoMessage(bool IsSuccess, string Message);
 }

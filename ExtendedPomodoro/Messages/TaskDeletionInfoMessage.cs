@@ -1,4 +1,4 @@
 ﻿namespace ExtendedPomodoro.Messages
 {
-    public record class TaskDeletionInfoMessage(bool IsTaskDeletionSuccess);
+    public record TaskDeletionInfoMessage(bool IsSuccess, string Message);
 }

@@ -1,4 +1,4 @@
 ﻿namespace ExtendedPomodoro.Messages
 {
-    public record class TaskCreationInfoMessage(bool IsTaskCreationSuccess);
+    public record TaskCreationInfoMessage(bool IsSuccess, string Message, object Source);
 }

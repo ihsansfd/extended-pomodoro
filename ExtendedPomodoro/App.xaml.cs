@@ -166,6 +166,8 @@ namespace ExtendedPomodoro
             services.AddTransient<ITimer, DispatcherTimerAdapter>();
             services.AddTransient<IExtendedTimer, ExtendedTimer>();
             services.AddTransient<ITimerSession, TimerSession>();
+            services.AddTransient<IFlashMessageService, FlashMessageService>();
+            services.AddTransient<IFlashMessageServiceViewModel, FlashMessageServiceViewModel>();
 
             return services.BuildServiceProvider();
         }

@@ -11,5 +11,12 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
+
+    <Style TargetType="{x:Type controls:FlashMessage}" x:Key="FlashMessageStyle">
+        <Setter Property="FontSize" Value="{StaticResource FSSmall}"/>
+        <Setter Property="FontFamily" Value="{StaticResource FWMedium}"/>
+        <Setter Property="Foreground" Value="{StaticResource White}"/>
+        <Setter Property="TextMaxWidth" Value="250"></Setter>
+    </Style>
     
 </ResourceDictionary>

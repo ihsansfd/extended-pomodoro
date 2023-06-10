@@ -12,6 +12,7 @@
       d:DataContext="{d:DesignInstance Type=vms:TimerViewModel}"
       xmlns:xrpb="http://XamlRadialProgressBar/DotNet"
       xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+      x:Name="TimerPage"
       Title="TimerView">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
@@ -147,5 +148,12 @@
             IsShown="{Binding CreateTaskViewModel.IsModalShown, Mode=TwoWay}"
             Style="{StaticResource RemoveErrorBorderStyle}"
             CreateTaskViewModel="{Binding CreateTaskViewModel}"/>
+        <controls:FlashMessage  
+            IsOpen="{Binding FlashMessageServiceViewModel.IsOpened }"
+            Message="{Binding FlashMessageServiceViewModel.Message}"
+            FlashMessageType="{Binding FlashMessageServiceViewModel.Type}"
+            PlacementTarget="{Binding ElementName=TimerPage}"
+            Style="{StaticResource FlashMessageStyle}"
+        />
     </Grid>
 </Page>

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using ExtendedPomodoro.Entities;
 using ExtendedPomodoro.Models.Domains;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using ExtendedPomodoro.Helpers;
@@ -11,18 +12,19 @@ using ExtendedPomodoro.Models.Services.Interfaces;
 using ExtendedPomodoro.Services.Interfaces;
 using ExtendedPomodoro.ViewServices.Interfaces;
 using ExtendedPomodoro.Core.Timeout;
+using ExtendedPomodoro.Services;
+using ExtendedPomodoro.Services.Entities;
 
 namespace ExtendedPomodoro.ViewModels
 {
     public partial class SettingsViewModel : ObservableValidator
     {
+        public IFlashMessageServiceViewModel FlashMessageServiceViewModel { get; init; }
+
         private readonly ISettingsService _settingsService;
         private readonly IMessageBoxService _messageBox;
         private readonly ISettingsViewService _settingsViewService;
         private readonly IAppSettingsProvider _appSettingsProvider;
-        private readonly RegisterWaitTimeoutCallback _registerWaitTimeoutCallback;
-
-        private int _saveChangesWaitTimeoutCount = 0;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -88,22 +90,19 @@ namespace ExtendedPomodoro.ViewModels
         [ObservableProperty]
         private Hotkey? _pauseHotkey;
 
-        [ObservableProperty] 
-        private bool _isSuccessChangingNotificationOpen;
-
         public SettingsViewModel(
             ISettingsService settingsService,
             IMessageBoxService messageBoxService,
             ISettingsViewService settingsViewService,
             IAppSettingsProvider appSettingsProvider,
-            RegisterWaitTimeoutCallback registerWaitTimeoutCallback
+            IFlashMessageServiceViewModel flashMessageServiceViewModel
         )
         {
             _settingsService = settingsService;
             _messageBox = messageBoxService;
             _settingsViewService = settingsViewService;
             _appSettingsProvider = appSettingsProvider;
-            _registerWaitTimeoutCallback = registerWaitTimeoutCallback;
+            FlashMessageServiceViewModel = flashMessageServiceViewModel;
         }
 
         [RelayCommand]
@@ -151,7 +150,11 @@ namespace ExtendedPomodoro.ViewModels
         {
             ValidateAllProperties();
 
-            if(HasErrors) return;
+            if (HasErrors)
+            {
+                FlashMessageServiceViewModel.NewFlashMessage(FlashMessageType.ERROR, "Changes failed to save.");
+                return;
+            }
 
             try
             {
@@ -172,31 +175,15 @@ namespace ExtendedPomodoro.ViewModels
                     PauseHotkeyDomain = PauseHotkey.ConvertToHotkeyDomain()
                 });
 
-                OpenSuccessChangingNotification();
+                FlashMessageServiceViewModel.NewFlashMessage(FlashMessageType.SUCCESS, "Changes saved successfully.");
+
             }
-            catch (Exception ex)
+            catch (Exception _)
             {
-                // ignored
+                FlashMessageServiceViewModel.NewFlashMessage(FlashMessageType.ERROR, "Changes failed to save.");
             }
 
             await _appSettingsProvider.LoadSettings();
-        }
-
-        private void OpenSuccessChangingNotification()
-        {
-            IsSuccessChangingNotificationOpen = true;
-
-            _saveChangesWaitTimeoutCount++;
-
-            _registerWaitTimeoutCallback.Invoke(() =>
-            {
-                _saveChangesWaitTimeoutCount--;
-                if (_saveChangesWaitTimeoutCount <= 0)
-                {
-                    IsSuccessChangingNotificationOpen = false;
-                }
-
-            }, TimeSpan.FromSeconds(3));
         }
 
     }

@@ -28,6 +28,7 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
         private readonly Mock<ITasksService> _tasksServiceMock;
         private readonly Mock<IMessenger> _messengerMock;
         private readonly Mock<IExtendedTimer> _extendedTimerMock;
+        private readonly Mock<IFlashMessageServiceViewModel> _flashMessageServiceViewModelMock;
 
         private readonly ReadTasksViewModel _readTasksViewModel;
         private readonly CreateTaskViewModel _createTasksViewModel;
@@ -44,8 +45,10 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
             _messengerMock = _mocker.GetMock<IMessenger>();
             _extendedTimerMock = _mocker.GetMock<IExtendedTimer>();
             _timerSession = _mocker.CreateInstance<TimerSession>();
+            _flashMessageServiceViewModelMock = _mocker.GetMock<IFlashMessageServiceViewModel>();
             _readTasksViewModel = _mocker.CreateInstance<ReadTasksViewModel>();
             _createTasksViewModel = _mocker.CreateInstance<CreateTaskViewModel>();
+            
             _sut = new TimerViewModel(
                 _readTasksViewModel,
                 _createTasksViewModel,
@@ -54,7 +57,8 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
                 _appSettingsProviderMock.Object,
                 _dailySessionsServiceMock.Object,
                 _tasksServiceMock.Object,
-                _messengerMock.Object
+                _messengerMock.Object,
+                _flashMessageServiceViewModelMock.Object
             );
         }
 

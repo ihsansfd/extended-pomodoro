@@ -23,8 +23,11 @@ namespace ExtendedPomodoro.ViewModels
         IRecipient<FinishDialogCloseClickedMessage>,
         IRecipient<StartHotkeyTriggeredMessage>,
         IRecipient<PauseHotkeyTriggeredMessage>,
-        IRecipient<MainWindowIsClosingMessage>
+        IRecipient<MainWindowIsClosingMessage>,
+        IRecipient<TaskCreationInfoMessage>
     {
+        public IFlashMessageServiceViewModel FlashMessageServiceViewModel { get; init; }
+
         private readonly IAppSettingsProvider _appSettingsProvider;
         private readonly IDailySessionsService _sessionsService;
         private readonly ITasksService _tasksService;
@@ -42,7 +45,8 @@ namespace ExtendedPomodoro.ViewModels
             IAppSettingsProvider appSettingsProvider,
             IDailySessionsService sessionsRepository,
             ITasksService tasksRepository,
-            IMessenger messenger
+            IMessenger messenger,
+            IFlashMessageServiceViewModel flashMessageServiceViewModel
             )
         {
 
@@ -54,6 +58,7 @@ namespace ExtendedPomodoro.ViewModels
             _sessionsService = sessionsRepository;
             _tasksService = tasksRepository;
             _messenger = messenger;
+            FlashMessageServiceViewModel = flashMessageServiceViewModel;
             _messenger.RegisterAll(this);
 
             _timerSession.SessionFinish += TimerSession_OnSessionFinish;
@@ -69,8 +74,6 @@ namespace ExtendedPomodoro.ViewModels
 
         public ReadTasksViewModel ReadTasksViewModel { get; }
         public CreateTaskViewModel CreateTaskViewModel { get; }
-
-        private bool _selectedTaskFirstLoad = true;
 
         private TaskDomainViewModel? _lastSelectedTask = null;
 
@@ -110,7 +113,18 @@ namespace ExtendedPomodoro.ViewModels
 
             var today = DateOnly.FromDateTime(DateTime.Now);
 
-            await UpdateTaskStateToComplete(SelectedTask.Id);
+            try
+            {
+                await UpdateTaskStateToComplete(SelectedTask.Id);
+                FlashMessageServiceViewModel.NewFlashMessage(FlashMessageType.SUCCESS, "Task marked as completed.");
+            }
+
+            catch (Exception ex)
+            {
+                FlashMessageServiceViewModel.NewFlashMessage(FlashMessageType.ERROR, $"Failed to mark task as completed: {ex.Message}");
+
+            }
+
             await StoreAndResetTimeElapsed(today, SelectedTask);
             await StoreDailySessionTotalTasksCompleted(today, 1);
             await ReadTasksViewModel.LoadTasks();
@@ -244,6 +258,13 @@ namespace ExtendedPomodoro.ViewModels
             _timerViewService.StopAlarmSound();
             _timerViewService.CloseCurrentSessionFinishBalloon();
         }
+
+        public void Receive(TaskCreationInfoMessage message)
+        {
+            FlashMessageServiceViewModel.NewFlashMessage(
+                message.IsSuccess ? FlashMessageType.SUCCESS : FlashMessageType.ERROR, message.Message);
+        }
+
 
         private void TimerSession_OnCanPausedChanged(object? sender, bool canPause)
         {

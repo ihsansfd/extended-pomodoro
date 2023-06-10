@@ -12,6 +12,8 @@
     <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConv"/>
     <converters:InvertNullToVisibilityConverter x:Key="InvertNullToVisibilityConv"/>
+    <converters:FlashMessageTypeToBrushConverter x:Key="FlashMessageTypeToBrushConv"/>
+    <converters:FlashMessageTypeToBootstrapIconKindConverter x:Key="FlashMessageTypeToBSIconKindConv"/>
 
     <!--#region DrawerSidebarMenu--> 
     <Style TargetType="{x:Type controls:DrawerSidebarMenu}">
@@ -411,5 +413,54 @@
     </Style>
 
     <!--#endregion TasksComboBox-->
-    
+
+    <!--#region FlashMessageControl-->
+
+    <Style TargetType="{x:Type controls:FlashMessage}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:FlashMessage}">
+                    <Popup 
+                        Panel.ZIndex="99" 
+                        IsOpen="{TemplateBinding IsOpen}" 
+                        StaysOpen="True"
+                        PlacementTarget="{TemplateBinding PlacementTarget}" 
+                        Placement="Custom" 
+                        x:Name="PART_Popup"
+                        HorizontalOffset="-15"
+                        AllowsTransparency="True">
+                        <Border 
+                            Background="{TemplateBinding FlashMessageType, Converter={StaticResource FlashMessageTypeToBrushConv}}" 
+                            CornerRadius="5" 
+                            Padding="15 10 15 10">
+                            <Grid MaxWidth="{TemplateBinding TextMaxWidth}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <iconPacks:PackIconBootstrapIcons
+                                    Kind="{TemplateBinding FlashMessageType, Converter={StaticResource FlashMessageTypeToBSIconKindConv}}"
+                                    Foreground="White"
+                                    Margin="0 0 10 0"
+                                    Width="{TemplateBinding FontSize}"
+                                    Height="{TemplateBinding FontSize}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                />
+                                <TextBlock 
+                                    Grid.Column="1"
+                                    Text="{TemplateBinding Message}"
+                                    TextWrapping="Wrap"
+                                    Foreground="{TemplateBinding Foreground}" 
+                                    FontFamily="{TemplateBinding FontFamily}" 
+                                    FontSize="{TemplateBinding FontSize}"/>
+                            </Grid>
+                        </Border>
+                    </Popup>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion FlashMessageControl-->
 </ResourceDictionary>

@@ -223,7 +223,7 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
             bool? isCreationSuccess = null;
 
             _messengerMock.Setup((x) => x.Send(It.IsAny<TaskCreationInfoMessage>(), It.IsAny<IsAnyToken>()))
-                .Callback((object val, object _) => isCreationSuccess = ((TaskCreationInfoMessage)val).IsTaskCreationSuccess);
+                .Callback((object val, object _) => isCreationSuccess = ((TaskCreationInfoMessage)val).IsSuccess);
             _tasksServiceMock.Setup((x) => x.CreateTask(It.IsAny<CreateTaskDomain>()));
 
             // Act
@@ -294,7 +294,7 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
 
             _tasksServiceMock.Setup((x) => x.UpdateTask(It.IsAny<UpdateTaskDomain>()));
             _messengerMock.Setup((x) => x.Send(It.IsAny<TaskUpdateInfoMessage>(), It.IsAny<IsAnyToken>()))
-                .Callback((object val, object _) => isUpdationSuccess = ((TaskUpdateInfoMessage)val).IsTaskUpdateSuccess);
+                .Callback((object val, object _) => isUpdationSuccess = ((TaskUpdateInfoMessage)val).IsSuccess);
             _sut.IsModalShown = true;
 
             // Act
@@ -354,7 +354,7 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
             bool? isUpdateSuccess = null;
 
             _messengerMock.Setup((x) => x.Send(It.IsAny<TaskUpdateStateInfoMessage>(), It.IsAny<IsAnyToken>()))
-                .Callback((object val, object _) => isUpdateSuccess = ((TaskUpdateStateInfoMessage)val).IsTaskUpdateSuccess);
+                .Callback((object val, object _) => isUpdateSuccess = ((TaskUpdateStateInfoMessage)val).IsSuccess);
 
             // Act
             var updateTaskStateDomainViewModel = _mocker.GetMock<IUpdateTaskStateDomainViewModel>().Object;
@@ -423,7 +423,7 @@ namespace ExtendedPomodoro.Tests.App.ViewModels
             bool? isDeletionSuccess = null;
 
             _messengerMock.Setup((x) => x.Send(It.IsAny<TaskDeletionInfoMessage>(), It.IsAny<IsAnyToken>()))
-                .Callback((object val, object _) => isDeletionSuccess = ((TaskDeletionInfoMessage)val).IsTaskDeletionSuccess);
+                .Callback((object val, object _) => isDeletionSuccess = ((TaskDeletionInfoMessage)val).IsSuccess);
 
             _messageBoxServiceMock.Setup((x) =>
                 x.Show(It.IsAny<string>(),

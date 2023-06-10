@@ -16,31 +16,70 @@ using ExtendedPomodoro.Services.Interfaces;
 
 namespace ExtendedPomodoro.ViewModels
 {
-    public partial class TasksViewModel : ObservableObject
+    public partial class TasksViewModel : 
+        ObservableObject, 
+        IRecipient<TaskCreationInfoMessage>, 
+        IRecipient<TaskUpdateInfoMessage>,
+        IRecipient<TaskUpdateStateInfoMessage>,
+        IRecipient<TaskDeletionInfoMessage>
     {
+        public IFlashMessageServiceViewModel FlashMessageServiceViewModel { get; init; }
+
         public ReadTasksViewModel ReadTasksViewModel { get;}
 
         public CreateTaskViewModel CreateTaskViewModel { get; }
 
         public UpdateTaskViewModel UpdateTaskViewModel { get; }
 
-        public DeleteTaskViewModel DeleteTaskViewModel { get;}
+        public DeleteTaskViewModel DeleteTaskViewModel { get; }
+
+        private readonly IMessenger _messenger;
 
         public TasksViewModel(ReadTasksViewModel readTaskViewModel, 
             UpdateTaskViewModel updateTaskViewModel,
             CreateTaskViewModel createTaskViewModel, 
-            DeleteTaskViewModel deleteTaskViewModel)
+            DeleteTaskViewModel deleteTaskViewModel,
+            IMessenger messenger,
+            IFlashMessageServiceViewModel flashMessageServiceViewModel
+            )
         {
             ReadTasksViewModel = readTaskViewModel;
             CreateTaskViewModel = createTaskViewModel;
             UpdateTaskViewModel = updateTaskViewModel;
             DeleteTaskViewModel = deleteTaskViewModel;
+            FlashMessageServiceViewModel = flashMessageServiceViewModel;
+            _messenger = messenger;
+            _messenger.RegisterAll(this);
         }
 
         [RelayCommand]
         private async Task Load()
         {
             await ReadTasksViewModel.LoadTasks();
+        }
+
+        public void Receive(TaskUpdateInfoMessage message)
+        {
+            FlashMessageServiceViewModel.NewFlashMessage(
+                message.IsSuccess ? FlashMessageType.SUCCESS : FlashMessageType.ERROR, message.Message);
+        }
+
+        public void Receive(TaskCreationInfoMessage message)
+        {
+            FlashMessageServiceViewModel.NewFlashMessage(
+                message.IsSuccess ? FlashMessageType.SUCCESS : FlashMessageType.ERROR, message.Message);
+        }
+
+        public void Receive(TaskDeletionInfoMessage message)
+        {
+            FlashMessageServiceViewModel.NewFlashMessage(
+                message.IsSuccess ? FlashMessageType.SUCCESS : FlashMessageType.ERROR, message.Message);
+        }
+
+        public void Receive(TaskUpdateStateInfoMessage message)
+        {
+            FlashMessageServiceViewModel.NewFlashMessage(
+                message.IsSuccess ? FlashMessageType.SUCCESS : FlashMessageType.ERROR, message.Message);
         }
     }
 
@@ -129,22 +168,22 @@ namespace ExtendedPomodoro.ViewModels
 
         public async void Receive(TaskDeletionInfoMessage taskDeletionInfo)
         {
-            if (taskDeletionInfo.IsTaskDeletionSuccess) await LoadTasks();
+            if (taskDeletionInfo.IsSuccess) await LoadTasks();
         }
 
         public async void Receive(TaskCreationInfoMessage taskCreationInfo)
         {
-            if (taskCreationInfo.IsTaskCreationSuccess) await LoadTasks();
+            if (taskCreationInfo.IsSuccess) await LoadTasks();
         }
 
         public async void Receive(TaskUpdateStateInfoMessage taskUpdateStateInfo)
         {
-            if (taskUpdateStateInfo.IsTaskUpdateSuccess) await LoadTasks();
+            if (taskUpdateStateInfo.IsSuccess) await LoadTasks();
         }
 
         public async void Receive(TaskUpdateInfoMessage taskUpdateInfo)
         {
-            if (taskUpdateInfo.IsTaskUpdateSuccess) await LoadTasks();
+            if (taskUpdateInfo.IsSuccess) await LoadTasks();
         }
 
         private void ClearTasks()
@@ -167,16 +206,13 @@ namespace ExtendedPomodoro.ViewModels
     public partial class CreateTaskViewModel : ObservableValidator
     {
         private readonly ITasksService _repository;
-        private readonly IMessageBoxService _messageBox;
         private readonly IMessenger _messenger;
 
         public CreateTaskViewModel(
             ITasksService repository, 
-            IMessageBoxService messageBoxService,
             IMessenger messenger)
         {
             _repository = repository;
-            _messageBox = messageBoxService;
             _messenger = messenger;
         }
 
@@ -217,12 +253,11 @@ namespace ExtendedPomodoro.ViewModels
                 ClearAll();
                 CloseModal();
 
-                _messenger.Send(new TaskCreationInfoMessage(true));
+                _messenger.Send(new TaskCreationInfoMessage(true, "Task added successfully.", this));
             }
             catch (Exception ex)
             {
-                _messenger.Send(new TaskCreationInfoMessage(false));
-                _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messenger.Send(new TaskCreationInfoMessage(false, $"Task failed to be added: {ex.Message}", this));
             }
         }
 
@@ -305,13 +340,11 @@ namespace ExtendedPomodoro.ViewModels
                     }
                     );
                 CloseModal();
-
-                _messenger.Send(new TaskUpdateInfoMessage(true));
+                _messenger.Send(new TaskUpdateInfoMessage(true, "Task updated successfully."));
 
             } catch(Exception ex)
             {
-                _messenger.Send(new TaskUpdateInfoMessage(false));
-                _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messenger.Send(new TaskUpdateInfoMessage(false, $"Task failed to be updated {ex.Message}"));
             }
 
         }
@@ -328,13 +361,12 @@ namespace ExtendedPomodoro.ViewModels
             try
             {
                 await _service.UpdateTaskState(args.TaskId, TasksHelper.ConvertIntegerToTaskState(args.IntendedTaskState));
-                _messenger.Send(new TaskUpdateStateInfoMessage(true));
+                _messenger.Send(new TaskUpdateStateInfoMessage(true, "Task status updated successfully."));
             }
 
             catch(Exception ex)
             {
-                _messenger.Send(new TaskUpdateStateInfoMessage(false));
-                _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messenger.Send(new TaskUpdateStateInfoMessage(false, $"Task status failed to be updated: {ex.Message}"));
             }
         }
 
@@ -388,13 +420,12 @@ namespace ExtendedPomodoro.ViewModels
 
                 await _repository.DeleteTask(taskId);
 
-                _messenger.Send(new TaskDeletionInfoMessage(true));
+                _messenger.Send(new TaskDeletionInfoMessage(true, "Task deleted successfully."));
             }
 
             catch (Exception ex)
             {
-                _messenger.Send(new TaskDeletionInfoMessage(false));
-                _messageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messenger.Send(new TaskDeletionInfoMessage(false, $"Task failed to be deleted: {ex.Message}"));
             }
         }
     }
