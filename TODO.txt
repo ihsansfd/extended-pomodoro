@@ -1,3 +1,0 @@
-KNOWN ISSUES:
-
-- as the timer view will automatically unsubsribe when it's unloaded, now when we switch to different page the popup, balloon, alarm, and other thing when the session finished will not work appropriately. Current known solution: make the listening event be in the MainWindow.
